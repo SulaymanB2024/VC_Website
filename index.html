@@ -1,19 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
+<<!DOCTYPE html>
+<!-- Last Published: Sun Apr 06 2025 12:47:26 GMT+0000 (Coordinated Universal Time) -->
+<html data-wf-domain="www.riot.vc" data-wf-page="638f18bec1c3baedecdd2ac2" data-wf-site="638f18bec1c3ba6c00dd2ac1">
     <head>
         <meta charset="utf-8"/>
-        <title>Sulayman Bowles - Portfolio</title>
-        <meta content="Double Bassist | UT Austin Student" name="description"/>
-        <meta content="Sulayman Bowles - Portfolio" property="og:title"/>
-        <meta content="Double Bassist | UT Austin Student" property="og:description"/>
+        <title>Sulayman Bowles - Finance & Technology Professional | UT Austin</title>
+        <meta content="Sulayman Bowles is a finance and technology professional at UT Austin specializing in blockchain innovation, energy trading, and investment analysis. View portfolio and experience." name="description"/>
+        <meta content="Sulayman Bowles, finance, technology, blockchain, energy trading, investment analysis, UT Austin, portfolio, student leader" name="keywords"/>
+        <meta content="Sulayman Bowles - Finance & Technology Professional" property="og:title"/>
+        <meta content="Finance & Technology Professional at UT Austin specializing in blockchain innovation, energy trading, and investment analysis." property="og:description"/>
+        <meta content="https://portfolio-website-steel-ten-72.vercel.app/" property="og:url"/>
         <meta content="https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63c5ab9469556d3b898d9552_riot-opengraph.webp" property="og:image"/>
-        <meta content="Sulayman Bowles - Portfolio" property="twitter:title"/>
-        <meta content="Double Bassist | UT Austin Student" property="twitter:description"/>
+        <meta content="1200" property="og:image:width"/>
+        <meta content="630" property="og:image:height"/>
+        <meta content="Sulayman Bowles - Finance & Technology Professional" property="twitter:title"/>
+        <meta content="Finance & Technology Professional at UT Austin specializing in blockchain innovation, energy trading, and investment analysis." property="twitter:description"/>
         <meta content="https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63c5ab9469556d3b898d9552_riot-opengraph.webp" property="twitter:image"/>
         <meta property="og:type" content="website"/>
         <meta content="summary_large_image" name="twitter:card"/>
         <meta content="width=device-width, initial-scale=1" name="viewport"/>
-        <link href="./Untitled-1.css" rel="stylesheet" type="text/css"/>
+        <meta name="robots" content="index, follow"/>
+        <meta name="author" content="Sulayman Bowles"/>
+        <meta name="theme-color" content="#667eea"/>
+        <link rel="canonical" href="https://portfolio-website-steel-ten-72.vercel.app/"/>
+        <link href="./styles.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript">
             !function(o, c) {
                 var n = c.documentElement
@@ -461,6 +470,49 @@
                 </clipPath>
             </defs>
         </svg>
+        
+        <!-- Structured Data for SEO -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Sulayman Bowles",
+          "jobTitle": "Finance & Technology Professional",
+          "description": "Finance and technology professional specializing in blockchain innovation, energy trading, and investment analysis",
+          "url": "https://portfolio-website-steel-ten-72.vercel.app/",
+          "image": "https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63c5ab9469556d3b898d9552_riot-opengraph.webp",
+          "email": "sulayman.bowles@utexas.edu",
+          "telephone": "+1-512-827-9016",
+          "affiliation": {
+            "@type": "EducationalOrganization",
+            "name": "University of Texas at Austin",
+            "url": "https://www.utexas.edu/"
+          },
+          "alumniOf": {
+            "@type": "EducationalOrganization",
+            "name": "University of Texas at Austin"
+          },
+          "knowsAbout": [
+            "Blockchain Technology",
+            "Energy Trading",
+            "Investment Analysis",
+            "Financial Modeling",
+            "Cryptocurrency",
+            "DeFi",
+            "Commercial Real Estate"
+          ],
+          "sameAs": [
+            "https://linkedin.com/in/sulayman-bowles",
+            "https://github.com/SulaymanB2024"
+          ],
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Austin",
+            "addressRegion": "TX",
+            "addressCountry": "US"
+          }
+        }
+        </script>
     </head>
     <body class="body">
         <div data-w-id="2fa57a61-cba7-2984-c812-6c438f58d0c3" style="opacity:1;display:block" class="overlay-page"></div>
@@ -1124,24 +1176,13 @@
                 const TEXT_FADE_IN_DELAY = 600;
 
                 const slideTextElements = document.querySelectorAll(".swiper-title");
-                
-                // Safe ANIMATION initialization with fallback
-                let ANIMATION = null;
-                try {
-                    if (window.RiotAnimation) {
-                        ANIMATION = new window.RiotAnimation({
-                            dom: document.querySelector(".hero-bg")
-                        });
-                        // initial load
-                        ANIMATION.gotoStep(0);
-                    }
-                } catch (e) {
-                    console.log('RiotAnimation not available, continuing without background animation');
-                }
+                let ANIMATION = new window.RiotAnimation({
+                    dom: document.querySelector(".hero-bg")
+                });
 
-                if (slideTextElements.length > 0) {
-                    slideTextElements[0].classList.add("active");
-                }
+                // initial load
+                ANIMATION.gotoStep(0);
+                slideTextElements[0].classList.add("active");
 
                 const SLIDE_CHANGE_DURATION = 1000;
 
@@ -1265,7 +1306,5 @@
             window.addEventListener("scroll", pageScroll);
             */
         </script>
-        <!-- Vercel Analytics -->
-        <script defer src="https://vercel.com/analytics/script.js"></script>
     </body>
 </html>
