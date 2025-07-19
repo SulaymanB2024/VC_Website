@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <!-- Last Published: Sun Apr 06 2025 12:47:26 GMT+0000 (Coordinated Universal Time) -->
 <html data-wf-domain="www.riot.vc" data-wf-page="638f18bec1c3baedecdd2ac2" data-wf-site="638f18bec1c3ba6c00dd2ac1">
     <head>
@@ -1059,7 +1059,8 @@
                             </div>
                             <h4 class="h4" style="color: #333; margin-bottom: 0.5rem;">Based in Austin, Texas</h4>
                             <p style="color: #666; font-size: 0.9rem;">University of Texas at Austin • Available for opportunities nationwide</p>
-                        </div>               
+                        </div>
+                        
                         <div class="contact-status" style="padding: 1.5rem; background: rgba(255,255,255,0.5); border-radius: 8px; border: 1px solid rgba(0,0,0,0.1);">
                             <div class="status-indicator" style="display: inline-flex; align-items: center; margin-bottom: 1rem;"></div>
                                 <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 8px;"></div>
@@ -1134,24 +1135,13 @@
                 const TEXT_FADE_IN_DELAY = 600;
 
                 const slideTextElements = document.querySelectorAll(".swiper-title");
-                
-                // Safe ANIMATION initialization with fallback
-                let ANIMATION = null;
-                try {
-                    if (window.RiotAnimation) {
-                        ANIMATION = new window.RiotAnimation({
-                            dom: document.querySelector(".hero-bg")
-                        });
-                        // initial load
-                        ANIMATION.gotoStep(0);
-                    }
-                } catch (e) {
-                    console.log('RiotAnimation not available, continuing without background animation');
-                }
+                let ANIMATION = new window.RiotAnimation({
+                    dom: document.querySelector(".hero-bg")
+                });
 
-                if (slideTextElements.length > 0) {
-                    slideTextElements[0].classList.add("active");
-                }
+                // initial load
+                ANIMATION.gotoStep(0);
+                slideTextElements[0].classList.add("active");
 
                 const SLIDE_CHANGE_DURATION = 1000;
 
@@ -1275,7 +1265,5 @@
             window.addEventListener("scroll", pageScroll);
             */
         </script>
-        <!-- Vercel Analytics -->
-        <script defer src="https://vercel.com/analytics/script.js"></script>
     </body>
 </html>
