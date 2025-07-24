@@ -1,0 +1,748 @@
+/*
+ * Research Report Fintech CSS
+ * Professional styling for fintech research reports and data visualization
+ * Designed to integrate seamlessly with the existing VC website design system
+ */
+
+/* ========================================
+   RESEARCH REPORTS SECTION
+   ======================================== */
+
+.section-research-reports {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+    background-image: url("https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63b45986eb88354581fc5110_bg-noise-tile.webp");
+    background-position: 50%;
+    background-size: 200px 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.research-reports-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+}
+
+.research-reports-tagline {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+.research-reports-subtitle {
+    font-size: 1.25rem;
+    color: #495057;
+    margin-top: 1.5rem;
+    font-weight: 400;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+/* ========================================
+   RESEARCH REPORT CARDS GRID
+   ======================================== */
+
+.research-reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.research-report-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.research-report-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.research-report-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.research-report-card:hover::before {
+    opacity: 1;
+}
+
+/* ========================================
+   REPORT CARD CONTENT
+   ======================================== */
+
+.research-report-header {
+    padding: 2rem 2rem 1rem 2rem;
+    border-bottom: 1px solid #e9ecef;
+    position: relative;
+}
+
+.research-report-category {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.research-report-title {
+    font-family: 'Aeonik Pro', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.research-report-date {
+    font-size: 0.9rem;
+    color: #718096;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.research-report-date::before {
+    content: "📅";
+    font-size: 0.8rem;
+}
+
+.research-report-body {
+    padding: 1.5rem 2rem;
+}
+
+.research-report-summary {
+    color: #4a5568;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.research-report-highlights {
+    margin-bottom: 1.5rem;
+}
+
+.research-report-highlights h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.research-report-highlights h4::before {
+    content: "💡";
+    font-size: 0.9rem;
+}
+
+.research-report-highlights ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.research-report-highlights li {
+    padding: 0.5rem 0;
+    color: #4a5568;
+    position: relative;
+    padding-left: 1.5rem;
+    line-height: 1.5;
+}
+
+.research-report-highlights li::before {
+    content: "▶";
+    position: absolute;
+    left: 0;
+    color: #667eea;
+    font-size: 0.8rem;
+}
+
+/* ========================================
+   REPORT METRICS & DATA
+   ======================================== */
+
+.research-report-metrics {
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    border-left: 4px solid #667eea;
+}
+
+.research-report-metrics-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.research-report-metrics-title::before {
+    content: "📊";
+    font-size: 0.9rem;
+}
+
+.research-report-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.research-report-metric {
+    text-align: center;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.research-report-metric:hover {
+    transform: translateY(-2px);
+}
+
+.research-report-metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #667eea;
+    margin-bottom: 0.25rem;
+    font-family: 'Aeonik Pro', sans-serif;
+}
+
+.research-report-metric-label {
+    font-size: 0.8rem;
+    color: #718096;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ========================================
+   REPORT ACTIONS
+   ======================================== */
+
+.research-report-actions {
+    padding: 1.5rem 2rem 2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e9ecef;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.research-report-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.3px;
+}
+
+.research-report-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+.research-report-btn-secondary {
+    background: transparent;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.research-report-btn-secondary:hover {
+    background: #667eea;
+    color: white;
+}
+
+.research-report-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.research-report-tag {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* ========================================
+   FEATURED RESEARCH REPORT
+   ======================================== */
+
+.featured-research-report {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.featured-research-report::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63b45986eb88354581fc5110_bg-noise-tile.webp");
+    background-size: 100px 100px;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.featured-research-report .research-report-category {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.featured-research-report .research-report-title {
+    color: white;
+    font-size: 2rem;
+}
+
+.featured-research-report .research-report-date {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.featured-research-report .research-report-summary {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+}
+
+.featured-research-report .research-report-metrics {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.featured-research-report .research-report-metric {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.featured-research-report .research-report-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.featured-research-report .research-report-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   RESEARCH TOOLS & FILTERS
+   ======================================== */
+
+.research-reports-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.research-filter-btn {
+    background: transparent;
+    border: 2px solid #e2e8f0;
+    color: #4a5568;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.research-filter-btn:hover,
+.research-filter-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+}
+
+.research-search-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.research-search-box:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+}
+
+.research-search-input {
+    border: none;
+    outline: none;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    width: 200px;
+}
+
+.research-search-icon {
+    color: #a0aec0;
+    margin-right: 0.5rem;
+}
+
+/* ========================================
+   DATA VISUALIZATION COMPONENTS
+   ======================================== */
+
+.research-chart-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.research-chart-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.research-chart-title::before {
+    content: "📈";
+    font-size: 1rem;
+}
+
+.research-chart-placeholder {
+    height: 250px;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0aec0;
+    font-size: 0.9rem;
+    border: 2px dashed #cbd5e0;
+}
+
+/* ========================================
+   RESEARCH REPORT MODAL/OVERLAY
+   ======================================== */
+
+.research-report-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.research-report-modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.research-report-modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    animation: modalSlideIn 0.3s ease-out forwards;
+}
+
+.research-report-modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    position: relative;
+}
+
+.research-report-modal-close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.research-report-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.research-report-modal-body {
+    padding: 2rem;
+}
+
+/* ========================================
+   BACKGROUND DECORATIVE ELEMENTS
+   ======================================== */
+
+.research-reports-bg-decoration {
+    position: absolute;
+    pointer-events: none;
+}
+
+.research-reports-bg-decoration.top-left {
+    top: -5rem;
+    left: -5rem;
+    width: 15rem;
+    height: 15rem;
+    background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+    border-radius: 50%;
+    filter: blur(2rem);
+}
+
+.research-reports-bg-decoration.bottom-right {
+    bottom: -5rem;
+    right: -5rem;
+    width: 20rem;
+    height: 20rem;
+    background: linear-gradient(135deg, #f093fb20 0%, #f5576c20 100%);
+    border-radius: 50%;
+    filter: blur(3rem);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media screen and (max-width: 991px) {
+    .research-reports-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .research-report-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .research-reports-filters {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .research-search-input {
+        width: 150px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .research-reports-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .research-report-card {
+        margin: 0 1rem;
+    }
+    
+    .research-report-header,
+    .research-report-body,
+    .research-report-actions {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+    
+    .research-report-actions {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .research-report-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .research-report-modal-content {
+        margin: 1rem;
+        max-height: 95vh;
+    }
+    
+    .research-report-modal-header,
+    .research-report-modal-body {
+        padding: 1.5rem;
+    }
+    
+    .featured-research-report .research-report-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .research-reports-subtitle {
+        font-size: 1.1rem;
+        padding: 0 1rem;
+    }
+    
+    .research-report-title {
+        font-size: 1.25rem;
+    }
+    
+    .research-report-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .research-search-input {
+        width: 120px;
+    }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: scale(0.9) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.research-report-card {
+    animation: slideInUp 0.6s ease-out forwards;
+}
+
+.research-report-card:nth-child(1) { animation-delay: 0.1s; }
+.research-report-card:nth-child(2) { animation-delay: 0.2s; }
+.research-report-card:nth-child(3) { animation-delay: 0.3s; }
+.research-report-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.research-text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.research-highlight {
+    background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.research-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #e2e8f0 50%, transparent 100%);
+    margin: 2rem 0;
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+
+@media print {
+    .research-report-card {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+        break-inside: avoid;
+        margin-bottom: 2rem;
+    }
+    
+    .research-report-btn,
+    .research-reports-filters {
+        display: none;
+    }
+    
+    .research-report-modal {
+        display: none !important;
+    }
+}
