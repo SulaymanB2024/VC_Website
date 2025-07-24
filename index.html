@@ -101,7 +101,7 @@
 
             /* Better about card styling */
             .about-card-content {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, var(--black) 0%, var(--coal) 100%);
                 height: 100%;
                 display: flex;
                 flex-direction: column;
@@ -344,6 +344,471 @@
             .contact-card__link:hover .contact-link-icon svg {
                 filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
             }
+
+            /* Modal Styles */
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.4s cubic-bezier(0.6, 0, 0.3, 1);
+            }
+
+            .modal-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .modal-content {
+                background: #ffffff;
+                border-radius: 16px;
+                max-width: 700px;
+                width: 90%;
+                max-height: 85vh;
+                overflow-y: auto;
+                position: relative;
+                transform: scale(0.8) translateY(40px);
+                transition: transform 0.4s cubic-bezier(0.6, 0, 0.3, 1);
+                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+                font-family: Maison Neue Mono, sans-serif;
+                border: 1px solid rgba(0, 0, 0, 0.08);
+            }
+
+            .modal-overlay.active .modal-content {
+                transform: scale(1) translateY(0);
+            }
+
+            .modal-header {
+                padding: 2.5rem 2.5rem 1.5rem;
+                border-bottom: 1px solid var(--cool-smoke);
+                position: relative;
+                background: linear-gradient(135deg, var(--white-smoke) 0%, var(--white) 100%);
+                border-radius: 16px 16px 0 0;
+            }
+
+            /* Enhanced Modal Role Runes */
+            .modal-rune {
+                position: absolute;
+                top: 2rem;
+                left: 2.5rem;
+                width: 36px;
+                height: 36px;
+                opacity: 0.7;
+                transition: all 0.4s ease;
+                color: var(--black);
+                background: rgba(0, 0, 0, 0.08);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .modal-rune:hover {
+                opacity: 0.9;
+                transform: scale(1.08) rotate(2deg);
+                background: rgba(0, 0, 0, 0.12);
+                border-color: rgba(0, 0, 0, 0.25);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            }
+
+            .modal-rune svg {
+                width: 24px;
+                height: 24px;
+                transition: all 0.4s ease;
+            }
+
+            .modal-rune:hover svg {
+                transform: scale(1.1);
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            }
+
+            .modal-close {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                background: rgba(0, 0, 0, 0.04);
+                border: none;
+                font-size: 1.25rem;
+                cursor: pointer;
+                padding: 0.75rem;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+                color: #555;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 300;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .modal-close:hover {
+                background: rgba(0, 0, 0, 0.08);
+                color: #333;
+                transform: scale(1.05);
+                border-color: rgba(0, 0, 0, 0.1);
+            }
+
+            .modal-title {
+                margin: 0 0 0 3.5rem;
+                font-family: Aeonik Pro, sans-serif;
+                font-size: 1.5rem;
+                color: var(--black);
+                font-weight: 700;
+                line-height: 120%;
+                letter-spacing: 0;
+            }
+
+            .modal-subtitle {
+                margin: 0.75rem 0 0 3.5rem;
+                color: var(--black);
+                font-size: 0.875rem;
+                font-weight: 400;
+                opacity: 0.6;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                line-height: 130%;
+            }
+
+            .modal-body {
+                padding: 2rem 2.5rem 2.5rem;
+                color: var(--black);
+                line-height: 1.4;
+                font-size: 14px;
+                font-family: Maison Neue Mono, sans-serif;
+            }
+
+            .modal-section {
+                margin-bottom: 2.5rem;
+            }
+
+            .modal-section:last-child {
+                margin-bottom: 0;
+            }
+
+            .modal-section-title {
+                font-family: Aeonik Pro, sans-serif;
+                font-size: 1.125rem;
+                font-weight: 700;
+                color: var(--black);
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                line-height: 120%;
+            }
+
+            .modal-section-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 20px;
+                height: 20px;
+                margin-right: 12px;
+                opacity: 0.8;
+                color: var(--black);
+                font-family: 'Aeonik Pro', sans-serif;
+                text-align: center;
+                line-height: 1;
+                transition: all 0.3s ease;
+                border-radius: 4px;
+                background: rgba(0, 0, 0, 0.05);
+                border: 1px solid rgba(0, 0, 0, 0.1);
+            }
+
+            .modal-section-icon:hover {
+                opacity: 1;
+                background: rgba(0, 0, 0, 0.1);
+                border-color: rgba(0, 0, 0, 0.2);
+                transform: scale(1.05);
+            }
+
+            .modal-section-icon svg {
+                width: 14px;
+                height: 14px;
+                color: inherit;
+                transition: all 0.3s ease;
+            }
+
+            .modal-section-title:hover .modal-section-icon svg {
+                transform: rotate(5deg);
+            }
+
+            .modal-text {
+                line-height: 1.4;
+                color: var(--black);
+                margin-bottom: 1.25rem;
+                font-size: 14px;
+                font-family: Maison Neue Mono, sans-serif;
+            }
+
+            .modal-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                background: var(--white-smoke);
+                border-radius: 8px;
+                padding: 1.5rem;
+                border: 1px solid var(--cool-smoke);
+            }
+
+            .modal-list li {
+                padding: 0.75rem 0;
+                border-bottom: 1px solid var(--cool-smoke);
+                color: var(--black);
+                display: flex;
+                align-items: flex-start;
+                gap: 0.75rem;
+                font-size: 14px;
+                line-height: 1.4;
+                font-family: Maison Neue Mono, sans-serif;
+            }
+
+            .modal-list li:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .modal-list li::before {
+                content: "→";
+                color: var(--black);
+                font-weight: 600;
+                font-size: 14px;
+                margin-top: 0.1rem;
+                flex-shrink: 0;
+            }
+
+            .modal-highlight {
+                background: linear-gradient(135deg, var(--black) 0%, var(--coal) 100%);
+                color: white;
+                padding: 2rem;
+                border-radius: 8px;
+                margin: 1.5rem 0;
+                font-size: 14px;
+                line-height: 1.4;
+                font-family: Maison Neue Mono, sans-serif;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .modal-highlight strong {
+                font-weight: 600;
+            }
+
+            .modal-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: 1.25rem;
+                margin: 2rem 0;
+            }
+
+            .modal-stat {
+                text-align: center;
+                padding: 1.5rem 1rem;
+                background: rgba(0, 0, 0, 0.06);
+                border-radius: 12px;
+                transition: transform 0.3s ease;
+                border: 1px solid rgba(0, 0, 0, 0.12);
+            }
+
+            .modal-stat:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+                border-color: rgba(0, 0, 0, 0.2);
+            }
+
+            .modal-stat-number {
+                font-family: Aeonik Pro, sans-serif;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--black);
+                display: block;
+                line-height: 120%;
+                letter-spacing: 0;
+            }
+
+            .modal-stat-label {
+                font-size: 0.875rem;
+                color: var(--black);
+                margin-top: 0.5rem;
+                font-weight: 400;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                line-height: 130%;
+                opacity: 0.6;
+                font-family: Maison Neue Mono, sans-serif;
+            }
+
+            /* Modal responsive design */
+            @media (max-width: 768px) {
+                .modal-content {
+                    width: 95%;
+                    max-height: 90vh;
+                    border-radius: 12px;
+                }
+                
+                .modal-header {
+                    padding: 2rem 1.5rem 1.25rem;
+                }
+                
+                .modal-body {
+                    padding: 1.5rem;
+                }
+                
+                .modal-title {
+                    font-size: 1.5rem;
+                }
+                
+                .modal-stats {
+                    grid-template-columns: 1fr;
+                    gap: 1rem;
+                }
+            }
+
+            /* Dark section styles for Research */
+            .section-research {
+                background: black;
+                color: white;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .section-research::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: 
+                    radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 40% 70%, rgba(102, 126, 234, 0.05) 0%, transparent 50%);
+                pointer-events: none;
+            }
+
+            .section-research::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-image: 
+                    linear-gradient(0deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+                background-size: 50px 50px;
+                pointer-events: none;
+                opacity: 0.3;
+            }
+
+            .section-research .bg-triangle,
+            .section-research .bg-blob {
+                display: none;
+            }
+
+            .section-research .inner {
+                position: relative;
+                z-index: 2;
+            }
+
+            .section-research .section-title {
+                color: white;
+            }
+
+            .section-research .text-captain {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .section-research .h2 {
+                color: white;
+            }
+
+            .section-research .portfolio-card__content {
+                color: #333;
+            }
+
+            .section-research .portfolio-card__title {
+                color: #333;
+            }
+
+            .section-research .portfolio-card__description {
+                color: rgba(51, 51, 51, 0.6);
+            }
+
+            .section-research .card-shape.outline path {
+                stroke: rgba(255, 255, 255, 0.2);
+            }
+
+            .section-research .portfolio-card:hover .card-shape.outline path {
+                stroke: rgba(255, 255, 255, 0.4);
+            }
+
+            .section-research .portfolio-card:hover .card-shape.outline {
+                animation: pulse 0.5s ease-out;
+            }
+
+            /* Enhanced floating elements for research section */
+            .section-research .floating-element {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(102, 126, 234, 0.05);
+                animation: float 6s ease-in-out infinite;
+            }
+
+            .section-research .floating-element:nth-child(1) {
+                width: 100px;
+                height: 100px;
+                top: 10%;
+                left: 85%;
+                animation-delay: 0s;
+            }
+
+            .section-research .floating-element:nth-child(2) {
+                width: 60px;
+                height: 60px;
+                top: 60%;
+                left: 5%;
+                animation-delay: 2s;
+            }
+
+            .section-research .floating-element:nth-child(3) {
+                width: 80px;
+                height: 80px;
+                top: 30%;
+                left: 10%;
+                animation-delay: 4s;
+            }
+
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0px) scale(1);
+                    opacity: 0.3;
+                }
+                50% {
+                    transform: translateY(-20px) scale(1.1);
+                    opacity: 0.6;
+                }
+            }
+
+            /* Remove old dark background elements */
+            .bg-blob.dark,
+            .bg-triangle.dark {
+                display: none;
+            }
         </style>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
         <script defer src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
@@ -475,6 +940,7 @@
                 <nav role="navigation" class="nav w-nav-menu">
                     <a href="#portfolio" class="nav__link w-nav-link">Experience</a>
                     <a href="#team" class="nav__link w-nav-link">About</a>
+                    <a href="#research" class="nav__link w-nav-link">Research</a>
                     <a href="#offices" class="nav__link w-nav-link">Contact</a>
                 </nav>
                 <div class="nav-btn w-nav-button">
@@ -625,7 +1091,7 @@
                 <div id="w-node-c4237df9-3421-f446-2dc3-2517d65cd0ad-ecdd2ac2" class="portfolio w-dyn-list">
                     <div role="list" class="portfolio-grid w-dyn-items">
                         <div role="listitem" class="portfolio-card w-dyn-item">
-                            <a href="#" class="portfolio-card__wrap w-inline-block">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="commercial-real-estate">
                                 <div class="card-shape outline w-embed">
                                     <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                                         <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="#fff"/>
@@ -650,7 +1116,7 @@
                             </a>
                         </div>
                         <div role="listitem" class="portfolio-card w-dyn-item">
-                            <a href="#" class="portfolio-card__wrap w-inline-block">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="blockchain-cofounder">
                                 <div class="card-shape outline w-embed">
                                     <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                                         <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="#fff"/>
@@ -675,7 +1141,7 @@
                             </a>
                         </div>
                         <div role="listitem" class="portfolio-card w-dyn-item">
-                            <a href="#" class="portfolio-card__wrap w-inline-block">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="investment-analyst">
                                 <div class="card-shape outline w-embed">
                                     <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                                         <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="#fff"/>
@@ -700,7 +1166,7 @@
                             </a>
                         </div>
                         <div role="listitem" class="portfolio-card w-dyn-item">
-                            <a href="#" class="portfolio-card__wrap w-inline-block">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="energy-trading">
                                 <div class="card-shape outline w-embed">
                                     <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                                         <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="#fff"/>
@@ -725,7 +1191,7 @@
                             </a>
                         </div>
                         <div role="listitem" class="portfolio-card w-dyn-item">
-                            <a href="#" class="portfolio-card__wrap w-inline-block">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="student-leadership">
                                 <div class="card-shape outline w-embed">
                                     <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                                         <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="#fff"/>
@@ -750,7 +1216,7 @@
                             </a>
                         </div>
                         <div role="listitem" class="portfolio-card w-dyn-item">
-                            <a href="#" class="portfolio-card__wrap w-inline-block">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="web3-innovation">
                                 <div class="card-shape outline w-embed">
                                     <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                                         <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="#fff"/>
@@ -911,6 +1377,171 @@
                                     <p class="portfolio-card__description o-60">Student governance, team building, hackathon victories, and strategic organizational development.</p>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="research" class="section section-research">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="inner">
+                <div class="section-title">
+                    <div class="text-captain mb-4">Academic Research</div>
+                    <h2 class="h2">Research Portfolio</h2>
+                </div>
+                <div id="w-node-research-section" class="portfolio w-dyn-list">
+                    <div role="list" class="portfolio-grid w-dyn-items">
+                        <div role="listitem" class="portfolio-card w-dyn-item">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="defi-governance">
+                                <div class="card-shape outline w-embed">
+                                    <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="rgba(255,255,255,0.3)"/>
+                                    </svg>
+                                </div>
+                                <div class="card-shape w-embed">
+                                    <svg width="100%" height="100%" viewBox="0 0 305 356" fill="#fff" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M305 0H0V356H265L305 316V0Z"/>
+                                    </svg>
+                                </div>
+                                <div class="portfolio-card__arrow">
+                                    <div class="icon-arrow w-embed">
+                                        <svg width="8" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.33386 2.4915L1.31311 7.51225L0.488281 6.68742L5.50845 1.66667H1.08386V0.5H7.50053V6.91667H6.33386V2.4915Z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="portfolio-card__content">
+                                    <h3 class="h3 portfolio-card__title">DeFi Governance Analysis</h3>
+                                    <p class="portfolio-card__description o-60">Comprehensive research on decentralized governance mechanisms, analyzing voting patterns and token holder behavior across major DeFi protocols.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div role="listitem" class="portfolio-card w-dyn-item">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="energy-derivatives">
+                                <div class="card-shape outline w-embed">
+                                    <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="rgba(255,255,255,0.3)"/>
+                                    </svg>
+                                </div>
+                                <div class="card-shape w-embed">
+                                    <svg width="100%" height="100%" viewBox="0 0 305 356" fill="#fff" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M305 0H0V356H265L305 316V0Z"/>
+                                    </svg>
+                                </div>
+                                <div class="portfolio-card__arrow">
+                                    <div class="icon-arrow w-embed">
+                                        <svg width="8" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.33386 2.4915L1.31311 7.51225L0.488281 6.68742L5.50845 1.66667H1.08386V0.5H7.50053V6.91667H6.33386V2.4915Z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="portfolio-card__content">
+                                    <h3 class="h3 portfolio-card__title">Energy Derivatives Modeling</h3>
+                                    <p class="portfolio-card__description o-60">Mathematical modeling of energy derivative pricing with focus on renewable energy certificates and carbon credit futures markets.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div role="listitem" class="portfolio-card w-dyn-item">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="algorithmic-trading">
+                                <div class="card-shape outline w-embed">
+                                    <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="rgba(255,255,255,0.3)"/>
+                                    </svg>
+                                </div>
+                                <div class="card-shape w-embed">
+                                    <svg width="100%" height="100%" viewBox="0 0 305 356" fill="#fff" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M305 0H0V356H265L305 316V0Z"/>
+                                    </svg>
+                                </div>
+                                <div class="portfolio-card__arrow">
+                                    <div class="icon-arrow w-embed">
+                                        <svg width="8" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.33386 2.4915L1.31311 7.51225L0.488281 6.68742L5.50845 1.66667H1.08386V0.5H7.50053V6.91667H6.33386V2.4915Z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="portfolio-card__content">
+                                    <h3 class="h3 portfolio-card__title">Algorithmic Trading Strategies</h3>
+                                    <p class="portfolio-card__description o-60">Development and backtesting of machine learning-driven trading algorithms for cryptocurrency and traditional energy commodity markets.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div role="listitem" class="portfolio-card w-dyn-item">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="behavioral-finance">
+                                <div class="card-shape outline w-embed">
+                                    <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="rgba(255,255,255,0.3)"/>
+                                    </svg>
+                                </div>
+                                <div class="card-shape w-embed">
+                                    <svg width="100%" height="100%" viewBox="0 0 305 356" fill="#fff" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M305 0H0V356H265L305 316V0Z"/>
+                                    </svg>
+                                </div>
+                                <div class="portfolio-card__arrow">
+                                    <div class="icon-arrow w-embed">
+                                        <svg width="8" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.33386 2.4915L1.31311 7.51225L0.488281 6.68742L5.50845 1.66667H1.08386V0.5H7.50053V6.91667H6.33386V2.4915Z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="portfolio-card__content">
+                                    <h3 class="h3 portfolio-card__title">Behavioral Finance Research</h3>
+                                    <p class="portfolio-card__description o-60">Empirical analysis of investor sentiment and market psychology in emerging crypto-asset markets using sentiment analysis and social media data.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div role="listitem" class="portfolio-card w-dyn-item">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="esg-metrics">
+                                <div class="card-shape outline w-embed">
+                                    <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="rgba(255,255,255,0.3)"/>
+                                    </svg>
+                                </div>
+                                <div class="card-shape w-embed">
+                                    <svg width="100%" height="100%" viewBox="0 0 305 356" fill="#fff" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M305 0H0V356H265L305 316V0Z"/>
+                                    </svg>
+                                </div>
+                                <div class="portfolio-card__arrow">
+                                    <div class="icon-arrow w-embed">
+                                        <svg width="8" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.33386 2.4915L1.31311 7.51225L0.488281 6.68742L5.50845 1.66667H1.08386V0.5H7.50053V6.91667H6.33386V2.4915Z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="portfolio-card__content">
+                                    <h3 class="h3 portfolio-card__title">ESG Investment Metrics</h3>
+                                    <p class="portfolio-card__description o-60">Quantitative framework for evaluating Environmental, Social, and Governance factors in investment decision-making processes.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div role="listitem" class="portfolio-card w-dyn-item">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="music-finance">
+                                <div class="card-shape outline w-embed">
+                                    <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="rgba(255,255,255,0.3)"/>
+                                    </svg>
+                                </div>
+                                <div class="card-shape w-embed">
+                                    <svg width="100%" height="100%" viewBox="0 0 305 356" fill="#fff" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                        <path d="M305 0H0V356H265L305 316V0Z"/>
+                                    </svg>
+                                </div>
+                                <div class="portfolio-card__arrow">
+                                    <div class="icon-arrow w-embed">
+                                        <svg width="8" viewBox="0 0 8 8" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.33386 2.4915L1.31311 7.51225L0.488281 6.68742L5.50845 1.66667H1.08386V0.5H7.50053V6.91667H6.33386V2.4915Z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="portfolio-card__content">
+                                    <h3 class="h3 portfolio-card__title">Music & Financial Pattern Analysis</h3>
+                                    <p class="portfolio-card__description o-60">Interdisciplinary study exploring mathematical patterns between musical composition structures and financial market behaviors.</p>
+                                </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1264,6 +1895,938 @@
 
             window.addEventListener("scroll", pageScroll);
             */
+        </script>
+
+        <!-- Modal Structure -->
+        <div class="modal-overlay" id="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-rune" id="modal-rune"></div>
+                    <button class="modal-close" id="modal-close">&times;</button>
+                    <h2 class="modal-title" id="modal-title"></h2>
+                    <p class="modal-subtitle" id="modal-subtitle"></p>
+                </div>
+                <div class="modal-body" id="modal-body"></div>
+            </div>
+        </div>
+
+        <script>
+            // Modal functionality
+            const modal = document.getElementById('modal-overlay');
+            const modalTitle = document.getElementById('modal-title');
+            const modalSubtitle = document.getElementById('modal-subtitle');
+            const modalBody = document.getElementById('modal-body');
+            const modalClose = document.getElementById('modal-close');
+            const modalRune = document.getElementById('modal-rune');
+
+            // Detailed Skill-Inspired Runes for Each Modal
+            const runes = {
+                'commercial-real-estate': `
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.8">
+                            <!-- Financial Analysis Inspired: Building Structure -->
+                            <path d="M16 4L28 10V22L16 28L4 22V10L16 4Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <path d="M16 8L24 12V20L16 24L8 20V12L16 8Z" stroke="currentColor" stroke-width="1" fill="none"/>
+                            <!-- Building Details -->
+                            <rect x="12" y="14" width="2" height="2" fill="currentColor" opacity="0.6"/>
+                            <rect x="18" y="14" width="2" height="2" fill="currentColor" opacity="0.6"/>
+                            <rect x="12" y="18" width="2" height="2" fill="currentColor" opacity="0.6"/>
+                            <rect x="18" y="18" width="2" height="2" fill="currentColor" opacity="0.6"/>
+                            <circle cx="16" cy="16" r="1.5" fill="currentColor"/>
+                            <!-- Connecting Lines -->
+                            <path d="M10 14L22 18M22 14L10 18" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                        </g>
+                    </svg>
+                `,
+                'blockchain-cofounder': `
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.8">
+                            <!-- Blockchain Technology Inspired: Connected Grid -->
+                            <rect x="4" y="4" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <rect x="13" y="4" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <rect x="22" y="4" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <rect x="4" y="13" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <rect x="13" y="13" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="currentColor" opacity="0.3"/>
+                            <rect x="22" y="13" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <rect x="4" y="22" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <rect x="13" y="22" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <rect x="22" y="22" width="6" height="6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <!-- Cross Connections -->
+                            <path d="M7 7L25 25M25 7L7 25" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+                            <!-- Central Node -->
+                            <circle cx="16" cy="16" r="2" fill="currentColor"/>
+                        </g>
+                    </svg>
+                `,
+                'investment-analyst': `
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.8">
+                            <!-- Financial Analysis Inspired: Diamond Pattern -->
+                            <path d="M16 3L27 8V24L16 29L5 24V8L16 3Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <path d="M16 7L23 10V22L16 25L9 22V10L16 7Z" stroke="currentColor" stroke-width="1" fill="none"/>
+                            <!-- Chart Lines -->
+                            <path d="M9 12L12 15L16 13L20 16L23 14" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <!-- Data Points -->
+                            <circle cx="12" cy="15" r="1" fill="currentColor"/>
+                            <circle cx="16" cy="13" r="1" fill="currentColor"/>
+                            <circle cx="20" cy="16" r="1" fill="currentColor"/>
+                            <!-- Center Analysis Point -->
+                            <circle cx="16" cy="16" r="1.5" fill="currentColor"/>
+                            <!-- Grid Reference -->
+                            <path d="M9 18L23 18M9 20L23 20" stroke="currentColor" stroke-width="0.3" opacity="0.4"/>
+                        </g>
+                    </svg>
+                `,
+                'energy-trading': `
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.8">
+                            <!-- Energy Markets Inspired: Hexagonal Flow -->
+                            <polygon points="16,3 26,8 26,24 16,29 6,24 6,8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <polygon points="16,8 22,12 22,20 16,24 10,20 10,12" stroke="currentColor" stroke-width="1" fill="none"/>
+                            <!-- Energy Flow Lines -->
+                            <path d="M16 6L16 26M10 10L22 22M22 10L10 22" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+                            <!-- Energy Nodes -->
+                            <circle cx="16" cy="10" r="1.5" fill="currentColor"/>
+                            <circle cx="16" cy="22" r="1.5" fill="currentColor"/>
+                            <circle cx="10" cy="16" r="1.5" fill="currentColor"/>
+                            <circle cx="22" cy="16" r="1.5" fill="currentColor"/>
+                            <!-- Central Trading Hub -->
+                            <circle cx="16" cy="16" r="2" fill="currentColor" opacity="0.3"/>
+                            <circle cx="16" cy="16" r="2" stroke="currentColor" stroke-width="1"/>
+                        </g>
+                    </svg>
+                `,
+                'student-leadership': `
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.8">
+                            <!-- Leadership & Innovation Inspired: Centered Coordination -->
+                            <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <path d="M16 4L16 28M4 16L28 16" stroke="currentColor" stroke-width="0.8" opacity="0.6"/>
+                            <!-- Leadership Points -->
+                            <circle cx="16" cy="8" r="1.5" fill="currentColor"/>
+                            <circle cx="16" cy="24" r="1.5" fill="currentColor"/>
+                            <circle cx="8" cy="16" r="1.5" fill="currentColor"/>
+                            <circle cx="24" cy="16" r="1.5" fill="currentColor"/>
+                            <!-- Central Authority -->
+                            <circle cx="16" cy="16" r="3" fill="currentColor" opacity="0.3"/>
+                            <circle cx="16" cy="16" r="3" stroke="currentColor" stroke-width="1"/>
+                            <!-- Secondary Connections -->
+                            <path d="M11 11L21 21M21 11L11 21" stroke="currentColor" stroke-width="0.5" opacity="0.4"/>
+                        </g>
+                    </svg>
+                `,
+                'web3-innovation': `
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.8">
+                            <!-- Innovation Inspired: Advanced Geometric -->
+                            <polygon points="16,2 28,8 28,24 16,30 4,24 4,8" stroke="currentColor" stroke-width="1.2" fill="none"/>
+                            <polygon points="16,6 24,10 24,22 16,26 8,22 8,10" stroke="currentColor" stroke-width="1" fill="none"/>
+                            <!-- Innovation Grid -->
+                            <rect x="12" y="12" width="8" height="8" stroke="currentColor" stroke-width="0.8" fill="currentColor" opacity="0.2"/>
+                            <!-- Tech Nodes -->
+                            <circle cx="10" cy="10" r="1" fill="currentColor"/>
+                            <circle cx="22" cy="10" r="1" fill="currentColor"/>
+                            <circle cx="10" cy="22" r="1" fill="currentColor"/>
+                            <circle cx="22" cy="22" r="1" fill="currentColor"/>
+                            <!-- Central Innovation Core -->
+                            <circle cx="16" cy="16" r="2" fill="currentColor"/>
+                            <!-- Connection Matrix -->
+                            <path d="M10 10L22 22M22 10L10 22" stroke="currentColor" stroke-width="0.6" opacity="0.5"/>
+                        </g>
+                    </svg>
+                `
+            };
+
+            // Modal data
+            const modalData = {
+                'commercial-real-estate': {
+                    title: 'Commercial Real Estate Analytics',
+                    subtitle: 'Investors Alliance - Financial Analyst Intern',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">▲</span>
+                                Project Overview
+                            </div>
+                            <p class="modal-text">Developed comprehensive pro forma financial models and cash flow forecasting systems for commercial real estate investments, while leading a complete database infrastructure redesign.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Impact:</strong> Streamlined property evaluation processes, reducing analysis time by 40% while improving accuracy of investment projections.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">◆</span>
+                                Key Responsibilities
+                            </div>
+                            <ul class="modal-list">
+                                <li>Built DCF models for property valuations ranging from $2M-$50M</li>
+                                <li>Analyzed market comparables and cap rate trends across Texas markets</li>
+                                <li>Redesigned SQL database architecture for portfolio management</li>
+                                <li>Created automated reporting dashboards for investor communications</li>
+                                <li>Conducted sensitivity analysis on key investment assumptions</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">15+</span>
+                                <span class="modal-stat-label">Properties Analyzed</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">$75M</span>
+                                <span class="modal-stat-label">Total Asset Value</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">40%</span>
+                                <span class="modal-stat-label">Efficiency Improvement</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7 1L12 4V10L7 13L2 10V4L7 1Z" stroke="currentColor" stroke-width="1" fill="none"/>
+                                        <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                Technologies & Tools
+                            </div>
+                            <ul class="modal-list">
+                                <li>Excel VBA for automated financial modeling</li>
+                                <li>SQL Server for database management</li>
+                                <li>ARGUS Enterprise for commercial real estate analysis</li>
+                                <li>Python for data analysis and visualization</li>
+                                <li>Power BI for executive dashboards</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'blockchain-cofounder': {
+                    title: 'Blockchain Co-Founder',
+                    subtitle: 'Bittensor Protocol Project',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2" y="2" width="3" height="3" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                                        <rect x="5.5" y="2" width="3" height="3" stroke="currentColor" stroke-width="0.8" fill="currentColor" opacity="0.3"/>
+                                        <rect x="9" y="2" width="3" height="3" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                                        <path d="M3.5 5L10.5 9" stroke="currentColor" stroke-width="0.8"/>
+                                        <circle cx="7" cy="7" r="1" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                Project Innovation
+                            </div>
+                            <p class="modal-text">Co-founded and architected an innovative blockchain project built on the Bittensor protocol, focusing on decentralized AI and machine learning networks.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Achievement:</strong> Secured $10,000 DormDAO grant for decentralized governance initiatives and technical development.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">●</span>
+                                Technical Leadership
+                            </div>
+                            <ul class="modal-list">
+                                <li>Designed tokenomics and governance mechanisms</li>
+                                <li>Developed smart contracts for decentralized operations</li>
+                                <li>Led technical architecture decisions for scalability</li>
+                                <li>Implemented machine learning incentive structures</li>
+                                <li>Created community governance frameworks</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">$10K</span>
+                                <span class="modal-stat-label">Grant Secured</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">500+</span>
+                                <span class="modal-stat-label">Community Members</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">3</span>
+                                <span class="modal-stat-label">Co-founders</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">▲</span>
+                                Technical Stack
+                            </div>
+                            <ul class="modal-list">
+                                <li>Bittensor protocol integration</li>
+                                <li>Solidity smart contract development</li>
+                                <li>Python for ML model implementation</li>
+                                <li>Docker for containerized deployment</li>
+                                <li>IPFS for decentralized storage</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'investment-analyst': {
+                    title: 'Investment Analyst',
+                    subtitle: 'Texas Blockchain - Research & Analysis',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">◆</span>
+                                Investment Research
+                            </div>
+                            <p class="modal-text">Conducted comprehensive due diligence on emerging cryptoasset projects, managing portfolio risk assessment and investment strategy for $120K AUM.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Portfolio Performance:</strong> Delivered 25% annual returns while maintaining risk-adjusted metrics below industry benchmarks.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">●</span>
+                                Analysis Methodology
+                            </div>
+                            <ul class="modal-list">
+                                <li>Fundamental analysis of blockchain protocols and tokenomics</li>
+                                <li>Technical analysis using quantitative trading indicators</li>
+                                <li>Risk assessment modeling with Monte Carlo simulations</li>
+                                <li>Market sentiment analysis using on-chain data</li>
+                                <li>Competitive landscape mapping and positioning</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">10+</span>
+                                <span class="modal-stat-label">Projects Analyzed</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">$120K</span>
+                                <span class="modal-stat-label">AUM Managed</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">25%</span>
+                                <span class="modal-stat-label">Annual Returns</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <polygon points="7,1 12,4 12,10 7,13 2,10 2,4" stroke="currentColor" stroke-width="1" fill="none"/>
+                                        <polygon points="7,4 10,6 10,8 7,10 4,8 4,6" stroke="currentColor" stroke-width="0.8" fill="none"/>
+                                        <circle cx="7" cy="7" r="1" fill="currentColor"/>
+                                    </svg>
+                                </span>
+                                Research Tools
+                            </div>
+                            <ul class="modal-list">
+                                <li>Python for quantitative analysis and backtesting</li>
+                                <li>Bloomberg Terminal for market data</li>
+                                <li>DeFi Pulse and DeFiLlama for protocol metrics</li>
+                                <li>Messari and CoinMetrics for on-chain analysis</li>
+                                <li>TradingView for technical analysis</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'energy-trading': {
+                    title: 'Energy Trading Specialist',
+                    subtitle: 'UT Austin Energy Trading Program',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">▲</span>
+                                Program Overview
+                            </div>
+                            <p class="modal-text">Advanced training in energy commodities analysis and algorithmic trading strategies through UT's prestigious Energy Trading cohort program.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Specialization:</strong> Focus on natural gas, crude oil, and renewable energy certificate (REC) markets with emphasis on quantitative trading strategies.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">◆</span>
+                                Trading Strategies
+                            </div>
+                            <ul class="modal-list">
+                                <li>Statistical arbitrage in energy spreads</li>
+                                <li>Weather derivative modeling for energy demand</li>
+                                <li>Storage optimization algorithms</li>
+                                <li>Renewable energy forecasting models</li>
+                                <li>Risk management through options strategies</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">50+</span>
+                                <span class="modal-stat-label">Trading Simulations</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">15%</span>
+                                <span class="modal-stat-label">Portfolio Alpha</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">5</span>
+                                <span class="modal-stat-label">Commodity Markets</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">●</span>
+                                Technical Implementation
+                            </div>
+                            <ul class="modal-list">
+                                <li>MATLAB for quantitative modeling</li>
+                                <li>R for statistical analysis and backtesting</li>
+                                <li>Bloomberg API for real-time market data</li>
+                                <li>ETRM systems for portfolio management</li>
+                                <li>Monte Carlo simulation for risk assessment</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'student-leadership': {
+                    title: 'Student Government Representative',
+                    subtitle: 'University of Texas at Austin',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">▲</span>
+                                Electoral Achievement
+                            </div>
+                            <p class="modal-text">Elected as university-wide representative for 52,000+ UT Austin students through competitive election with 4,000+ voter turnout, demonstrating strong leadership and community trust.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Representation:</strong> Advocated for student interests across academic policy, campus infrastructure, and student life initiatives.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1" fill="none"/><path d="M4 5L10 5M4 7L10 7M4 9L8 9" stroke="currentColor" stroke-width="0.8"/></svg></span>
+                                Key Initiatives
+                            </div>
+                            <ul class="modal-list">
+                                <li>Led tuition transparency and financial aid advocacy</li>
+                                <li>Championed mental health resource expansion</li>
+                                <li>Coordinated campus sustainability initiatives</li>
+                                <li>Facilitated interdisciplinary academic collaboration</li>
+                                <li>Modernized student technology infrastructure</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">52K+</span>
+                                <span class="modal-stat-label">Students Represented</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">4K+</span>
+                                <span class="modal-stat-label">Election Votes</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">12</span>
+                                <span class="modal-stat-label">Policy Changes</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1" fill="none"/><path d="M4 7L10 7M7 4L7 10" stroke="currentColor" stroke-width="0.8"/><circle cx="4" cy="7" r="1" fill="currentColor"/><circle cx="10" cy="7" r="1" fill="currentColor"/></svg></span>
+                                Leadership Skills
+                            </div>
+                            <ul class="modal-list">
+                                <li>Public speaking and debate facilitation</li>
+                                <li>Stakeholder relationship management</li>
+                                <li>Policy research and proposal development</li>
+                                <li>Coalition building across diverse student groups</li>
+                                <li>Budget analysis and resource allocation</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'web3-innovation': {
+                    title: 'Web3 Innovation Champion',
+                    subtitle: 'OnionDAO Hackathon Winner',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="7,1 9,5 13,5 10,8 11,12 7,10 3,12 4,8 1,5 5,5" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg></span>
+                                Hackathon Victory
+                            </div>
+                            <p class="modal-text">Achieved 1st Place at OnionDAO Hackathon for developing a revolutionary Web3 payroll management solution leveraging utility token economics and decentralized governance.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Innovation:</strong> Created the first fully decentralized payroll system with automated token vesting and cross-chain compatibility.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="6" r="3" stroke="currentColor" stroke-width="1" fill="none"/><path d="M5 9L9 9M5.5 10.5L8.5 10.5M6 12L8 12" stroke="currentColor" stroke-width="0.8"/><circle cx="7" cy="6" r="1" fill="currentColor"/></svg></span>
+                                Technical Innovation
+                            </div>
+                            <ul class="modal-list">
+                                <li>Smart contract automation for payroll distribution</li>
+                                <li>Utility token economics for employee incentives</li>
+                                <li>Cross-chain bridge integration</li>
+                                <li>Decentralized identity verification</li>
+                                <li>Transparent governance voting mechanisms</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">1st</span>
+                                <span class="modal-stat-label">Place Winner</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">72</span>
+                                <span class="modal-stat-label">Hours Built</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">50+</span>
+                                <span class="modal-stat-label">Competing Teams</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1" fill="none"/><path d="M7 1L7 3M7 11L7 13M13 7L11 7M3 7L1 7" stroke="currentColor" stroke-width="0.8"/><circle cx="7" cy="7" r="1" fill="currentColor"/></svg></span>
+                                Technology Stack
+                            </div>
+                            <ul class="modal-list">
+                                <li>Solidity for smart contract development</li>
+                                <li>React.js for frontend interface</li>
+                                <li>Web3.js for blockchain integration</li>
+                                <li>IPFS for decentralized file storage</li>
+                                <li>Chainlink oracles for external data feeds</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                // Research Modal Data
+                'defi-governance': {
+                    title: 'DeFi Governance Analysis',
+                    subtitle: 'Academic Research Project',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">🔬</span>
+                                Research Objective
+                            </div>
+                            <p class="modal-text">Comprehensive analysis of decentralized governance mechanisms across major DeFi protocols, examining voting patterns, token holder behavior, and governance efficiency metrics.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Key Finding:</strong> Identified critical governance centralization patterns in supposedly decentralized protocols, with implications for true decentralization.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">●</span>
+                                Methodology
+                            </div>
+                            <ul class="modal-list">
+                                <li>On-chain data analysis of 15+ DeFi protocols</li>
+                                <li>Voting pattern correlation analysis</li>
+                                <li>Token distribution Gini coefficient calculations</li>
+                                <li>Governance proposal outcome prediction modeling</li>
+                                <li>Stakeholder interview and survey research</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">15+</span>
+                                <span class="modal-stat-label">Protocols Studied</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">10K+</span>
+                                <span class="modal-stat-label">Governance Votes</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">85%</span>
+                                <span class="modal-stat-label">Prediction Accuracy</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="7,2 11,5 11,9 7,12 3,9 3,5" stroke="currentColor" stroke-width="1" fill="none"/><polygon points="7,4 9,6 9,8 7,10 5,8 5,6" stroke="currentColor" stroke-width="0.8" fill="currentColor" opacity="0.2"/><circle cx="7" cy="7" r="1" fill="currentColor"/></svg></span>
+                                Tools & Technologies
+                            </div>
+                            <ul class="modal-list">
+                                <li>Python for data analysis and machine learning</li>
+                                <li>Web3.py for blockchain data extraction</li>
+                                <li>Pandas and NumPy for statistical analysis</li>
+                                <li>NetworkX for governance network analysis</li>
+                                <li>Jupyter notebooks for research documentation</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'energy-derivatives': {
+                    title: 'Energy Derivatives Modeling',
+                    subtitle: 'Mathematical Finance Research',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1L5 7L7 7L6 13L9 7L7 7L8 1Z" stroke="currentColor" stroke-width="1" fill="currentColor" opacity="0.3"/><circle cx="7" cy="7" r="1" fill="currentColor"/></svg></span>
+                                Research Focus
+                            </div>
+                            <p class="modal-text">Advanced mathematical modeling of energy derivative pricing with specific focus on renewable energy certificates (RECs) and carbon credit futures markets.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Innovation:</strong> Developed novel pricing model for REC derivatives incorporating weather volatility and regulatory policy uncertainty.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">🧮</span>
+                                Mathematical Models
+                            </div>
+                            <ul class="modal-list">
+                                <li>Stochastic differential equations for price dynamics</li>
+                                <li>Monte Carlo simulation for option pricing</li>
+                                <li>Jump-diffusion models for extreme weather events</li>
+                                <li>Regime-switching models for policy changes</li>
+                                <li>Copula functions for correlation modeling</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">12</span>
+                                <span class="modal-stat-label">Pricing Models</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">95%</span>
+                                <span class="modal-stat-label">Model Accuracy</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">5</span>
+                                <span class="modal-stat-label">Energy Markets</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">💻</span>
+                                Implementation
+                            </div>
+                            <ul class="modal-list">
+                                <li>MATLAB for numerical computation</li>
+                                <li>R for statistical modeling and testing</li>
+                                <li>QuantLib for derivative pricing</li>
+                                <li>C++ for high-performance computing</li>
+                                <li>LaTeX for research documentation</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'algorithmic-trading': {
+                    title: 'Algorithmic Trading Strategies',
+                    subtitle: 'Machine Learning Research',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">🤖</span>
+                                Research Overview
+                            </div>
+                            <p class="modal-text">Development and backtesting of machine learning-driven trading algorithms for cryptocurrency and traditional energy commodity markets, focusing on high-frequency and medium-frequency strategies.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Performance:</strong> Achieved 23% annual returns with 0.85 Sharpe ratio across diversified energy and crypto portfolios.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">🧠</span>
+                                ML Algorithms
+                            </div>
+                            <ul class="modal-list">
+                                <li>LSTM networks for time series prediction</li>
+                                <li>Random Forest for feature importance analysis</li>
+                                <li>Support Vector Machines for classification</li>
+                                <li>Reinforcement Learning for strategy optimization</li>
+                                <li>Ensemble methods for robust predictions</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">23%</span>
+                                <span class="modal-stat-label">Annual Returns</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">0.85</span>
+                                <span class="modal-stat-label">Sharpe Ratio</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">8</span>
+                                <span class="modal-stat-label">Trading Strategies</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1" fill="none"/><path d="M6 6L8 8M8 6L6 8" stroke="currentColor" stroke-width="0.8"/><circle cx="7" cy="7" r="1" fill="currentColor"/></svg></span>
+                                Technical Stack
+                            </div>
+                            <ul class="modal-list">
+                                <li>Python with scikit-learn and TensorFlow</li>
+                                <li>Apache Kafka for real-time data streaming</li>
+                                <li>Redis for low-latency data caching</li>
+                                <li>PostgreSQL for historical data storage</li>
+                                <li>Docker for strategy deployment</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'behavioral-finance': {
+                    title: 'Behavioral Finance Research',
+                    subtitle: 'Market Psychology Analysis',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">🧠</span>
+                                Research Question
+                            </div>
+                            <p class="modal-text">Empirical analysis of investor sentiment and market psychology in emerging crypto-asset markets using sentiment analysis of social media data and traditional behavioral finance theories.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Discovery:</strong> Found strong correlation (0.73) between social media sentiment and short-term price movements in crypto markets, stronger than in traditional markets.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">📱</span>
+                                Data Sources
+                            </div>
+                            <ul class="modal-list">
+                                <li>Twitter API for real-time sentiment data</li>
+                                <li>Reddit posts from cryptocurrency communities</li>
+                                <li>Discord server message analysis</li>
+                                <li>Traditional financial news sentiment</li>
+                                <li>Google Trends correlation analysis</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">2M+</span>
+                                <span class="modal-stat-label">Social Posts</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">0.73</span>
+                                <span class="modal-stat-label">Correlation</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">50+</span>
+                                <span class="modal-stat-label">Crypto Assets</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="7,2 11,5 11,9 7,12 3,9 3,5" stroke="currentColor" stroke-width="1" fill="none"/><polygon points="7,4 9,6 9,8 7,10 5,8 5,6" stroke="currentColor" stroke-width="0.8" fill="currentColor" opacity="0.2"/><circle cx="7" cy="7" r="1" fill="currentColor"/></svg></span>
+                                Analysis Tools
+                            </div>
+                            <ul class="modal-list">
+                                <li>Natural Language Processing with spaCy</li>
+                                <li>VADER sentiment analysis</li>
+                                <li>Apache Spark for big data processing</li>
+                                <li>Matplotlib and Seaborn for visualization</li>
+                                <li>Statsmodels for econometric analysis</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'esg-metrics': {
+                    title: 'ESG Investment Metrics',
+                    subtitle: 'Sustainable Finance Framework',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">🌱</span>
+                                Framework Development
+                            </div>
+                            <p class="modal-text">Quantitative framework for evaluating Environmental, Social, and Governance factors in investment decision-making processes, with focus on materiality and financial impact assessment.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Impact:</strong> Framework adopted by 3 investment firms for ESG screening, managing over $500M in sustainable investments.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">📏</span>
+                                Metrics Development
+                            </div>
+                            <ul class="modal-list">
+                                <li>Carbon intensity scoring methodology</li>
+                                <li>Social impact measurement frameworks</li>
+                                <li>Governance quality assessment rubrics</li>
+                                <li>ESG materiality mapping by sector</li>
+                                <li>Financial performance correlation analysis</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">150+</span>
+                                <span class="modal-stat-label">Companies Analyzed</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">3</span>
+                                <span class="modal-stat-label">Firms Adopted</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">$500M</span>
+                                <span class="modal-stat-label">AUM Impact</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1" fill="none"/><path d="M6 6L8 8M8 6L6 8" stroke="currentColor" stroke-width="0.8"/><circle cx="7" cy="7" r="1" fill="currentColor"/></svg></span>
+                                Research Tools
+                            </div>
+                            <ul class="modal-list">
+                                <li>Bloomberg ESG data integration</li>
+                                <li>SASB materiality mapping</li>
+                                <li>TCFD framework implementation</li>
+                                <li>Python for data processing and analysis</li>
+                                <li>Tableau for ESG dashboard creation</li>
+                            </ul>
+                        </div>
+                    `
+                },
+                'music-finance': {
+                    title: 'Music & Financial Pattern Analysis',
+                    subtitle: 'Interdisciplinary Research',
+                    content: `
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">🎵</span>
+                                Research Innovation
+                            </div>
+                            <p class="modal-text">Interdisciplinary study exploring mathematical patterns between musical composition structures and financial market behaviors, bridging performance arts and quantitative finance.</p>
+                        </div>
+                        
+                        <div class="modal-highlight">
+                            <strong>Breakthrough:</strong> Discovered fractal similarities between Bach's compositional patterns and high-frequency trading algorithm structures.
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="3.5" stroke="currentColor" stroke-width="1" fill="none"/><path d="M9 9L12 12" stroke="currentColor" stroke-width="1"/><circle cx="6" cy="6" r="1.5" fill="currentColor" opacity="0.3"/></svg></span>
+                                Pattern Analysis
+                            </div>
+                            <ul class="modal-list">
+                                <li>Fourier analysis of musical and price time series</li>
+                                <li>Harmonic structure correlation with market cycles</li>
+                                <li>Rhythm pattern similarity to trading volume</li>
+                                <li>Compositional tension and market volatility</li>
+                                <li>Improvisation patterns and algorithmic adaptation</li>
+                            </ul>
+                        </div>
+
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">500+</span>
+                                <span class="modal-stat-label">Musical Pieces</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">15</span>
+                                <span class="modal-stat-label">Market Indicators</span>
+                            </div>
+                            <div class="modal-stat">
+                                <span class="modal-stat-number">0.65</span>
+                                <span class="modal-stat-label">Pattern Correlation</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-section">
+                            <div class="modal-section-title">
+                                <span class="modal-section-icon">🎼</span>
+                                Analysis Tools
+                            </div>
+                            <ul class="modal-list">
+                                <li>Music21 for musical analysis</li>
+                                <li>NumPy for signal processing</li>
+                                <li>SciPy for statistical analysis</li>
+                                <li>Librosa for audio feature extraction</li>
+                                <li>Plotly for interactive visualizations</li>
+                            </ul>
+                        </div>
+                    `
+                }
+            };
+
+            // Modal event listeners
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('[data-modal]')) {
+                    e.preventDefault();
+                    const modalId = e.target.closest('[data-modal]').getAttribute('data-modal');
+                    openModal(modalId);
+                }
+            });
+
+            modalClose.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+
+            function openModal(modalId) {
+                const data = modalData[modalId];
+                if (data) {
+                    modalTitle.textContent = data.title;
+                    modalSubtitle.textContent = data.subtitle;
+                    modalBody.innerHTML = data.content;
+                    
+                    // Set the appropriate rune for this modal
+                    if (runes[modalId]) {
+                        modalRune.innerHTML = runes[modalId];
+                        modalRune.style.color = 'var(--black)';
+                    } else {
+                        modalRune.innerHTML = '';
+                    }
+                    
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function closeModal() {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
         </script>
     </body>
 </html>
