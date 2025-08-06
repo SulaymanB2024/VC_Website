@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Future is Now - Sulayman Bowles</title>
+    
+    <!-- External CSS Files -->
+    <link href="./Untitled-1.css" rel="stylesheet" type="text/css"/>
+    <link href="./css/home-styles.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
+    
+    <!-- External JavaScript Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+</head>
+<body>
+    <!-- Invisible div to ensure scrollable content -->
+    <div class="scroll-content"></div>
+    
+    <div class="grid-overlay"></div>
+    
+    <!-- Header matching existing site -->
+    <div class="header w-nav">
+        <div class="inner hdr__inner w-container">
+            <a href="/" class="logo w-nav-brand">
+                <div class="logo-minimal">Sulayman Bowles</div>
+            </a>
+            <nav role="navigation" class="nav w-nav-menu">
+                <a href="./index.html#portfolio" class="nav__link w-nav-link">Experience</a>
+                <a href="./index.html#team" class="nav__link w-nav-link">About</a>
+                <a href="./research.html" class="nav__link w-nav-link">Research</a>
+                <a href="./index.html#offices" class="nav__link w-nav-link">Contact</a>
+            </nav>
+            <div class="nav-btn w-nav-button">
+                <div class="w-icon-nav-menu"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content with slider -->
+    <div class="main-text-container">
+        <div class="main-text-swiper swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="slide-text" id="slide1Text">
+                        <!-- "THE FUTURE IS NOW" will be typed here automatically -->
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slide-text" id="slide2Text">
+                        <!-- "INNOVATION DRIVES CHANGE" will be typed here on scroll -->
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div class="slide-text" id="slide3Text">
+                        <!-- "CAPITAL MEETS TECHNOLOGY" will be typed here on scroll -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Investment CTA -->
+    <div class="investment-cta" id="investmentCta"></div>
+    
+    <div class="orderbook" id="orderbook">
+        <div class="orderbook-header">Live Market</div>
+        <div class="connecting">Connecting to markets...</div>
+    </div>
+    
+    <div class="news-ticker" id="newsTicker">
+        <div class="news-header">Latest News</div>
+        <div class="news-content" id="newsContent">
+            <!-- News items will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">↓ Scroll to explore</div>
+
+    <!-- 3D Globe -->
+    <div class="globe-container">
+        <canvas class="globe-canvas" id="globeCanvas"></canvas>
+    </div>
+
+    <!-- FRED Insight Section -->
+    <div class="fred-insight">
+        <div class="fred-header">
+            <div class="fred-label">Economic Insights</div>
+            <div class="fred-title">FRED Economic Data</div>
+        </div>
+        <div class="fred-grid">
+            <!-- GDP Trend Panel -->
+            <div class="gdp-panel">
+                <div class="chart-title">GDP Growth Rate</div>
+                <div class="gdp-chart" id="gdpChart"></div>
+                <div class="gdp-text">
+                    <ul class="chart-bullets">
+                        <li>Quarterly data, seasonally adjusted</li>
+                        <li>Source: FRED, Federal Reserve Bank of St. Louis</li>
+                    </ul>
+                    <div class="chart-source">Source: FRED, Federal Reserve Bank of St. Louis</div>
+                </div>
+            </div>
+
+            <!-- Inflation Bar Strip -->
+            <div class="inflation-strip">
+                <div class="inflation-chart" id="inflationChart"></div>
+                <div class="inflation-caption">Inflation Rate (CPI)</div>
+            </div>
+
+            <!-- Yield Curve Spread -->
+            <div class="yield-curve">
+                <div class="chart-title">Yield Curve Spread</div>
+                <div class="yield-chart" id="yieldChart"></div>
+                <div class="yield-text">10-Year - 2-Year Treasury Yield Spread</div>
+            </div>
+
+            <!-- Austin Spotlight Card -->
+            <div class="austin-card">
+                <div class="austin-kpi">
+                    <div class="austin-kpi-value" id="austinKpiValue">3.8%</div>
+                    <div class="austin-kpi-label">Unemployment Rate</div>
+                </div>
+                <div class="austin-chart" id="austinChart"></div>
+            </div>
+
+            <!-- Metric Ticker Row -->
+            <div class="metrics-row">
+                <div class="metric-box">
+                    <div class="metric-value" id="metric1Value">2.5%</div>
+                    <div class="metric-label">GDP Growth</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value" id="metric2Value">1.8%</div>
+                    <div class="metric-label">Inflation</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value" id="metric3Value">0.25%</div>
+                    <div class="metric-label">Fed Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call-to-Action Footer -->
+        <div class="fred-cta">
+            <a href="#explore" class="fred-cta-link">Explore More Insights</a>
+        </div>
+
+        <!-- Background Globe - Ultra Faint -->
+        <div class="fred-globe-bg"></div>
+    </div>
+
+    <!-- Modular JavaScript Files -->
+    <script src="./js/config.js"></script>
+    <script src="./js/text-slider.js"></script>
+    <script src="./js/news-api.js"></script>
+    <script src="./js/orderbook.js"></script>
+    <script src="./js/globe.js"></script>
+    <script src="./js/fred-data.js"></script>
+    <script src="./js/main.js"></script>
+    
+    <!-- Enhanced automated experience handler with click-to-begin and reverse animations -->
+    <script>
+        // Enhanced automated experience handler with click-to-begin and reverse animations
+        class HomeExperienceHandler {
+            constructor() {
+                this.currentStep = 0;
+                this.totalSteps = 4;
+                this.isExperienceActive = false;
+                this.hasStarted = false;
+                this.direction = 'forward';
+                this.isInFredSection = false;
+                this.clickListener = null;
+            }
+            
+            init() {
+                console.log('🎬 Initializing automated experience handler...');
+                
+                // Wait for globe to be ready
+                setTimeout(() => {
+                    if (window.GlobeManager && window.GlobeManager.scene) {
+                        console.log('🌍 Globe ready - experience handler initialized');
+                        this.setupClickToBegin();
+                        this.setupFredSectionDetection();
+                    } else {
+                        console.warn('⚠️ Globe not ready, retrying...');
+                        setTimeout(() => this.init(), 500);
+                    }
+                }, 1000);
+            }
+            
+            setupClickToBegin() {
+                // Create click-to-begin indicator
+                this.createClickIndicator();
+                
+                // CRITICAL FIX: Only listen for clicks on the specific button, not the entire page
+                this.clickListener = (event) => {
+                    // ONLY respond to clicks on the begin experience button
+                    const beginButton = document.getElementById('clickToBeginIndicator');
+                    if (event.target === beginButton || beginButton?.contains(event.target)) {
+                        if (!this.hasStarted) {
+                            this.hasStarted = true;
+                            this.startAutomatedExperience();
+                            this.removeClickIndicator();
+                            document.removeEventListener('click', this.clickListener);
+                        }
+                    }
+                };
+                
+                document.addEventListener('click', this.clickListener);
+                console.log('👆 Click-to-begin system active - button only');
+            }
+            
+            createClickIndicator() {
+                const indicator = document.createElement('div');
+                indicator.id = 'clickToBeginIndicator';
+                indicator.style.cssText = `
+                    position: fixed;
+                    bottom: 40px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(255, 255, 255, 0.08);
+                    border: 1px solid rgba(255, 255, 255, 0.25);
+                    border-radius: 30px;
+                    padding: 12px 24px;
+                    font-family: 'Maison Neue Mono', monospace;
+                    font-size: 13px;
+                    color: rgba(255, 255, 255, 0.85);
+                    z-index: 1002;
+                    backdrop-filter: blur(15px);
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    animation: subtlePulse 3s infinite ease-in-out;
+                    pointer-events: auto;
+                `;
+                indicator.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 6px; height: 6px; background: rgba(255,255,255,0.8); border-radius: 50%; animation: pulse 2s infinite;"></div>
+                        Begin experience
+                    </div>
+                `;
+                
+                // Add hover effect
+                indicator.addEventListener('mouseenter', () => {
+                    indicator.style.background = 'rgba(255, 255, 255, 0.12)';
+                    indicator.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+                    indicator.style.transform = 'translateX(-50%) translateY(-2px)';
+                });
+                
+                indicator.addEventListener('mouseleave', () => {
+                    indicator.style.background = 'rgba(255, 255, 255, 0.08)';
+                    indicator.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+                    indicator.style.transform = 'translateX(-50%) translateY(0)';
+                });
+                
+                document.body.appendChild(indicator);
+                
+                // Add CSS animations
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes subtlePulse {
+                        0%, 100% { 
+                            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+                            opacity: 0.9;
+                        }
+                        50% { 
+                            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.25);
+                            opacity: 1;
+                        }
+                    }
+                    @keyframes pulse {
+                        0%, 100% { opacity: 0.8; transform: scale(1); }
+                        50% { opacity: 0.4; transform: scale(1.3); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            removeClickIndicator() {
+                const indicator = document.getElementById('clickToBeginIndicator');
+                if (indicator) {
+                    indicator.style.opacity = '0';
+                    indicator.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                    setTimeout(() => {
+                        if (indicator.parentNode) {
+                            indicator.parentNode.removeChild(indicator);
+                        }
+                    }, 300);
+                }
+            }
+            
+            startAutomatedExperience() {
+                console.log('🎬 Starting automated experience sequence');
+                this.isExperienceActive = true;
+                this.direction = 'forward';
+                this.currentStep = 0;
+                
+                // Show progress indicator
+                this.createProgressIndicator();
+                
+                // Start the sequence
+                this.executeStep(0);
+            }
+            
+            createProgressIndicator() {
+                const indicator = document.createElement('div');
+                indicator.id = 'experienceProgress';
+                indicator.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0, 0, 0, 0.8);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 25px;
+                    padding: 12px 20px;
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 12px;
+                    color: rgba(255, 255, 255, 0.8);
+                    z-index: 1001;
+                    backdrop-filter: blur(10px);
+                    opacity: 0;
+                    transition: opacity 0.5s ease;
+                `;
+                
+                document.body.appendChild(indicator);
+                
+                setTimeout(() => {
+                    indicator.style.opacity = '1';
+                }, 100);
+            }
+            
+            updateProgress(step, total, status) {
+                const indicator = document.getElementById('experienceProgress');
+                if (indicator) {
+                    const progress = Math.round((step / total) * 100);
+                    indicator.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 100px; height: 2px; background: rgba(255,255,255,0.2); border-radius: 1px; overflow: hidden;">
+                                <div style="width: ${progress}%; height: 100%; background: #fff; transition: width 0.5s ease;"></div>
+                            </div>
+                            <span>${status}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            executeStep(step) {
+                const stepNames = ['Introduction', 'Investment Focus', 'Innovation Vision', 'Capital Strategy', 'Data Analytics'];
+                this.updateProgress(step, this.totalSteps, stepNames[step]);
+                
+                console.log(`⏩ Executing automated step ${step + 1}: ${stepNames[step]}`);
+                
+                switch (step) {
+                    case 0:
+                        // Step 0: "THE FUTURE IS NOW" + CTA with ticker rotation immediately
+                        if (window.GlobeManager) {
+                            window.GlobeManager.updateGlobeState(0); // Global view
+                        }
+                        
+                        // Show CTA and start ticker rotation immediately in first section
+                        setTimeout(() => {
+                            if (window.TextSliderManager) {
+                                window.TextSliderManager.showInvestmentCTA();
+                            }
+                        }, 2000); // Show CTA after 2 seconds of typing
+                        
+                        this.scheduleNextStep(6000); // Extended time to enjoy ticker rotation
+                        break;
+                        
+                    case 1:
+                        // Step 1: Show CTA + Texas focus
+                        if (window.TextSliderManager) {
+                            window.TextSliderManager.showInvestmentCTA();
+                        }
+                        if (window.GlobeManager) {
+                            window.GlobeManager.updateGlobeState(2); // Texas focus
+                        }
+                        this.scheduleNextStep(4000); // Match updated text slider duration
+                        break;
+                        
+                    case 2:
+                        // Step 2: "INNOVATION" + America focus
+                        if (window.TextSliderManager) {
+                            window.TextSliderManager.smoothSwitchToSlide(1, 'forward');
+                            window.TextSliderManager.smoothHideCTA();
+                        }
+                        if (window.GlobeManager) {
+                            window.GlobeManager.updateGlobeState(1); // America focus
+                        }
+                        this.scheduleNextStep(6000); // Match updated text slider duration
+                        break;
+                        
+                    case 3:
+                        // Step 3: "CAPITAL" + Texas focus
+                        if (window.TextSliderManager) {
+                            window.TextSliderManager.smoothSwitchToSlide(2, 'forward');
+                        }
+                        if (window.GlobeManager) {
+                            window.GlobeManager.updateGlobeState(2); // Texas focus
+                        }
+                        this.scheduleNextStep(5000); // Match updated text slider duration
+                        break;
+                        
+                    case 4:
+                        // Step 4: FRED section - CRITICAL FIX: Proper FRED section transition
+                        console.log('🎯 Final step - transitioning to FRED section');
+                        
+                        // Hide all homepage elements completely
+                        const homepageElements = [
+                            '.main-text-container',
+                            '.investment-cta', 
+                            '.orderbook',
+                            '.news-ticker',
+                            '.scroll-indicator'
+                        ];
+                        
+                        homepageElements.forEach(selector => {
+                            const element = document.querySelector(selector);
+                            if (element) {
+                                element.style.transition = 'opacity 1s ease-out';
+                                element.style.opacity = '0';
+                                element.style.pointerEvents = 'none';
+                            }
+                        });
+                        
+                        // Fade out globe significantly
+                        const globeContainer = document.querySelector('.globe-container');
+                        if (globeContainer) {
+                            globeContainer.style.transition = 'opacity 1.5s ease-out';
+                            globeContainer.style.opacity = '0.05';
+                        }
+                        
+                        // CRITICAL FIX: Show FRED section without trying to scroll to it
+                        setTimeout(() => {
+                            if (window.TextSliderManager) {
+                                window.TextSliderManager.showFREDSection();
+                            }
+                            
+                            // Mark that we're in FRED section immediately
+                            this.isInFredSection = true;
+                            this.setupReverseMode();
+                            this.removeProgressIndicator();
+                        }, 1200);
+                        
+                        break;
+                }
+            }
+            
+            scheduleNextStep(delay) {
+                setTimeout(() => {
+                    this.currentStep++;
+                    if (this.currentStep <= this.totalSteps) {
+                        this.executeStep(this.currentStep);
+                    }
+                }, delay);
+            }
+            
+            setupReverseMode() {
+                console.log('🔄 Setting up reverse mode for FRED section');
+                
+                // Create reverse navigation indicator
+                this.createReverseIndicator();
+                
+                // Set up scroll listener for reverse detection
+                this.setupReverseScrollDetection();
+            }
+            
+            createReverseIndicator() {
+                const indicator = document.createElement('div');
+                indicator.id = 'reverseIndicator';
+                indicator.style.cssText = `
+                    position: fixed;
+                    top: 30px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0, 0, 0, 0.8);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 25px;
+                    padding: 12px 20px;
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 12px;
+                    color: rgba(255, 255, 255, 0.8);
+                    z-index: 1001;
+                    backdrop-filter: blur(10px);
+                    opacity: 0;
+                    transition: opacity 0.5s ease;
+                `;
+                indicator.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>↑</span>
+                        Scroll up to return
+                    </div>
+                `;
+                
+                document.body.appendChild(indicator);
+                
+                setTimeout(() => {
+                    indicator.style.opacity = '1';
+                }, 500);
+            }
+            
+            setupReverseScrollDetection() {
+                let lastScrollY = window.pageYOffset;
+                let scrollDirection = null;
+                let reverseStarted = false;
+                let upwardScrollDistance = 0;
+                let upwardScrollTimer = null;
+                
+                const reverseScrollHandler = () => {
+                    const currentScrollY = window.pageYOffset;
+                    const scrollDelta = currentScrollY - lastScrollY;
+                    
+                    // CRITICAL FIX: Much stricter requirements for reverse scroll
+                    if (scrollDelta < -5 && this.isInFredSection && !reverseStarted) {
+                        // Accumulate upward scroll distance
+                        upwardScrollDistance += Math.abs(scrollDelta);
+                        
+                        // Clear any existing timer
+                        if (upwardScrollTimer) {
+                            clearTimeout(upwardScrollTimer);
+                        }
+                        
+                        // Reset accumulated distance after 2 seconds of no upward scrolling
+                        upwardScrollTimer = setTimeout(() => {
+                            upwardScrollDistance = 0;
+                        }, 2000);
+                        
+                        // Require significant continuous upward scrolling (200px total) to trigger reverse
+                        if (upwardScrollDistance >= 200) {
+                            console.log('🔄 Significant reverse scroll detected - starting reverse animation');
+                            reverseStarted = true;
+                            upwardScrollDistance = 0;
+                            this.startReverseExperience();
+                        }
+                    } else if (scrollDelta > 0) {
+                        // Reset if user scrolls down
+                        upwardScrollDistance = 0;
+                        if (upwardScrollTimer) {
+                            clearTimeout(upwardScrollTimer);
+                        }
+                    }
+                    
+                    lastScrollY = currentScrollY;
+                };
+                
+                window.addEventListener('scroll', reverseScrollHandler, { passive: true });
+            }
+            
+            startReverseExperience() {
+                console.log('🔄 Starting reverse to homescreen');
+                this.direction = 'reverse';
+                this.isInFredSection = false;
+                
+                // Remove reverse indicator
+                const reverseIndicator = document.getElementById('reverseIndicator');
+                if (reverseIndicator) {
+                    reverseIndicator.style.opacity = '0';
+                    setTimeout(() => {
+                        if (reverseIndicator.parentNode) {
+                            reverseIndicator.parentNode.removeChild(reverseIndicator);
+                        }
+                    }, 300);
+                }
+                
+                // SIMPLIFIED: Direct return to homescreen instead of step-by-step reverse
+                this.returnToHomescreen();
+            }
+            
+            returnToHomescreen() {
+                console.log('🏠 Returning directly to homescreen');
+                
+                // Hide FRED section immediately
+                if (window.TextSliderManager) {
+                    window.TextSliderManager.hideFREDSection();
+                }
+                
+                // Return to initial state: "THE FUTURE IS NOW" + Global view
+                setTimeout(() => {
+                    if (window.TextSliderManager) {
+                        window.TextSliderManager.smoothSwitchToSlide(0, 'backward');
+                        window.TextSliderManager.smoothHideCTA();
+                    }
+                    if (window.GlobeManager) {
+                        window.GlobeManager.updateGlobeState(0); // Global view
+                    }
+                }, 500);
+                
+                // Reset to beginning state
+                setTimeout(() => {
+                    this.resetForReExperience();
+                }, 1500);
+            }
+            
+            // Remove all the step-by-step reverse methods
+            // createReverseProgressIndicator() - REMOVED
+            // updateReverseProgress() - REMOVED  
+            // executeReverseStep() - REMOVED
+            // scheduleReverseStep() - REMOVED
+            // completeReverseExperience() - REMOVED
+            // removeReverseProgressIndicator() - REMOVED
+            resetForReExperience() {
+                this.isExperienceActive = false;
+                this.isInFredSection = false;
+                this.currentStep = 0;
+                this.direction = 'forward';
+                
+                // Show click-to-begin again
+                this.hasStarted = false;
+                this.setupClickToBegin();
+                
+                console.log('🔄 Experience reset - ready for re-activation');
+            }
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 DOM loaded, starting experience handler...');
+            const experienceHandler = new HomeExperienceHandler();
+            experienceHandler.init();
+        });
+        
+        // Also initialize immediately if DOM is already loaded
+        if (document.readyState === 'loading') {
+            // DOM not ready, wait for DOMContentLoaded
+        } else {
+            // DOM already loaded
+            console.log('🚀 DOM already loaded, starting experience handler immediately...');
+            const experienceHandler = new HomeExperienceHandler();
+            experienceHandler.init();
+        }
+    </script>
+</body>
+</html>

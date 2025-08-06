@@ -1,0 +1,853 @@
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --near-black: #0a0a0a;
+    --dark-grey: #1a1a1a;
+    --light-grey: rgba(255, 255, 255, 0.1);
+    --accent-white: rgba(255, 255, 255, 0.95);
+    --subtle-white: rgba(255, 255, 255, 0.8);
+}
+
+/* Hide scrollbar completely across all elements */
+html {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    overflow-x: hidden;
+    /* Allow vertical scrolling */
+    overflow-y: auto;
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Ensure no element creates its own scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Maison Neue Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 500vh; /* CRITICAL FIX: Use min-height instead of height */
+    position: relative;
+    font-feature-settings: "liga" 1, "kern" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Hide scrollbar but allow scrolling */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+/* Add invisible content div to force scrolling */
+.scroll-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 500vh;
+    pointer-events: none;
+    opacity: 0;
+    z-index: -1;
+}
+
+/* Subtle background pattern for depth */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.01) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.01) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Header styles with refined spacing */
+.header {
+    color: var(--white);
+    background-color: transparent;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 6rem; /* REDUCED from 8rem to 6rem (25% shorter) */
+    display: flex;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--light-grey);
+}
+
+.inner {
+    z-index: 1;
+    width: 90%;
+    max-width: 1380px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
+
+.inner.hdr__inner {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+}
+
+.logo {
+    margin-right: auto;
+}
+
+.logo-minimal {
+    color: var(--accent-white);
+    font-size: 1.125rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    font-family: 'Maison Neue Mono', sans-serif;
+    position: relative;
+}
+
+.logo-minimal::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--white);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-minimal:hover::after {
+    width: 100%;
+}
+
+.nav {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.nav__link {
+    color: var(--subtle-white);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400;
+    text-decoration: none;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0.5rem 0;
+}
+
+.nav__link:hover {
+    color: var(--white);
+    transform: translateY(-1px);
+}
+
+.nav__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--white);
+    height: 1px;
+    width: 0;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav__link:hover::after {
+    width: 100%;
+}
+
+/* Main text slider container */
+.main-text-container {
+    position: fixed;
+    bottom: 140px;
+    left: 80px;
+    font-family: 'Aeonik Pro', 'SF Pro Display', system-ui, sans-serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+    opacity: 1; /* Show immediately */
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+    height: auto;
+    overflow: hidden;
+    z-index: 100; /* CRITICAL FIX: Higher z-index to ensure text stays visible */
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Swiper for main text */
+.main-text-swiper {
+    width: 100%;
+    height: auto;
+    z-index: 100; /* CRITICAL FIX: Ensure swiper stays on top */
+}
+
+.main-text-swiper .swiper-slide {
+    height: auto !important;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    z-index: 100; /* CRITICAL FIX: Ensure slides stay visible */
+}
+
+.main-text-swiper .swiper-slide-active {
+    opacity: 1 !important; /* CRITICAL FIX: Force active slide to be fully visible */
+    z-index: 101; /* CRITICAL FIX: Active slide has highest priority */
+}
+
+.slide-text {
+    white-space: nowrap;
+    color: var(--white) !important; /* CRITICAL FIX: Force white text color */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* CRITICAL FIX: Add shadow for better visibility */
+}
+
+.cursor {
+    /* Restore blinking animation for typing effect */
+    animation: blink 1.2s infinite;
+    opacity: 0.8;
+}
+
+.news-cursor {
+    /* Restore news cursor animation */
+    animation: newsBlink 1s infinite;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 0.8; }
+    51%, 100% { opacity: 0; }
+}
+
+@keyframes newsBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Investment call-to-action */
+.investment-cta {
+    position: fixed;
+    bottom: 80px;
+    left: 80px;
+    font-family: 'Maison Neue Mono', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    opacity: 1; /* Show immediately */
+}
+
+/* 3D Globe Container - Enhanced visibility and fixed cropping */
+.globe-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Much larger container to accommodate zoomed globe without cropping */
+    width: 150vw;
+    height: 150vh;
+    /* Remove size constraints that could cause cropping */
+    max-width: none;
+    max-height: none;
+    min-width: none;
+    min-height: none;
+    pointer-events: auto; /* CRITICAL FIX: Enable mouse interaction */
+    z-index: 5; /* CRITICAL FIX: Proper layering - above background, below UI */
+    opacity: 0.45; /* Increased from 0.35 for better visibility */
+    transition: opacity 1.2s ease-in-out;
+    /* Remove padding that could interfere with zoom */
+    padding: 0;
+    box-sizing: border-box;
+    /* Ensure no overflow clipping */
+    overflow: visible;
+    /* Add subtle glow for better presence */
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.03));
+}
+
+/* Ensure globe canvas receives events */
+.globe-canvas {
+    width: 100%;
+    height: 100%;
+    pointer-events: auto !important; /* CRITICAL FIX: Force pointer events */
+    /* Remove cursor none that might interfere with events */
+}
+
+/* Enhanced orderbook with better visual hierarchy */
+.orderbook {
+    position: fixed;
+    top: 160px;
+    right: 80px;
+    font-size: 1.1rem;
+    font-family: 'Maison Neue Mono', monospace;
+    text-align: right;
+    opacity: 1; /* Show immediately */
+    background: rgba(255, 255, 255, 0.02);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--light-grey);
+    border-radius: 8px;
+    padding: 1.5rem;
+    min-width: 200px;
+}
+
+.orderbook-header {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid var(--light-grey);
+    padding-bottom: 0.4rem;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.price-label {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    letter-spacing: 0.1em;
+}
+
+.price-value {
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+/* News ticker box */
+.news-ticker {
+    position: fixed;
+    bottom: 80px;
+    right: 80px;
+    font-size: 0.9rem;
+    font-family: 'Maison Neue Mono', monospace;
+    text-align: left;
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.02);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--light-grey);
+    border-radius: 8px;
+    padding: 1.2rem;
+    min-width: 280px;
+    max-width: 320px;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.news-header {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid var(--light-grey);
+    padding-bottom: 0.4rem;
+}
+
+.news-content {
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    min-height: 1.4em;
+    display: flex;
+    align-items: center;
+}
+
+/* FRED Insight Section Styles - Fixed to start from the beginning */
+.fred-insight {
+    position: relative;
+    background: var(--black);
+    margin-top: 400vh; /* Keeps proper positioning */
+    min-height: 100vh;
+    z-index: 10;
+    opacity: 0;
+    /* CRITICAL FIX: Start from top, not middle */
+    transform: translateY(0);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+    /* Ensure section starts at the very top when visible */
+    padding-top: 0;
+    /* Ensure smooth scrolling into view */
+    scroll-margin-top: 0;
+}
+
+.fred-header {
+    width: 100%;
+    height: 96px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    /* CRITICAL FIX: Remove margin-top so content starts at the very top */
+    margin-top: 0;
+    /* Add padding instead to create visual spacing but keep content at top */
+    padding-top: 1rem;
+}
+
+.fred-label {
+    font-family: 'JetBrains Mono', 'Maison Neue Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.fred-title {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--white);
+    margin: 0;
+}
+
+.fred-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2rem;
+    padding: 4rem 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* GDP Trend Panel */
+.gdp-panel {
+    grid-column: 1 / 9;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.gdp-chart {
+    width: 100%;
+    height: 280px;
+    margin-bottom: 1rem;
+}
+
+.gdp-text {
+    grid-column: 9 / 13;
+    padding: 2rem 0;
+}
+
+.chart-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--white);
+}
+
+.chart-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chart-bullets li {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.chart-bullets li::before {
+    content: "→";
+    margin-right: 0.5rem;
+    opacity: 0.6;
+}
+
+.chart-source {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    opacity: 0.4;
+    margin-top: 1rem;
+}
+
+/* Inflation Bar Strip */
+.inflation-strip {
+    grid-column: 1 / 13;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.inflation-chart {
+    flex: 1;
+    height: 80px;
+    position: relative;
+}
+
+.inflation-caption {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    opacity: 0.7;
+    margin-left: 2rem;
+}
+
+/* Yield Curve Spread */
+.yield-curve {
+    grid-column: 1 / 13;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.yield-chart {
+    width: 100%;
+    height: 360px;
+    margin-bottom: 1rem;
+}
+
+.yield-text {
+    text-align: right;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.7;
+}
+
+/* Austin Spotlight Card */
+.austin-card {
+    grid-column: 1 / 7;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.austin-chart {
+    width: 260px;
+    height: 160px;
+}
+
+.austin-kpi {
+    text-align: center;
+}
+
+.austin-kpi-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--white);
+    display: block;
+}
+
+.austin-kpi-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    opacity: 0.6;
+    margin-top: 0.5rem;
+}
+
+/* Metric Ticker Row */
+.metrics-row {
+    grid-column: 7 / 13;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.metric-box {
+    width: 128px;
+    height: 128px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s ease;
+}
+
+.metric-box:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.metric-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--white);
+    text-align: center;
+}
+
+.metric-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    opacity: 0.6;
+    text-align: center;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Call-to-Action Footer */
+.fred-cta {
+    grid-column: 1 / 13;
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.fred-cta-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: var(--white);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.fred-cta-link:hover {
+    text-decoration: underline;
+    transform: translateY(-2px);
+}
+
+/* Background Globe - Ultra Faint */
+.fred-globe-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.04;
+    z-index: -1;
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+/* Performance optimizations */
+.main-text-container,
+.orderbook,
+.news-ticker,
+.investment-cta {
+    will-change: transform, opacity;
+}
+
+/* Enhanced accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .main-text-container,
+    .orderbook,
+    .news-ticker,
+    .investment-cta {
+        animation: none;
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 991px) {
+    .fred-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 3rem 4%;
+    }
+
+    .gdp-panel,
+    .gdp-text,
+    .inflation-strip,
+    .yield-curve,
+    .austin-card,
+    .metrics-row,
+    .fred-cta {
+        grid-column: 1;
+    }
+
+    .austin-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .metrics-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .fred-title {
+        font-size: 36px;
+    }
+
+    .globe-container {
+        width: min(80vw, 80vh);
+        height: min(80vw, 80vh);
+        max-width: 600px;
+        max-height: 600px;
+        min-width: 350px;
+        min-height: 350px;
+    }
+    
+    .nav {
+        display: none;
+    }
+    
+    .nav-btn {
+        display: block;
+        cursor: pointer;
+        padding: 18px;
+        font-size: 24px;
+        color: var(--white);
+        transition: opacity 0.3s ease;
+    }
+
+    .nav-btn:hover {
+        opacity: 0.8;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .fred-header {
+        height: 80px;
+    }
+
+    .fred-title {
+        font-size: 28px;
+    }
+
+    .fred-grid {
+        padding: 2rem 5%;
+        gap: 1.5rem;
+    }
+
+    .gdp-chart,
+    .yield-chart {
+        height: 240px;
+    }
+
+    .austin-chart {
+        width: 100%;
+        height: 140px;
+    }
+
+    .metric-box {
+        width: 100%;
+        height: 100px;
+    }
+
+    .metrics-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .globe-container {
+        width: min(85vw, 85vh);
+        height: min(85vw, 85vh);
+        max-width: 500px;
+        max-height: 500px;
+        min-width: 300px;
+        min-height: 300px;
+    }
+    
+    .header {
+        height: 6rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .main-text-container {
+        bottom: 120px;
+        left: 40px;
+        font-size: clamp(2.5rem, 10vw, 4rem);
+    }
+
+    .investment-cta {
+        bottom: 60px;
+        left: 40px;
+        font-size: 1rem;
+    }
+    
+    .orderbook {
+        top: 120px;
+        right: 40px;
+        padding: 1rem;
+        min-width: 160px;
+    }
+
+    .news-ticker {
+        bottom: 60px;
+        right: 40px;
+        padding: 0.8rem;
+        min-width: 220px;
+        max-width: 260px;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .globe-container {
+        width: min(90vw, 90vh);
+        height: min(90vw, 90vh);
+        max-width: 400px;
+        max-height: 400px;
+        min-width: 250px;
+        min-height: 250px;
+    }
+    
+    .main-text-container {
+        bottom: 100px;
+        left: 30px;
+        font-size: clamp(2rem, 12vw, 3rem);
+    }
+
+    .investment-cta {
+        bottom: 45px;
+        left: 30px;
+        font-size: 0.9rem;
+    }
+    
+    .orderbook {
+        top: 100px;
+        right: 30px;
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+
+    .news-ticker {
+        bottom: 45px;
+        right: 30px;
+        padding: 0.6rem;
+        min-width: 180px;
+        max-width: 220px;
+    }
+}
