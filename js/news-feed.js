@@ -1,89 +1,198 @@
-// News Feed Manager for Market Snapshot
+// News Feed Manager - Displays live financial headlines with Gemini integration
 (function() {
     'use strict';
     
     class NewsFeedManager {
         constructor() {
             this.container = null;
-            this.cache = new Map();
-            this.updateInterval = null;
+            this.refreshButton = null;
+            this.isLoading = false;
+            this.headlines = [];
         }
 
         // Initialize news feed
         async init() {
-            console.log('📰 Initializing News Feed...');
+            console.log('📰 Initializing News Feed Manager...');
             
-            this.container = document.getElementById('newsList');
+            this.container = document.getElementById('newsFeed');
+            this.refreshButton = document.getElementById('newsRefresh');
+            
             if (!this.container) {
-                console.warn('News feed container not found - this is normal if not on home page');
+                console.warn('News feed container not found');
                 return;
             }
 
-            // Initial load
-            await this.updateNews();
+            // Setup refresh button
+            this.setupRefreshButton();
             
-            console.log('✅ News Feed initialized');
+            // Load initial headlines
+            await this.loadHeadlines();
+            
+            console.log('✅ News Feed Manager initialized');
         }
 
-        // Update news feed
-        async updateNews() {
-            try {
-                // Mock news data for now
-                const news = [
-                    "Federal Reserve maintains interest rates at current levels",
-                    "Tech stocks rally on AI infrastructure investments",
-                    "Oil prices stabilize amid global supply concerns",
-                    "Cryptocurrency markets show renewed institutional interest",
-                    "Housing market data indicates cooling trend",
-                    "Labor market remains resilient despite economic headwinds",
-                    "Infrastructure spending bill passes key legislative hurdle",
-                    "Renewable energy investments reach record highs",
-                    "Banking sector reports strong quarterly earnings",
-                    "International trade negotiations show progress"
-                ];
-
-                this.renderNews(news);
-            } catch (error) {
-                console.error('Error updating news feed:', error);
-                this.renderErrorState();
+        // Setup refresh button functionality
+        setupRefreshButton() {
+            if (this.refreshButton) {
+                this.refreshButton.addEventListener('click', async () => {
+                    if (!this.isLoading) {
+                        await this.manualRefresh();
+                    }
+                });
             }
         }
 
-        // Render news items
-        renderNews(newsItems) {
-            if (!this.container || !Array.isArray(newsItems)) return;
+        // Load headlines from NewsAPIManager
+        async loadHeadlines() {
+            if (this.isLoading) return;
+            
+            this.isLoading = true;
+            this.showLoading();
 
-            // Clear existing items
+            try {
+                if (window.NewsAPIManager) {
+                    this.headlines = await window.NewsAPIManager.getHeadlines();
+                    this.renderHeadlines();
+                } else {
+                    console.warn('NewsAPIManager not available');
+                    this.showError('News service unavailable');
+                }
+            } catch (error) {
+                console.error('Error loading headlines:', error);
+                this.showError('Failed to load news');
+            } finally {
+                this.isLoading = false;
+            }
+        }
+
+        // Manual refresh triggered by user
+        async manualRefresh() {
+            console.log('📰 Manual news refresh triggered');
+            
+            if (window.NewsAPIManager) {
+                try {
+                    this.headlines = await window.NewsAPIManager.manualRefresh();
+                    this.renderHeadlines();
+                    
+                    // Visual feedback for refresh
+                    if (this.refreshButton) {
+                        this.refreshButton.style.transform = 'rotate(360deg)';
+                        setTimeout(() => {
+                            this.refreshButton.style.transform = '';
+                        }, 500);
+                    }
+                } catch (error) {
+                    console.error('Manual refresh failed:', error);
+                    this.showError('Refresh failed');
+                }
+            }
+        }
+
+        // Show loading state
+        showLoading() {
+            if (this.container) {
+                this.container.innerHTML = '<div class="news-loading">Loading latest financial headlines...</div>';
+            }
+        }
+
+        // Show error state
+        showError(message) {
+            if (this.container) {
+                this.container.innerHTML = `<div class="news-loading">${message}</div>`;
+            }
+        }
+
+        // Render headlines in feed
+        renderHeadlines() {
+            if (!this.container || !Array.isArray(this.headlines)) {
+                this.showError('No headlines available');
+                return;
+            }
+
+            if (this.headlines.length === 0) {
+                this.showError('No headlines found');
+                return;
+            }
+
+            // Clear container
             this.container.innerHTML = '';
 
-            // Add news items
-            newsItems.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.textContent = this.truncateText(item, 80);
-                this.container.appendChild(li);
+            // Create headlines list
+            this.headlines.forEach((item, index) => {
+                const newsItem = this.createNewsItem(item, index);
+                this.container.appendChild(newsItem);
             });
+
+            console.log(`📰 Rendered ${this.headlines.length} headlines`);
         }
 
-        // Render error state
-        renderErrorState() {
-            if (!this.container) return;
-            this.container.innerHTML = '<li>Unable to load news feed</li>';
+        // Create individual news item element
+        createNewsItem(item, index) {
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-item';
+            
+            // Create headline element
+            const headline = document.createElement('div');
+            headline.className = 'news-headline';
+            headline.textContent = this.truncateHeadline(item.headline, 62);
+            
+            // Create source element
+            const source = document.createElement('div');
+            source.className = 'news-source';
+            source.textContent = item.source;
+            
+            // Add elements to news item
+            newsItem.appendChild(headline);
+            newsItem.appendChild(source);
+            
+            // Add subtle animation delay
+            newsItem.style.opacity = '0';
+            newsItem.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                newsItem.style.transition = 'all 0.3s ease';
+                newsItem.style.opacity = '1';
+                newsItem.style.transform = 'translateY(0)';
+            }, index * 50); // Stagger animation
+            
+            return newsItem;
         }
 
-        // Truncate text with ellipsis
-        truncateText(text, maxLength) {
-            if (typeof text !== 'string') return '';
-            if (text.length <= maxLength) return text;
-            return text.substring(0, maxLength - 3) + '...';
+        // Truncate headline to fit display requirements
+        truncateHeadline(headline, maxLength) {
+            if (!headline || typeof headline !== 'string') return 'Invalid headline';
+            
+            if (headline.length <= maxLength) return headline;
+            
+            // Find last space before limit
+            const truncated = headline.substring(0, maxLength - 3);
+            const lastSpace = truncated.lastIndexOf(' ');
+            
+            if (lastSpace > maxLength * 0.7) {
+                return truncated.substring(0, lastSpace) + '...';
+            } else {
+                return truncated + '...';
+            }
+        }
+
+        // Get current headlines
+        getHeadlines() {
+            return this.headlines;
+        }
+
+        // Check if feed is loading
+        isLoadingState() {
+            return this.isLoading;
         }
 
         // Cleanup
         destroy() {
-            if (this.updateInterval) {
-                clearInterval(this.updateInterval);
-                this.updateInterval = null;
+            if (this.refreshButton) {
+                this.refreshButton.removeEventListener('click', this.manualRefresh);
             }
-            this.cache.clear();
+            
+            this.headlines = [];
+            console.log('🧹 News Feed Manager destroyed');
         }
     }
 

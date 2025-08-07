@@ -86,68 +86,254 @@
         <canvas class="globe-canvas" id="globeCanvas"></canvas>
     </div>
 
-    <!-- FRED Insight Section -->
+    <!-- FRED Insight Section - Rebuilt with Live Market Data -->
     <div class="fred-insight">
         <div class="fred-header">
-            <div class="fred-label">Economic Insights</div>
-            <div class="fred-title">FRED Economic Data</div>
+            <div class="fred-label">Real-Time Market Intelligence</div>
+            <div class="fred-title">Live Markets & Economic Data</div>
         </div>
-        <div class="fred-grid">
-            <!-- GDP Trend Panel -->
-            <div class="gdp-panel">
-                <div class="chart-title">GDP Growth Rate</div>
-                <div class="gdp-chart" id="gdpChart"></div>
-                <div class="gdp-text">
-                    <ul class="chart-bullets">
-                        <li>Quarterly data, seasonally adjusted</li>
-                        <li>Source: FRED, Federal Reserve Bank of St. Louis</li>
-                    </ul>
-                    <div class="chart-source">Source: FRED, Federal Reserve Bank of St. Louis</div>
+        
+        <!-- Market Tiles Grid (6 tiles: QQQ, SPY, DJT + BTC, ETH, SOL) -->
+        <div class="market-tiles-grid">
+            <!-- Equity Tiles -->
+            <div class="market-tile equity" id="tile-QQQ">
+                <div class="tile-header">
+                    <div class="tile-symbol">QQQ</div>
+                    <div class="tile-badge" id="badge-QQQ">US OPEN</div>
+                </div>
+                <div class="tile-price" id="price-QQQ">Loading...</div>
+                <div class="tile-change" id="change-QQQ">Connecting...</div>
+                <div class="tile-sparkline">
+                    <canvas id="spark-QQQ" width="120" height="24"></canvas>
+                </div>
+                <div class="tile-range">
+                    <div class="range-bar">
+                        <div class="range-indicator" id="range-QQQ"></div>
+                    </div>
+                    <div class="range-labels">
+                        <span id="range-low-QQQ">--</span>
+                        <span id="range-high-QQQ">--</span>
+                    </div>
+                </div>
+                <div class="tile-name">NASDAQ 100 ETF</div>
+            </div>
+
+            <div class="market-tile equity" id="tile-SPY">
+                <div class="tile-header">
+                    <div class="tile-symbol">SPY</div>
+                    <div class="tile-badge" id="badge-SPY">US OPEN</div>
+                </div>
+                <div class="tile-price" id="price-SPY">Loading...</div>
+                <div class="tile-change" id="change-SPY">Connecting...</div>
+                <div class="tile-sparkline">
+                    <canvas id="spark-SPY" width="120" height="24"></canvas>
+                </div>
+                <div class="tile-range">
+                    <div class="range-bar">
+                        <div class="range-indicator" id="range-SPY"></div>
+                    </div>
+                    <div class="range-labels">
+                        <span id="range-low-SPY">--</span>
+                        <span id="range-high-SPY">--</span>
+                    </div>
+                </div>
+                <div class="tile-name">S&P 500 ETF</div>
+            </div>
+
+            <div class="market-tile equity" id="tile-DJT">
+                <div class="tile-header">
+                    <div class="tile-symbol">DJT</div>
+                    <div class="tile-badge" id="badge-DJT">US OPEN</div>
+                </div>
+                <div class="tile-price" id="price-DJT">Loading...</div>
+                <div class="tile-change" id="change-DJT">Connecting...</div>
+                <div class="tile-sparkline">
+                    <canvas id="spark-DJT" width="120" height="24"></canvas>
+                </div>
+                <div class="tile-range">
+                    <div class="range-bar">
+                        <div class="range-indicator" id="range-DJT"></div>
+                    </div>
+                    <div class="range-labels">
+                        <span id="range-low-DJT">--</span>
+                        <span id="range-high-DJT">--</span>
+                    </div>
+                </div>
+                <div class="tile-name">Dow Transportation</div>
+                <div class="tile-proxy" id="proxy-DJT" style="display: none;">(proxy: IYT)</div>
+            </div>
+
+            <!-- Crypto Tiles -->
+            <div class="market-tile crypto" id="tile-BTC">
+                <div class="tile-header">
+                    <div class="tile-symbol">BTC</div>
+                    <div class="tile-badge crypto-badge">24H</div>
+                </div>
+                <div class="tile-price" id="price-BTC">Loading...</div>
+                <div class="tile-change" id="change-BTC">Connecting...</div>
+                <div class="tile-sparkline">
+                    <canvas id="spark-BTC" width="120" height="24"></canvas>
+                </div>
+                <div class="tile-range">
+                    <div class="range-bar">
+                        <div class="range-indicator" id="range-BTC"></div>
+                    </div>
+                    <div class="range-labels">
+                        <span id="range-low-BTC">--</span>
+                        <span id="range-high-BTC">--</span>
+                    </div>
+                </div>
+                <div class="tile-name">Bitcoin</div>
+            </div>
+
+            <div class="market-tile crypto" id="tile-ETH">
+                <div class="tile-header">
+                    <div class="tile-symbol">ETH</div>
+                    <div class="tile-badge crypto-badge">24H</div>
+                </div>
+                <div class="tile-price" id="price-ETH">Loading...</div>
+                <div class="tile-change" id="change-ETH">Connecting...</div>
+                <div class="tile-sparkline">
+                    <canvas id="spark-ETH" width="120" height="24"></canvas>
+                </div>
+                <div class="tile-range">
+                    <div class="range-bar">
+                        <div class="range-indicator" id="range-ETH"></div>
+                    </div>
+                    <div class="range-labels">
+                        <span id="range-low-ETH">--</span>
+                        <span id="range-high-ETH">--</span>
+                    </div>
+                </div>
+                <div class="tile-name">Ethereum</div>
+            </div>
+
+            <div class="market-tile crypto" id="tile-SOL">
+                <div class="tile-header">
+                    <div class="tile-symbol">SOL</div>
+                    <div class="tile-badge crypto-badge">24H</div>
+                </div>
+                <div class="tile-price" id="price-SOL">Loading...</div>
+                <div class="tile-change" id="change-SOL">Connecting...</div>
+                <div class="tile-sparkline">
+                    <canvas id="spark-SOL" width="120" height="24"></canvas>
+                </div>
+                <div class="tile-range">
+                    <div class="range-bar">
+                        <div class="range-indicator" id="range-SOL"></div>
+                    </div>
+                    <div class="range-labels">
+                        <span id="range-low-SOL">--</span>
+                        <span id="range-high-SOL">--</span>
+                    </div>
+                </div>
+                <div class="tile-name">Solana</div>
+            </div>
+        </div>
+
+        <!-- FRED Economic Data Cards -->
+        <div class="fred-cards-section">
+            <div class="section-header">
+                <h3>Economic Indicators</h3>
+                <span class="data-source">Source: Federal Reserve Economic Data (FRED)</span>
+            </div>
+            
+            <div class="fred-cards-grid">
+                <!-- GDP Card -->
+                <div class="fred-card" id="gdp-card">
+                    <div class="fred-card-header">
+                        <div class="fred-metric-name">Real GDP</div>
+                        <div class="fred-metric-value" id="gdpValue">Loading...</div>
+                    </div>
+                    <div class="fred-chart-container">
+                        <canvas id="gdpChart" width="200" height="60"></canvas>
+                    </div>
+                    <div class="fred-takeaway" id="gdpTakeaway">Loading economic data...</div>
+                    <div class="fred-date" id="gdpDate">--</div>
+                </div>
+
+                <!-- Inflation Card -->
+                <div class="fred-card" id="cpi-card">
+                    <div class="fred-card-header">
+                        <div class="fred-metric-name">Inflation (CPI)</div>
+                        <div class="fred-metric-value" id="cpiValue">Loading...</div>
+                    </div>
+                    <div class="fred-chart-container">
+                        <canvas id="cpiChart" width="200" height="60"></canvas>
+                    </div>
+                    <div class="fred-takeaway" id="cpiTakeaway">Loading economic data...</div>
+                    <div class="fred-date" id="cpiDate">--</div>
+                </div>
+
+                <!-- Unemployment Card -->
+                <div class="fred-card" id="unrate-card">
+                    <div class="fred-card-header">
+                        <div class="fred-metric-name">Unemployment</div>
+                        <div class="fred-metric-value" id="unrateValue">Loading...</div>
+                    </div>
+                    <div class="fred-chart-container">
+                        <canvas id="unrateChart" width="200" height="60"></canvas>
+                    </div>
+                    <div class="fred-takeaway" id="unrateTakeaway">Loading economic data...</div>
+                    <div class="fred-date" id="unrateDate">--</div>
+                </div>
+
+                <!-- Yield Spread Card -->
+                <div class="fred-card" id="yield-card">
+                    <div class="fred-card-header">
+                        <div class="fred-metric-name">10Y-2Y Spread</div>
+                        <div class="fred-metric-value" id="yieldValue">Loading...</div>
+                    </div>
+                    <div class="fred-chart-container">
+                        <canvas id="yieldChart" width="200" height="60"></canvas>
+                    </div>
+                    <div class="fred-takeaway" id="yieldTakeaway">Loading economic data...</div>
+                    <div class="fred-date" id="yieldDate">--</div>
                 </div>
             </div>
+        </div>
 
-            <!-- Inflation Bar Strip -->
-            <div class="inflation-strip">
-                <div class="inflation-chart" id="inflationChart"></div>
-                <div class="inflation-caption">Inflation Rate (CPI)</div>
-            </div>
-
-            <!-- Yield Curve Spread -->
-            <div class="yield-curve">
-                <div class="chart-title">Yield Curve Spread</div>
-                <div class="yield-chart" id="yieldChart"></div>
-                <div class="yield-text">10-Year - 2-Year Treasury Yield Spread</div>
-            </div>
-
-            <!-- Austin Spotlight Card -->
-            <div class="austin-card">
-                <div class="austin-kpi">
-                    <div class="austin-kpi-value" id="austinKpiValue">3.8%</div>
-                    <div class="austin-kpi-label">Unemployment Rate</div>
+        <!-- Austin Spotlight & Metrics Strip -->
+        <div class="bottom-section">
+            <!-- Austin Spotlight -->
+            <div class="austin-spotlight">
+                <div class="spotlight-header">
+                    <h3>Austin Market Spotlight</h3>
+                    <div class="spotlight-value" id="austinValue">Loading...</div>
                 </div>
-                <div class="austin-chart" id="austinChart"></div>
+                <div class="spotlight-chart">
+                    <canvas id="austinChart" width="300" height="120"></canvas>
+                </div>
+                <div class="spotlight-description" id="austinTakeaway">Loading Austin market data...</div>
+                <div class="spotlight-date" id="austinDate">--</div>
             </div>
 
-            <!-- Metric Ticker Row -->
-            <div class="metrics-row">
-                <div class="metric-box">
-                    <div class="metric-value" id="metric1Value">2.5%</div>
+            <!-- Key Metrics Strip -->
+            <div class="metrics-strip">
+                <div class="metric-item">
                     <div class="metric-label">GDP Growth</div>
+                    <div class="metric-value" id="gdpGrowthMetric">--</div>
                 </div>
-                <div class="metric-box">
-                    <div class="metric-value" id="metric2Value">1.8%</div>
-                    <div class="metric-label">Inflation</div>
+                <div class="metric-item">
+                    <div class="metric-label">CPI YoY</div>
+                    <div class="metric-value" id="cpiYoyMetric">--</div>
                 </div>
-                <div class="metric-box">
-                    <div class="metric-value" id="metric3Value">0.25%</div>
-                    <div class="metric-label">Fed Rate</div>
+                <div class="metric-item">
+                    <div class="metric-label">Fed Funds Upper</div>
+                    <div class="metric-value" id="fedFundsMetric">5.50%</div>
                 </div>
             </div>
         </div>
 
-        <!-- Call-to-Action Footer -->
-        <div class="fred-cta">
-            <a href="#explore" class="fred-cta-link">Explore More Insights</a>
+        <!-- Live News Feed -->
+        <div class="news-feed-section">
+            <div class="news-feed-header">
+                <h3>Live Financial News</h3>
+                <div class="news-refresh" id="newsRefresh">↻</div>
+            </div>
+            <div class="news-feed" id="newsFeed">
+                <div class="news-loading">Loading latest financial headlines...</div>
+            </div>
         </div>
 
         <!-- Background Globe - Ultra Faint -->
@@ -156,11 +342,16 @@
 
     <!-- Modular JavaScript Files -->
     <script src="./js/config.js"></script>
+    <script src="./js/cache-utils.js"></script>
+    <script src="./js/alpha-vantage.js"></script>
+    <script src="./js/coinbase.js"></script>
     <script src="./js/text-slider.js"></script>
     <script src="./js/news-api.js"></script>
     <script src="./js/orderbook.js"></script>
     <script src="./js/globe.js"></script>
     <script src="./js/fred-data.js"></script>
+    <script src="./js/market-tiles.js"></script>
+    <script src="./js/news-feed.js"></script>
     <script src="./js/main.js"></script>
     
     <!-- Enhanced automated experience handler with click-to-begin and reverse animations -->

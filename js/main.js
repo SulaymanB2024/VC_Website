@@ -29,6 +29,23 @@ class MainApp {
     }
 
     initializeManagers() {
+        // Initialize cache utilities first
+        if (window.CacheManager) {
+            this.managers.cache = window.CacheManager;
+            console.log('✅ Cache manager initialized');
+        }
+
+        // Initialize API managers
+        if (window.AlphaVantageManager) {
+            this.managers.alphaVantage = window.AlphaVantageManager;
+            console.log('✅ Alpha Vantage manager initialized');
+        }
+
+        if (window.CoinbaseManager) {
+            this.managers.coinbase = window.CoinbaseManager;
+            console.log('✅ Coinbase manager initialized');
+        }
+
         // Initialize text slider first
         if (window.TextSliderManager) {
             console.log('📝 Initializing Text Slider...');
@@ -45,36 +62,11 @@ class MainApp {
             console.log('✅ News Ticker initialized');
         }
 
-        // Initialize API managers
-        if (window.AlphaVantageManager) {
-            this.managers.alphaVantage = window.AlphaVantageManager;
-            console.log('✅ Alpha Vantage manager initialized');
-        }
-
-        if (window.CoinbaseManager) {
-            this.managers.coinbase = window.CoinbaseManager;
-            console.log('✅ Coinbase manager initialized');
-        }
-
-        // Initialize Market Snapshot
-        if (window.MarketSnapshotManager) {
-            console.log('📊 Initializing Market Snapshot...');
-            this.managers.marketSnapshot = window.MarketSnapshotManager;
-            this.managers.marketSnapshot.init();
-        }
-
-        // Initialize FRED Cards
-        if (window.FredCardsManager) {
-            console.log('📈 Initializing FRED Cards...');
-            this.managers.fredCards = window.FredCardsManager;
-            this.managers.fredCards.init();
-        }
-
-        // Initialize News Feed
-        if (window.NewsFeedManager) {
-            console.log('📰 Initializing News Feed...');
-            this.managers.newsFeed = window.NewsFeedManager;
-            this.managers.newsFeed.init();
+        // Initialize News API Manager
+        if (window.NewsAPIManager) {
+            console.log('📰 Initializing News API...');
+            this.managers.newsAPI = window.NewsAPIManager;
+            this.managers.newsAPI.init();
         }
 
         // Initialize orderbook
@@ -87,11 +79,25 @@ class MainApp {
         // Initialize Globe with better error handling
         this.initializeGlobe();
 
-        // Initialize FRED data
+        // Initialize FRED data manager
         if (window.FREDDataManager) {
             console.log('📊 Initializing FRED Data Manager...');
             this.managers.fredData = window.FREDDataManager;
-            this.managers.fredData.init();
+            // FRED will be initialized when the section is shown
+        }
+
+        // Initialize Market Tiles Manager
+        if (window.MarketTilesManager) {
+            console.log('📊 Initializing Market Tiles...');
+            this.managers.marketTiles = window.MarketTilesManager;
+            // Market tiles will be initialized when FRED section is shown
+        }
+
+        // Initialize News Feed Manager
+        if (window.NewsFeedManager) {
+            console.log('📰 Initializing News Feed...');
+            this.managers.newsFeed = window.NewsFeedManager;
+            // News feed will be initialized when FRED section is shown
         }
 
         // Start text typing animation
@@ -127,6 +133,35 @@ class MainApp {
         }
     }
 
+    // Initialize FRED section components when needed
+    async initializeFREDSection() {
+        console.log('📊 Initializing FRED section components...');
+        
+        const promises = [];
+        
+        // Initialize FRED data
+        if (this.managers.fredData && !this.managers.fredData.state.dataLoaded) {
+            promises.push(this.managers.fredData.init());
+        }
+        
+        // Initialize market tiles
+        if (this.managers.marketTiles && !this.managers.marketTiles.isInitialized) {
+            promises.push(this.managers.marketTiles.init());
+        }
+        
+        // Initialize news feed
+        if (this.managers.newsFeed) {
+            promises.push(this.managers.newsFeed.init());
+        }
+        
+        try {
+            await Promise.allSettled(promises);
+            console.log('✅ FRED section components initialized');
+        } catch (error) {
+            console.error('❌ Error initializing FRED section:', error);
+        }
+    }
+
     setupGlobalEvents() {
         // Handle window resize
         const debouncedResize = UTILS.debounce(() => {
@@ -136,11 +171,11 @@ class MainApp {
             
             // Resize charts if needed
             if (this.managers.fredData && this.managers.fredData.state.charts) {
-                Object.values(this.managers.fredData.state.charts).forEach(chart => {
+                for (const chart of this.managers.fredData.state.charts.values()) {
                     if (chart && chart.resize) {
                         chart.resize();
                     }
-                });
+                }
             }
         }, 250);
         
@@ -205,12 +240,18 @@ class MainApp {
         }
 
         // Destroy charts
-        if (this.managers.fredData && this.managers.fredData.state.charts) {
-            Object.values(this.managers.fredData.state.charts).forEach(chart => {
-                if (chart && chart.destroy) {
-                    chart.destroy();
-                }
-            });
+        if (this.managers.fredData) {
+            this.managers.fredData.destroy();
+        }
+
+        // Cleanup market tiles
+        if (this.managers.marketTiles) {
+            this.managers.marketTiles.destroy();
+        }
+
+        // Cleanup news feed
+        if (this.managers.newsFeed) {
+            this.managers.newsFeed.destroy();
         }
 
         this.initialized = false;
@@ -226,10 +267,48 @@ class MainApp {
             this.managers.globe.updateGlobeState(state);
         }
     }
+
+    // Initialize FRED section when user reaches it
+    async showFREDSection() {
+        console.log('📊 Showing FRED section...');
+        
+        // Initialize FRED components if not already done
+        await this.initializeFREDSection();
+        
+        // Update metrics strip with current FRED data
+        this.updateMetricsStrip();
+    }
+
+    // Update metrics strip with real data
+    updateMetricsStrip() {
+        if (!this.managers.fredData || !this.managers.fredData.state.dataLoaded) return;
+        
+        // This will be populated with real data from FRED cards
+        console.log('📊 Updating metrics strip with FRED data');
+    }
 }
 
 // Create global app instance
 const app = new MainApp();
+
+// Enhanced TextSliderManager integration for FRED section
+if (window.TextSliderManager) {
+    // Override the showFREDSection method to initialize our new components
+    const originalShowFREDSection = window.TextSliderManager.showFREDSection;
+    window.TextSliderManager.showFREDSection = function() {
+        console.log('📊 Enhanced FRED section display');
+        
+        // Call original method first
+        if (typeof originalShowFREDSection === 'function') {
+            originalShowFREDSection.call(this);
+        }
+        
+        // Then initialize our new components
+        setTimeout(async () => {
+            await app.showFREDSection();
+        }, 500);
+    };
+}
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
@@ -248,4 +327,4 @@ window.addEventListener('beforeunload', () => app.destroy());
 // Make app globally accessible
 window.app = app;
 
-console.log('🎯 Main.js loaded successfully');
+console.log('🎯 Enhanced Main.js loaded successfully');
