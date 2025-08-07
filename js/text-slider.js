@@ -721,189 +721,190 @@ class TextSlider {
         this.state.ctaActive = false;
     }
 
-    // Enhanced FRED section transitions - Fixed to appear from top
+    // NEW: Re-enable scroll detection when returning to main experience
+    enableScrollDetection() {
+        if (this.originalScrollHandler) {
+            this.handleScroll = this.originalScrollHandler;
+            this.scrollDisabled = false;
+            console.log('✅ Scroll detection re-enabled');
+        }
+    }
+
+    // Enhanced FRED section transitions - COMPLETELY DIFFERENT APPROACH
     showFREDSection() {
-        const fredSection = document.querySelector('.fred-insight');
-        if (fredSection && fredSection.dataset.revealed !== 'true') {
-            console.log('📊 Revealing FRED section from top');
-            
-            // CRITICAL FIX: Reset transform to start from top, not middle
-            fredSection.style.transform = 'translateY(0)';
-            fredSection.style.opacity = '0';
-            
-            // Smooth fade out of main UI elements with stagger
-            const elementsToFade = [
-                { selector: '.main-text-container', delay: 0 },
-                { selector: '.investment-cta', delay: 100 },
-                { selector: '.orderbook', delay: 200 },
-                { selector: '.news-ticker', delay: 300 }
-            ];
-            
-            elementsToFade.forEach(({ selector, delay }) => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    setTimeout(() => {
-                        element.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
-                        element.style.opacity = '0.2';
-                        element.style.transform = 'translateY(-10px)';
-                    }, delay);
-                }
-            });
-            
-            // Fade globe
-            const globeContainer = document.querySelector('.globe-container');
-            if (globeContainer) {
-                globeContainer.style.transition = 'opacity 1s ease-out';
-                globeContainer.style.opacity = '0.1';
-            }
-            
-            // Reveal FRED section with smooth fade-in animation (no transform change)
-            setTimeout(() => {
-                fredSection.style.transition = 'opacity 1s ease-out';
-                fredSection.style.opacity = '1';
-                // Keep transform at translateY(0) to show from beginning
-                fredSection.style.transform = 'translateY(0)';
-                fredSection.dataset.revealed = 'true';
-            }, 500);
-        }
-    }
-
-    hideFREDSection() {
-        const fredSection = document.querySelector('.fred-insight');
-        if (fredSection && fredSection.dataset.revealed === 'true') {
-            console.log('📊 Hiding FRED section');
-            
-            // Quick fade out
-            fredSection.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-            fredSection.style.opacity = '0';
-            fredSection.style.transform = 'translateY(30px)';
-            fredSection.dataset.revealed = 'false';
-            
-            // Restore main UI elements with stagger
-            setTimeout(() => {
-                const elementsToRestore = [
-                    { selector: '.main-text-container', delay: 0 },
-                    { selector: '.orderbook', delay: 100 },
-                    { selector: '.news-ticker', delay: 200 }
-                ];
-                
-                elementsToRestore.forEach(({ selector, delay }) => {
-                    const element = document.querySelector(selector);
-                    if (element) {
-                        setTimeout(() => {
-                            element.style.transition = 'opacity 0.6s ease-in, transform 0.6s ease-in';
-                            element.style.opacity = '1';
-                            element.style.transform = 'translateY(0)';
-                        }, delay);
-                    }
-                });
-                
-                // Restore globe
-                const globeContainer = document.querySelector('.globe-container');
-                if (globeContainer) {
-                    globeContainer.style.transition = 'opacity 0.8s ease-in';
-                    globeContainer.style.opacity = '0.35';
-                }
-            }, 200);
-        }
-    }
-
-    // Initialize the text slider
-    init() {
-        console.log('💫 TextSlider initializing...');
+        console.log('📊 Starting FRED section display - new approach');
         
-        // Validate required elements exist
-        const requiredElements = [
-            'slide1Text',
-            'slide2Text', 
-            'slide3Text',
-            'investmentCta'
-        ];
-        
-        const missingElements = requiredElements.filter(id => !document.getElementById(id));
-        if (missingElements.length > 0) {
-            console.error('❌ Missing required elements:', missingElements);
+        // APPROACH 1: Force immediate display without complex transitions
+        const fredSection = document.querySelector('.fred-insight');
+        if (!fredSection) {
+            console.error('❌ FRED section not found!');
             return;
         }
         
-        setTimeout(() => {
-            try {
-                // Initialize Swiper with error handling
-                this.initSwiper();
-                
-                if (!this.state.swiper) {
-                    console.error('❌ Failed to initialize Swiper');
-                    return;
-                }
-                
-                // Set initial state
-                this.state.currentSlideIndex = 0;
-                this.state.charIndex = 0;
-                this.state.isTyping = true;
-                this.currentScrollZone = 0;
-                this.state.lastTransitionTime = 0;
-                
-                // Start initial typing
-                this.state.hasStartedTyping = true;
-                this.typeSlideText();
-                console.log('✅ Started typing "THE FUTURE IS NOW"');
-                
-                // Initialize news ticker with delay
-                setTimeout(() => {
-                    if (window.NewsTickerManager) {
-                        window.NewsTickerManager.startTickerSeries();
-                        console.log('📰 News ticker started');
-                    }
-                }, 1200);
-                
-                // Attach optimized scroll listener
-                const scrollHandler = () => this.handleScroll();
-                window.addEventListener('scroll', scrollHandler, { passive: true });
-                
-                // Validate scroll capability
-                const scrollInfo = {
-                    documentHeight: document.documentElement.scrollHeight,
-                    windowHeight: window.innerHeight,
-                    bodyHeight: document.body.scrollHeight
-                };
-                
-                const canScroll = scrollInfo.documentHeight > scrollInfo.windowHeight;
-                console.log('📏 Scroll info:', { ...scrollInfo, canScroll });
-                
-                if (!canScroll) {
-                    console.warn('⚠️ Page may not have sufficient height for scrolling');
-                }
-                
-                console.log('🚀 TextSlider fully initialized and ready');
-                
-            } catch (error) {
-                console.error('❌ TextSlider initialization failed:', error);
+        // CRITICAL: Completely prevent all scrolling to avoid accidental escapes
+        this.preventAllScrolling();
+        
+        // CRITICAL: Force immediate visibility with !important overrides
+        fredSection.style.cssText = `
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #000000 !important;
+            z-index: 9999 !important;
+            opacity: 1 !important;
+            display: block !important;
+            overflow-y: auto !important;
+            transform: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        `;
+        
+        // CRITICAL: Immediately hide ALL other elements with !important
+        const allElements = document.querySelectorAll('body > *:not(.fred-insight)');
+        allElements.forEach(element => {
+            if (!element.classList.contains('fred-insight')) {
+                element.style.cssText = `
+                    display: none !important;
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+                `;
             }
-        }, 120); // Slightly longer delay for DOM readiness
+        });
+        
+        // Add return button to FRED section
+        this.addReturnButton(fredSection);
+        
+        // Initialize FRED data
+        setTimeout(() => {
+            if (window.FREDDataManager) {
+                window.FREDDataManager.initializeCharts();
+            }
+            fredSection.dataset.revealed = 'true';
+            console.log('📊 FRED section force-displayed successfully');
+        }, 100);
+    }
+    
+    // NEW: Completely prevent all scrolling when in FRED section
+    preventAllScrolling() {
+        // Store original body scroll properties
+        this.originalBodyOverflow = document.body.style.overflow;
+        this.originalHtmlOverflow = document.documentElement.style.overflow;
+        
+        // Disable all scrolling on body and html
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        
+        // Disable scroll events globally
+        this.scrollPreventHandler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        };
+        
+        // Add passive: false to override default passive behavior
+        window.addEventListener('scroll', this.scrollPreventHandler, { passive: false });
+        window.addEventListener('wheel', this.scrollPreventHandler, { passive: false });
+        window.addEventListener('touchmove', this.scrollPreventHandler, { passive: false });
+        window.addEventListener('keydown', this.keyPreventHandler, { passive: false });
+        
+        console.log('🚫 All scrolling completely disabled - FRED section locked');
+    }
+    
+    // NEW: Prevent arrow keys and page up/down from scrolling
+    keyPreventHandler = (e) => {
+        // Prevent arrow keys, page up/down, home/end from scrolling
+        const preventKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', 'Space'];
+        if (preventKeys.includes(e.key)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
     }
 
-    // Cleanup method for proper teardown
-    destroy() {
-        console.log('🧹 Cleaning up TextSlider...');
+    // NEW: Re-enable scrolling when leaving FRED section
+    restoreScrolling() {
+        // Restore original body overflow settings
+        document.body.style.overflow = this.originalBodyOverflow || '';
+        document.documentElement.style.overflow = this.originalHtmlOverflow || '';
         
-        // Clear all timers
-        if (this.scrollDebounceTimer) clearTimeout(this.scrollDebounceTimer);
-        if (this.slowDownTimer) clearTimeout(this.slowDownTimer);
-        if (this.frameRequestId) cancelAnimationFrame(this.frameRequestId);
-        
-        // Cleanup ticker rotation
-        this.cleanupTickerRotation();
-        
-        // Reset state
-        this.state.ctaActive = false;
-        this.state.isTransitioning = false;
-        this.isSlowingDown = false;
-        this.scrollHistory = [];
-        
-        // Destroy swiper
-        if (this.state.swiper) {
-            this.state.swiper.destroy(true, true);
+        // Remove scroll prevention handlers
+        if (this.scrollPreventHandler) {
+            window.removeEventListener('scroll', this.scrollPreventHandler);
+            window.removeEventListener('wheel', this.scrollPreventHandler);
+            window.removeEventListener('touchmove', this.scrollPreventHandler);
+            window.removeEventListener('keydown', this.keyPreventHandler);
         }
+        
+        // Re-enable normal scroll detection
+        this.enableScrollDetection();
+        
+        console.log('✅ Scrolling restored - normal navigation resumed');
+    }
+    
+    // NEW: Return to main experience with globe animation
+    returnToMainExperience() {
+        console.log('🔄 Returning to main experience');
+        
+        const fredSection = document.querySelector('.fred-insight');
+        if (fredSection) {
+            // Hide FRED section immediately
+            fredSection.style.cssText = `display: none !important;`;
+        }
+        
+        // CRITICAL FIX: Restore scrolling immediately
+        this.restoreScrolling();
+        
+        // Restore all hidden elements
+        const allElements = document.querySelectorAll('body > *:not(.fred-insight)');
+        allElements.forEach(element => {
+            element.style.cssText = '';
+        });
+        
+        // Animate globe back into view
+        setTimeout(() => {
+            const globeContainer = document.querySelector('.globe-container');
+            if (globeContainer) {
+                globeContainer.style.transition = 'opacity 1.5s ease-in-out, transform 1s ease-in-out';
+                globeContainer.style.opacity = '0.45';
+                globeContainer.style.transform = 'translate(-50%, -50%) scale(1)';
+                globeContainer.style.pointerEvents = 'auto';
+            }
+            
+            // Reset to initial state - "THE FUTURE IS NOW" + Global view
+            if (window.TextSliderManager) {
+                window.TextSliderManager.smoothSwitchToSlide(0, 'backward');
+                window.TextSliderManager.smoothHideCTA();
+                window.TextSliderManager.currentScrollZone = 0;
+            }
+            
+            if (window.GlobeManager) {
+                window.GlobeManager.updateGlobeState(0); // Global view
+            }
+            
+            // Restore UI elements with stagger
+            const elementsToRestore = [
+                '.main-text-container',
+                '.orderbook', 
+                '.news-ticker'
+            ];
+            
+            elementsToRestore.forEach((selector, index) => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    setTimeout(() => {
+                        element.style.transition = 'opacity 0.8s ease-in, transform 0.8s ease-in';
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                        element.style.visibility = 'visible';
+                        element.style.pointerEvents = 'auto';
+                    }, index * 200);
+                }
+            });
+            
+            console.log('🏠 Successfully returned to main experience');
+        }, 200);
     }
 }
 

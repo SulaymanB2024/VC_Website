@@ -350,8 +350,11 @@
             }
             
             executeStep(step) {
-                const stepNames = ['Introduction', 'Investment Focus', 'Innovation Vision', 'Capital Strategy', 'Data Analytics'];
-                this.updateProgress(step, this.totalSteps, stepNames[step]);
+                const stepNames = ['Introduction', 'Investment Focus', 'Innovation Vision', 'Capital Strategy'];
+                // CRITICAL FIX: Remove "Data Analytics" step to prevent the button from appearing
+                if (step < this.totalSteps) {
+                    this.updateProgress(step, this.totalSteps, stepNames[step]);
+                }
                 
                 console.log(`⏩ Executing automated step ${step + 1}: ${stepNames[step]}`);
                 
@@ -373,42 +376,46 @@
                         break;
                         
                     case 1:
-                        // Step 1: Show CTA + Texas focus
-                        if (window.TextSliderManager) {
-                            window.TextSliderManager.showInvestmentCTA();
-                        }
+                        // Step 1: KEEP CTA VISIBLE + Texas focus
+                        // CRITICAL FIX: Do NOT hide CTA - keep it visible with ticker rotation
                         if (window.GlobeManager) {
                             window.GlobeManager.updateGlobeState(2); // Texas focus
                         }
-                        this.scheduleNextStep(4000); // Match updated text slider duration
+                        this.scheduleNextStep(4000);
                         break;
                         
                     case 2:
-                        // Step 2: "INNOVATION" + America focus
+                        // Step 2: "INNOVATION" + America focus + KEEP CTA VISIBLE
                         if (window.TextSliderManager) {
                             window.TextSliderManager.smoothSwitchToSlide(1, 'forward');
-                            window.TextSliderManager.smoothHideCTA();
+                            // CRITICAL FIX: Do NOT hide CTA here - keep ticker visible
                         }
                         if (window.GlobeManager) {
                             window.GlobeManager.updateGlobeState(1); // America focus
                         }
-                        this.scheduleNextStep(6000); // Match updated text slider duration
+                        this.scheduleNextStep(6000);
                         break;
                         
                     case 3:
-                        // Step 3: "CAPITAL" + Texas focus
+                        // Step 3: "CAPITAL" + Texas focus + KEEP CTA VISIBLE
                         if (window.TextSliderManager) {
                             window.TextSliderManager.smoothSwitchToSlide(2, 'forward');
+                            // CRITICAL FIX: Do NOT hide CTA here - keep ticker visible
                         }
                         if (window.GlobeManager) {
                             window.GlobeManager.updateGlobeState(2); // Texas focus
                         }
-                        this.scheduleNextStep(5000); // Match updated text slider duration
+                        this.scheduleNextStep(5000);
                         break;
                         
                     case 4:
-                        // Step 4: FRED section - CRITICAL FIX: Proper FRED section transition
+                        // Step 4: FRED section - NOW hide CTA and show FRED
                         console.log('🎯 Final step - transitioning to FRED section');
+                        
+                        // NOW hide the CTA since we're going to FRED
+                        if (window.TextSliderManager) {
+                            window.TextSliderManager.smoothHideCTA();
+                        }
                         
                         // Hide all homepage elements completely
                         const homepageElements = [
@@ -425,6 +432,7 @@
                                 element.style.transition = 'opacity 1s ease-out';
                                 element.style.opacity = '0';
                                 element.style.pointerEvents = 'none';
+                                element.style.visibility = 'hidden';
                             }
                         });
                         
@@ -432,18 +440,55 @@
                         const globeContainer = document.querySelector('.globe-container');
                         if (globeContainer) {
                             globeContainer.style.transition = 'opacity 1.5s ease-out';
-                            globeContainer.style.opacity = '0.05';
+                            globeContainer.style.opacity = '0.02';
+                            globeContainer.style.pointerEvents = 'none';
                         }
                         
-                        // CRITICAL FIX: Show FRED section without trying to scroll to it
+                        // CRITICAL FIX: Properly show FRED section using direct method
                         setTimeout(() => {
-                            if (window.TextSliderManager) {
-                                window.TextSliderManager.showFREDSection();
+                            // DIRECTLY call the FRED section display instead of relying on TextSliderManager
+                            const fredSection = document.querySelector('.fred-insight');
+                            if (fredSection) {
+                                console.log('📊 Directly displaying FRED section');
+                                
+                                // Force immediate visibility with !important overrides
+                                fredSection.style.cssText = `
+                                    position: fixed !important;
+                                    top: 0 !important;
+                                    left: 0 !important;
+                                    width: 100vw !important;
+                                    height: 100vh !important;
+                                    background: #000000 !important;
+                                    z-index: 9999 !important;
+                                    opacity: 1 !important;
+                                    display: block !important;
+                                    overflow-y: auto !important;
+                                    transform: none !important;
+                                    margin: 0 !important;
+                                    padding: 0 !important;
+                                `;
+                                
+                                // Add return button directly
+                                if (window.TextSliderManager && typeof window.TextSliderManager.addReturnButton === 'function') {
+                                    window.TextSliderManager.addReturnButton(fredSection);
+                                }
+                                
+                                // Initialize FRED data
+                                if (window.FREDDataManager) {
+                                    window.FREDDataManager.initializeCharts();
+                                }
+                                
+                                // Prevent scrolling
+                                document.body.style.overflow = 'hidden';
+                                document.documentElement.style.overflow = 'hidden';
+                                
+                                fredSection.dataset.revealed = 'true';
+                                console.log('📊 FRED section displayed successfully via direct method');
                             }
                             
                             // Mark that we're in FRED section immediately
                             this.isInFredSection = true;
-                            this.setupReverseMode();
+                            // Remove progress indicator IMMEDIATELY when FRED appears
                             this.removeProgressIndicator();
                         }, 1200);
                         
@@ -463,92 +508,28 @@
             setupReverseMode() {
                 console.log('🔄 Setting up reverse mode for FRED section');
                 
-                // Create reverse navigation indicator
-                this.createReverseIndicator();
-                
-                // Set up scroll listener for reverse detection
-                this.setupReverseScrollDetection();
+                // CRITICAL FIX: Do NOT setup scroll detection - only use the return button
+                console.log('✅ FRED section configured - only return button will work');
             }
             
-            createReverseIndicator() {
-                const indicator = document.createElement('div');
-                indicator.id = 'reverseIndicator';
-                indicator.style.cssText = `
-                    position: fixed;
-                    top: 30px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: rgba(0, 0, 0, 0.8);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 25px;
-                    padding: 12px 20px;
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 12px;
-                    color: rgba(255, 255, 255, 0.8);
-                    z-index: 1001;
-                    backdrop-filter: blur(10px);
-                    opacity: 0;
-                    transition: opacity 0.5s ease;
-                `;
-                indicator.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span>↑</span>
-                        Scroll up to return
-                    </div>
-                `;
-                
-                document.body.appendChild(indicator);
-                
-                setTimeout(() => {
-                    indicator.style.opacity = '1';
-                }, 500);
+            // CRITICAL FIX: Add method to remove progress indicator
+            removeProgressIndicator() {
+                const indicator = document.getElementById('experienceProgress');
+                if (indicator) {
+                    indicator.style.opacity = '0';
+                    indicator.style.transform = 'translateX(-50%) scale(0.8)';
+                    setTimeout(() => {
+                        if (indicator.parentNode) {
+                            indicator.parentNode.removeChild(indicator);
+                        }
+                    }, 500);
+                    console.log('🗑️ Progress indicator removed');
+                }
             }
             
-            setupReverseScrollDetection() {
-                let lastScrollY = window.pageYOffset;
-                let scrollDirection = null;
-                let reverseStarted = false;
-                let upwardScrollDistance = 0;
-                let upwardScrollTimer = null;
-                
-                const reverseScrollHandler = () => {
-                    const currentScrollY = window.pageYOffset;
-                    const scrollDelta = currentScrollY - lastScrollY;
-                    
-                    // CRITICAL FIX: Much stricter requirements for reverse scroll
-                    if (scrollDelta < -5 && this.isInFredSection && !reverseStarted) {
-                        // Accumulate upward scroll distance
-                        upwardScrollDistance += Math.abs(scrollDelta);
-                        
-                        // Clear any existing timer
-                        if (upwardScrollTimer) {
-                            clearTimeout(upwardScrollTimer);
-                        }
-                        
-                        // Reset accumulated distance after 2 seconds of no upward scrolling
-                        upwardScrollTimer = setTimeout(() => {
-                            upwardScrollDistance = 0;
-                        }, 2000);
-                        
-                        // Require significant continuous upward scrolling (200px total) to trigger reverse
-                        if (upwardScrollDistance >= 200) {
-                            console.log('🔄 Significant reverse scroll detected - starting reverse animation');
-                            reverseStarted = true;
-                            upwardScrollDistance = 0;
-                            this.startReverseExperience();
-                        }
-                    } else if (scrollDelta > 0) {
-                        // Reset if user scrolls down
-                        upwardScrollDistance = 0;
-                        if (upwardScrollTimer) {
-                            clearTimeout(upwardScrollTimer);
-                        }
-                    }
-                    
-                    lastScrollY = currentScrollY;
-                };
-                
-                window.addEventListener('scroll', reverseScrollHandler, { passive: true });
+            setupFredSectionDetection() {
+                // This method can be empty since we're using button-only navigation
+                console.log('🔧 FRED section detection configured for button-only navigation');
             }
             
             startReverseExperience() {
@@ -596,13 +577,6 @@
                 }, 1500);
             }
             
-            // Remove all the step-by-step reverse methods
-            // createReverseProgressIndicator() - REMOVED
-            // updateReverseProgress() - REMOVED  
-            // executeReverseStep() - REMOVED
-            // scheduleReverseStep() - REMOVED
-            // completeReverseExperience() - REMOVED
-            // removeReverseProgressIndicator() - REMOVED
             resetForReExperience() {
                 this.isExperienceActive = false;
                 this.isInFredSection = false;
