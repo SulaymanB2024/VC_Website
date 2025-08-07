@@ -9,6 +9,11 @@ class OrderbookManager {
     initializeOrderbook() {
         if (!this.state.initialized) {
             const orderbookElement = document.getElementById('orderbook');
+            if (!orderbookElement) {
+                console.warn('Orderbook element not found - this is normal if not on home page');
+                return;
+            }
+            
             orderbookElement.innerHTML = `
                 <div class="orderbook-header">Live Market</div>
                 <div class="price-row">
@@ -34,140 +39,120 @@ class OrderbookManager {
             
             const formattedBid = UTILS.formatPrice(bid);
             const formattedAsk = UTILS.formatPrice(ask);
-
-            // Update only the price values without any flash animation
-            const askElement = document.getElementById('askPrice');
-            const bidElement = document.getElementById('bidPrice');
             
-            if (askElement && bidElement) {
-                askElement.textContent = `$${formattedAsk}`;
-                bidElement.textContent = `$${formattedBid}`;
-                // Removed all flash animation code
-            }
+            const bidElement = document.getElementById('bidPrice');
+            const askElement = document.getElementById('askPrice');
+            
+            if (bidElement) bidElement.textContent = `$${formattedBid}`;
+            if (askElement) askElement.textContent = `$${formattedAsk}`;
         }
     }
 
     // WebSocket connection management
     connectWebSocket() {
         try {
-            console.log('Connecting to Coinbase Pro WebSocket...');
+            console.log('🔌 Attempting WebSocket connection to Coinbase...');
+            
             this.state.ws = new WebSocket(this.config.url);
             
-            const connectionTimeout = setTimeout(() => {
+            this.state.ws.onopen = () => {
+                console.log('✅ WebSocket connected');
+                this.state.connected = true;
+                this.state.reconnectAttempts = 0;
+                
+                // Subscribe to BTC-USD ticker
+                const subscribeMsg = {
+                    type: 'subscribe',
+                    product_ids: ['BTC-USD'],
+                    channels: ['ticker']
+                };
+                
+                this.state.ws.send(JSON.stringify(subscribeMsg));
+            };
+            
+            this.state.ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'ticker') {
+                        this.updateOrderbook(data);
+                    }
+                } catch (error) {
+                    console.error('Error parsing WebSocket message:', error);
+                }
+            };
+            
+            this.state.ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                this.state.connected = false;
+                
+                if (this.state.reconnectAttempts < this.config.maxReconnectAttempts) {
+                    setTimeout(() => {
+                        this.state.reconnectAttempts++;
+                        this.connectWebSocket();
+                    }, 5000);
+                } else {
+                    console.log('Max reconnection attempts reached, falling back to mock data');
+                    this.startMockOrderbook();
+                }
+            };
+            
+            this.state.ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                this.startMockOrderbook();
+            };
+            
+            // Connection timeout
+            setTimeout(() => {
                 if (!this.state.connected) {
-                    console.log('Connection timeout, using mock data');
-                    if (this.state.ws) this.state.ws.close();
+                    console.log('WebSocket connection timeout, using mock data');
+                    this.state.ws.close();
                     this.startMockOrderbook();
                 }
             }, this.config.connectionTimeout);
             
-            this.state.ws.onopen = () => {
-                console.log('Connected to Coinbase Pro');
-                this.state.connected = true;
-                this.state.reconnectAttempts = 0;
-                clearTimeout(connectionTimeout);
-                
-                const subscribeMessage = {
-                    type: 'subscribe',
-                    channels: [
-                        {
-                            name: 'ticker',
-                            product_ids: ['BTC-USD']
-                        }
-                    ]
-                };
-                this.state.ws.send(JSON.stringify(subscribeMessage));
-            };
-
-            this.state.ws.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data.type === 'ticker' && data.product_id === 'BTC-USD') {
-                        // Throttle updates to prevent excessive flashing
-                        const now = Date.now();
-                        if (now - this.state.lastUpdateTime > this.config.updateThrottle) {
-                            this.updateOrderbook(data);
-                            this.state.lastUpdateTime = now;
-                        }
-                    }
-                } catch (e) {
-                    console.error('Error parsing WebSocket data:', e);
-                }
-            };
-
-            this.state.ws.onclose = () => {
-                console.log('WebSocket connection closed');
-                this.state.connected = false;
-                clearTimeout(connectionTimeout);
-                
-                if (this.state.reconnectAttempts < this.config.maxReconnectAttempts) {
-                    this.state.reconnectAttempts++;
-                    console.log(`Reconnection attempt ${this.state.reconnectAttempts}/${this.config.maxReconnectAttempts}`);
-                    setTimeout(() => this.connectWebSocket(), 3000);
-                } else {
-                    console.log('Max reconnection attempts reached, using mock data');
-                    this.startMockOrderbook();
-                }
-            };
-
-            this.state.ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-                this.state.connected = false;
-                clearTimeout(connectionTimeout);
-            };
-            
         } catch (error) {
-            console.error('Failed to connect WebSocket:', error);
+            console.error('WebSocket setup error:', error);
             this.startMockOrderbook();
         }
-    }
+   }
 
-    // Enhanced mock orderbook with realistic data
+    // DISABLED: Enhanced mock orderbook with realistic data
     startMockOrderbook() {
-        console.log('Starting enhanced mock orderbook...');
-        let basePrice = 96750; // Current realistic BTC price
-        let isRunning = false;
+        console.log('🚫 Mock orderbook disabled - no synthetic data allowed');
         
-        if (isRunning) return;
-        isRunning = true;
-
-        this.initializeOrderbook();
-
-        const updateMockOrderbook = () => {
-            const spread = 30 + Math.random() * 40; // $30-70 spread
-            const volatility = (Math.random() - 0.5) * 800;
-            const bid = basePrice - spread/2 + volatility;
-            const ask = basePrice + spread/2 + volatility;
-
-            const formattedBid = UTILS.formatPrice(bid);
-            const formattedAsk = UTILS.formatPrice(ask);
-
-            // Update only the price values without flash animation
-            const askElement = document.getElementById('askPrice');
-            const bidElement = document.getElementById('bidPrice');
-            
-            if (askElement && bidElement) {
-                askElement.textContent = `$${formattedAsk}`;
-                bidElement.textContent = `$${formattedBid}`;
-                // Removed all flash animation code
-            }
-
-            // Realistic price movement
-            basePrice += (Math.random() - 0.5) * 1200;
-            basePrice = Math.max(85000, Math.min(120000, basePrice));
-        };
-
-        updateMockOrderbook();
-        setInterval(updateMockOrderbook, 2500 + Math.random() * 2000);
+        // Hide orderbook completely since no real data is available
+        const orderbookElement = document.getElementById('orderbook');
+        if (orderbookElement) {
+            orderbookElement.style.display = 'none';
+            console.log('💹 Orderbook hidden - no data available');
+        }
+        
+        return; // Exit early - no mock data
     }
 
-    // Initialize orderbook system
+    // Initialize orderbook system - DISABLED for synthetic data
     init() {
-        // Try WebSocket first, fall back to mock data
+        console.log('💹 Initializing orderbook system...');
+        
+        // Try WebSocket first, but no fallback to mock data
         this.connectWebSocket();
-        console.log('Orderbook manager initialized');
+        
+        // If WebSocket fails, hide the orderbook instead of showing mock data
+        setTimeout(() => {
+            if (!this.state.connected) {
+                console.log('🚫 WebSocket failed and no synthetic data allowed - hiding orderbook');
+                const orderbookElement = document.getElementById('orderbook');
+                if (orderbookElement) {
+                    orderbookElement.style.display = 'none';
+                }
+            }
+        }, this.config.connectionTimeout + 1000);
+        
+        console.log('✅ Orderbook manager initialized (real data only)');
     }
 }
 
 // Create global instance
 window.OrderbookManager = new OrderbookManager();
+
+console.log('✅ Orderbook Manager loaded successfully');

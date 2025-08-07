@@ -9,7 +9,7 @@ class MainApp {
     init() {
         if (this.initialized) return;
         
-        console.log('DOM loaded, initializing components...');
+        console.log('🚀 DOM loaded, initializing components...');
         
         try {
             // Initialize all managers in proper order
@@ -21,70 +21,114 @@ class MainApp {
             // Mark as initialized
             this.initialized = true;
             
-            console.log('All components initialized successfully');
+            console.log('✅ All components initialized successfully');
             
         } catch (error) {
-            console.error('Error during initialization:', error);
+            console.error('❌ Error during initialization:', error);
         }
     }
 
     initializeManagers() {
-        // Initialize text slider and news ticker
+        // Initialize text slider first
         if (window.TextSliderManager) {
+            console.log('📝 Initializing Text Slider...');
             this.managers.textSlider = window.TextSliderManager;
-            this.managers.textSlider.init();
+            this.managers.textSlider.initSwiper();
+            console.log('✅ Text Slider initialized');
         }
 
-        // Initialize live news API system (enhances existing ticker)
-        if (window.NewsAPIManager) {
-            this.managers.newsAPI = window.NewsAPIManager;
-            this.managers.newsAPI.init();
+        // Initialize news ticker
+        if (window.NewsTickerManager) {
+            console.log('📰 Initializing News Ticker...');
+            this.managers.newsTicker = window.NewsTickerManager;
+            this.managers.newsTicker.startTickerSeries();
+            console.log('✅ News Ticker initialized');
         }
 
-        // Initialize orderbook (try WebSocket first, fall back to mock)
+        // Initialize API managers
+        if (window.AlphaVantageManager) {
+            this.managers.alphaVantage = window.AlphaVantageManager;
+            console.log('✅ Alpha Vantage manager initialized');
+        }
+
+        if (window.CoinbaseManager) {
+            this.managers.coinbase = window.CoinbaseManager;
+            console.log('✅ Coinbase manager initialized');
+        }
+
+        // Initialize Market Snapshot
+        if (window.MarketSnapshotManager) {
+            console.log('📊 Initializing Market Snapshot...');
+            this.managers.marketSnapshot = window.MarketSnapshotManager;
+            this.managers.marketSnapshot.init();
+        }
+
+        // Initialize FRED Cards
+        if (window.FredCardsManager) {
+            console.log('📈 Initializing FRED Cards...');
+            this.managers.fredCards = window.FredCardsManager;
+            this.managers.fredCards.init();
+        }
+
+        // Initialize News Feed
+        if (window.NewsFeedManager) {
+            console.log('📰 Initializing News Feed...');
+            this.managers.newsFeed = window.NewsFeedManager;
+            this.managers.newsFeed.init();
+        }
+
+        // Initialize orderbook
         if (window.OrderbookManager) {
+            console.log('💹 Initializing Orderbook...');
             this.managers.orderbook = window.OrderbookManager;
             this.managers.orderbook.init();
         }
 
-        // Enhanced 3D Globe initialization with better error handling
-        console.log('🌍 Checking Globe prerequisites...');
-        console.log('THREE.js available:', typeof THREE !== 'undefined');
-        console.log('GlobeManager available:', typeof window.GlobeManager !== 'undefined');
+        // Initialize Globe with better error handling
+        this.initializeGlobe();
+
+        // Initialize FRED data
+        if (window.FREDDataManager) {
+            console.log('📊 Initializing FRED Data Manager...');
+            this.managers.fredData = window.FREDDataManager;
+            this.managers.fredData.init();
+        }
+
+        // Start text typing animation
+        setTimeout(() => {
+            if (this.managers.textSlider) {
+                this.managers.textSlider.typeSlideText();
+            }
+        }, 1000);
+    }
+
+    initializeGlobe() {
+        console.log('🌍 Initializing Globe...');
+        console.log('- THREE.js available:', typeof THREE !== 'undefined');
+        console.log('- GlobeManager available:', typeof window.GlobeManager !== 'undefined');
         
         const globeCanvas = document.getElementById('globeCanvas');
-        console.log('Globe canvas found:', !!globeCanvas);
+        console.log('- Globe canvas found:', !!globeCanvas);
         
         if (window.GlobeManager && typeof THREE !== 'undefined' && globeCanvas) {
-            console.log('🌍 Initializing Globe...');
             this.managers.globe = window.GlobeManager;
             
-            // Add small delay to ensure canvas is fully ready
+            // Add small delay to ensure canvas is ready
             setTimeout(() => {
                 try {
                     this.managers.globe.init();
                     console.log('✅ Globe initialized successfully');
                 } catch (error) {
                     console.error('❌ Globe initialization failed:', error);
-                    console.error('Error details:', error.stack);
                 }
-            }, 100);
+            }, 500);
         } else {
-            console.error('❌ Globe prerequisites not met:');
-            console.error('- THREE.js:', typeof THREE !== 'undefined');
-            console.error('- GlobeManager:', typeof window.GlobeManager !== 'undefined');
-            console.error('- Canvas element:', !!globeCanvas);
-        }
-
-        // Initialize FRED economic data
-        if (window.FREDDataManager) {
-            this.managers.fredData = window.FREDDataManager;
-            this.managers.fredData.init();
+            console.warn('⚠️ Globe prerequisites not met - Globe will not be available');
         }
     }
 
     setupGlobalEvents() {
-        // Handle window resize for all components
+        // Handle window resize
         const debouncedResize = UTILS.debounce(() => {
             if (this.managers.globe) {
                 this.managers.globe.onGlobeResize();
@@ -102,38 +146,53 @@ class MainApp {
         
         window.addEventListener('resize', debouncedResize);
 
-        // Performance optimization: pause animations when not visible
+        // Handle visibility changes
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                // Pause globe animation
+                // Pause animations when not visible
                 if (this.managers.globe && this.managers.globe.state.animationFrame) {
                     cancelAnimationFrame(this.managers.globe.state.animationFrame);
                 }
             } else {
-                // Resume globe animation
+                // Resume animations when visible
                 if (this.managers.globe && this.managers.globe.globeGroup) {
                     this.managers.globe.animateGlobe();
                 }
             }
         });
 
-        // Handle errors gracefully
-        window.addEventListener('error', (event) => {
-            console.error('Global error caught:', event.error);
-            // Could implement error reporting here
+        // Enhanced scroll handling for text slider
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (this.managers.textSlider) {
+                this.managers.textSlider.handleScroll();
+            }
+            
+            // Clear previous timeout
+            if (scrollTimeout) {
+                clearTimeout(scrollTimeout);
+            }
+            
+            // Set new timeout for scroll end detection
+            scrollTimeout = setTimeout(() => {
+                console.log('📜 Scroll ended');
+            }, 150);
         });
 
-        // Handle unhandled promise rejections
+        // Global error handling
+        window.addEventListener('error', (event) => {
+            console.error('🚨 Global error:', event.error);
+        });
+
         window.addEventListener('unhandledrejection', (event) => {
-            console.error('Unhandled promise rejection:', event.reason);
-            // Prevent the error from appearing in console
+            console.error('🚨 Unhandled promise rejection:', event.reason);
             event.preventDefault();
         });
     }
 
-    // Cleanup method for page unload
+    // Cleanup method
     destroy() {
-        console.log('Cleaning up application...');
+        console.log('🧹 Cleaning up application...');
         
         // Cleanup globe
         if (this.managers.globe) {
@@ -157,22 +216,14 @@ class MainApp {
         this.initialized = false;
     }
 
-    // Public API for external access
+    // Public API methods
     getManager(name) {
         return this.managers[name];
     }
 
-    // Update globe state (called from text slider)
     updateGlobeState(state) {
         if (this.managers.globe) {
             this.managers.globe.updateGlobeState(state);
-        }
-    }
-
-    // Start news ticker (called from text slider)
-    startNewsTicker() {
-        if (window.NewsTickerManager) {
-            window.NewsTickerManager.startTickerSeries();
         }
     }
 }
@@ -182,62 +233,19 @@ const app = new MainApp();
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => app.init());
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('📄 DOM Content Loaded - starting initialization');
+        app.init();
+    });
 } else {
-    // DOM already loaded
+    console.log('📄 DOM already loaded - starting initialization immediately');
     app.init();
 }
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => app.destroy());
 
-// Make app globally accessible for debugging
+// Make app globally accessible
 window.app = app;
 
-// Export for potential module use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = MainApp;
-}
-
-// Create a simple diagnostic function to check globe initialization
-function diagnoseGlobe() {
-    console.log('🔍 Globe Diagnostic Report:');
-    console.log('========================');
-    
-    // Check basic prerequisites
-    console.log('1. THREE.js loaded:', typeof THREE !== 'undefined');
-    console.log('2. Canvas element exists:', !!document.getElementById('globeCanvas'));
-    console.log('3. Container exists:', !!document.querySelector('.globe-container'));
-    console.log('4. GlobeManager exists:', typeof window.GlobeManager !== 'undefined');
-    
-    // Check manager state
-    if (window.GlobeManager) {
-        console.log('5. Globe scene exists:', !!window.GlobeManager.scene);
-        console.log('6. Globe renderer exists:', !!window.GlobeManager.renderer);
-        console.log('7. Globe group exists:', !!window.GlobeManager.globeGroup);
-        console.log('8. Animation running:', !!window.GlobeManager.state.animationFrame);
-    }
-    
-    // Check canvas dimensions
-    const canvas = document.getElementById('globeCanvas');
-    if (canvas) {
-        console.log('9. Canvas dimensions:', canvas.width + 'x' + canvas.height);
-        console.log('10. Canvas style:', canvas.style.cssText || 'no inline styles');
-    }
-    
-    // Check container dimensions
-    const container = document.querySelector('.globe-container');
-    if (container) {
-        const rect = container.getBoundingClientRect();
-        console.log('11. Container dimensions:', rect.width + 'x' + rect.height);
-        console.log('12. Container opacity:', window.getComputedStyle(container).opacity);
-    }
-    
-    console.log('========================');
-}
-
-// Add diagnostic to window for manual testing
-window.diagnoseGlobe = diagnoseGlobe;
-
-// Run diagnostic after a short delay to allow initialization
-setTimeout(diagnoseGlobe, 1000);
+console.log('🎯 Main.js loaded successfully');

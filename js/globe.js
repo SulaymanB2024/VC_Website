@@ -291,6 +291,7 @@ class GlobeManager {
             });
             
             if (points.length > 0) {
+                // Close the continent outline
                 points.push(points[0]);
             }
             

@@ -785,126 +785,162 @@ class TextSlider {
             console.log('📊 FRED section force-displayed successfully');
         }, 100);
     }
-    
-    // NEW: Completely prevent all scrolling when in FRED section
+
+    // NEW: Hide FRED section method
+    hideFREDSection() {
+        const fredSection = document.querySelector('.fred-insight');
+        if (fredSection) {
+            fredSection.style.cssText = `display: none !important;`;
+            fredSection.dataset.revealed = 'false';
+            console.log('📊 FRED section hidden');
+        }
+    }
+
+    // NEW: Add return button to FRED section
+    addReturnButton(fredSection) {
+        // Remove existing return button if present
+        const existingButton = fredSection.querySelector('.fred-return-button');
+        if (existingButton) {
+            existingButton.remove();
+        }
+
+        // Create return button
+        const returnButton = document.createElement('button');
+        returnButton.className = 'fred-return-button';
+        returnButton.innerHTML = '← Return to Experience';
+        returnButton.style.cssText = `
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            padding: 12px 20px !important;
+            border-radius: 25px !important;
+            font-family: 'Maison Neue Mono', monospace !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+            z-index: 10000 !important;
+            backdrop-filter: blur(10px) !important;
+            transition: all 0.3s ease !important;
+            pointer-events: auto !important;
+        `;
+
+        // Add hover effects
+        returnButton.addEventListener('mouseenter', () => {
+            returnButton.style.background = 'rgba(255, 255, 255, 0.2)';
+            returnButton.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+        });
+
+        returnButton.addEventListener('mouseleave', () => {
+            returnButton.style.background = 'rgba(255, 255, 255, 0.1)';
+            returnButton.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+        });
+
+        // Add click handler to return to main experience
+        returnButton.addEventListener('click', () => {
+            console.log('🔄 Return button clicked - returning to main experience');
+            this.returnToMainExperience();
+        });
+
+        // Add button to FRED section
+        fredSection.appendChild(returnButton);
+        console.log('✅ Return button added to FRED section');
+    }
+
+    // NEW: Return to main experience method
+    returnToMainExperience() {
+        console.log('🔄 Returning to main experience from FRED section');
+        
+        // Hide FRED section
+        this.hideFREDSection();
+        
+        // CRITICAL FIX: Re-enable scrolling
+        document.body.style.overflow = 'auto';
+        document.documentElement.style.overflow = 'auto';
+        
+        // Show all main elements again
+        const mainElements = [
+            '.main-text-container',
+            '.investment-cta', 
+            '.orderbook',
+            '.news-ticker',
+            '.globe-container'
+        ];
+        
+        mainElements.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                element.style.cssText = '';
+                element.style.opacity = '1';
+                element.style.visibility = 'visible';
+                element.style.pointerEvents = 'auto';
+            }
+        });
+        
+        // Reset scroll position to a reasonable location
+        window.scrollTo({
+            top: document.documentElement.scrollHeight * 0.85, // 85% down
+            behavior: 'smooth'
+        });
+        
+        // Reset experience state
+        this.currentScrollZone = 3; // Go back to zone 3 (Capital + Texas)
+        this.smoothSwitchToSlide(2, 'backward');
+        
+        // Reset globe to Texas view
+        if (window.GlobeManager) {
+            setTimeout(() => {
+                window.GlobeManager.updateGlobeState(2);
+            }, 500);
+        }
+        
+        console.log('✅ Successfully returned to main experience');
+    }
+
+    // NEW: Prevent scrolling past FRED section
     preventAllScrolling() {
-        // Store original body scroll properties
-        this.originalBodyOverflow = document.body.style.overflow;
-        this.originalHtmlOverflow = document.documentElement.style.overflow;
+        console.log('🚫 Preventing all scrolling - FRED section active');
         
-        // Disable all scrolling on body and html
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
+        // CRITICAL: Completely disable scrolling
+        document.body.style.cssText = `
+            overflow: hidden !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+        `;
         
-        // Disable scroll events globally
-        this.scrollPreventHandler = (e) => {
+        document.documentElement.style.cssText = `
+            overflow: hidden !important;
+            scroll-behavior: auto !important;
+        `;
+        
+        // Disable mouse wheel scrolling
+        const preventScroll = (e) => {
             e.preventDefault();
             e.stopPropagation();
             return false;
         };
         
-        // Add passive: false to override default passive behavior
-        window.addEventListener('scroll', this.scrollPreventHandler, { passive: false });
-        window.addEventListener('wheel', this.scrollPreventHandler, { passive: false });
-        window.addEventListener('touchmove', this.scrollPreventHandler, { passive: false });
-        window.addEventListener('keydown', this.keyPreventHandler, { passive: false });
-        
-        console.log('🚫 All scrolling completely disabled - FRED section locked');
-    }
-    
-    // NEW: Prevent arrow keys and page up/down from scrolling
-    keyPreventHandler = (e) => {
-        // Prevent arrow keys, page up/down, home/end from scrolling
-        const preventKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', 'Space'];
-        if (preventKeys.includes(e.key)) {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-    }
-
-    // NEW: Re-enable scrolling when leaving FRED section
-    restoreScrolling() {
-        // Restore original body overflow settings
-        document.body.style.overflow = this.originalBodyOverflow || '';
-        document.documentElement.style.overflow = this.originalHtmlOverflow || '';
-        
-        // Remove scroll prevention handlers
-        if (this.scrollPreventHandler) {
-            window.removeEventListener('scroll', this.scrollPreventHandler);
-            window.removeEventListener('wheel', this.scrollPreventHandler);
-            window.removeEventListener('touchmove', this.scrollPreventHandler);
-            window.removeEventListener('keydown', this.keyPreventHandler);
-        }
-        
-        // Re-enable normal scroll detection
-        this.enableScrollDetection();
-        
-        console.log('✅ Scrolling restored - normal navigation resumed');
-    }
-    
-    // NEW: Return to main experience with globe animation
-    returnToMainExperience() {
-        console.log('🔄 Returning to main experience');
-        
-        const fredSection = document.querySelector('.fred-insight');
-        if (fredSection) {
-            // Hide FRED section immediately
-            fredSection.style.cssText = `display: none !important;`;
-        }
-        
-        // CRITICAL FIX: Restore scrolling immediately
-        this.restoreScrolling();
-        
-        // Restore all hidden elements
-        const allElements = document.querySelectorAll('body > *:not(.fred-insight)');
-        allElements.forEach(element => {
-            element.style.cssText = '';
+        // Add event listeners to prevent all forms of scrolling
+        window.addEventListener('wheel', preventScroll, { passive: false });
+        window.addEventListener('touchmove', preventScroll, { passive: false });
+        window.addEventListener('keydown', (e) => {
+            // Prevent arrow keys, page up/down, space, home, end
+            if ([32, 33, 34, 35, 36, 37, 38, 39, 40].includes(e.keyCode)) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
         });
         
-        // Animate globe back into view
-        setTimeout(() => {
-            const globeContainer = document.querySelector('.globe-container');
-            if (globeContainer) {
-                globeContainer.style.transition = 'opacity 1.5s ease-in-out, transform 1s ease-in-out';
-                globeContainer.style.opacity = '0.45';
-                globeContainer.style.transform = 'translate(-50%, -50%) scale(1)';
-                globeContainer.style.pointerEvents = 'auto';
-            }
-            
-            // Reset to initial state - "THE FUTURE IS NOW" + Global view
-            if (window.TextSliderManager) {
-                window.TextSliderManager.smoothSwitchToSlide(0, 'backward');
-                window.TextSliderManager.smoothHideCTA();
-                window.TextSliderManager.currentScrollZone = 0;
-            }
-            
-            if (window.GlobeManager) {
-                window.GlobeManager.updateGlobeState(0); // Global view
-            }
-            
-            // Restore UI elements with stagger
-            const elementsToRestore = [
-                '.main-text-container',
-                '.orderbook', 
-                '.news-ticker'
-            ];
-            
-            elementsToRestore.forEach((selector, index) => {
-                const element = document.querySelector(selector);
-                if (element) {
-                    setTimeout(() => {
-                        element.style.transition = 'opacity 0.8s ease-in, transform 0.8s ease-in';
-                        element.style.opacity = '1';
-                        element.style.transform = 'translateY(0)';
-                        element.style.visibility = 'visible';
-                        element.style.pointerEvents = 'auto';
-                    }, index * 200);
-                }
-            });
-            
-            console.log('🏠 Successfully returned to main experience');
-        }, 200);
+        // Store reference for cleanup
+        this.preventScrollListeners = {
+            wheel: preventScroll,
+            touchmove: preventScroll
+        };
     }
 }
 
