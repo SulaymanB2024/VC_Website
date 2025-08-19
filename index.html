@@ -345,82 +345,175 @@
                 filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
             }
 
-            /* Modal Styles */
+            /* Executive Modal System */
             .modal-overlay {
                 position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.85);
-                backdrop-filter: blur(15px);
-                -webkit-backdrop-filter: blur(15px);
+                background: 
+                    radial-gradient(circle at 40% 30%, rgba(0, 0, 0, 0.6) 0%, transparent 50%),
+                    radial-gradient(circle at 60% 70%, rgba(0, 0, 0, 0.5) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.8) 100%);
+                backdrop-filter: blur(0px) saturate(1) brightness(1);
+                -webkit-backdrop-filter: blur(0px) saturate(1) brightness(1);
                 z-index: 9999;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 opacity: 0;
                 visibility: hidden;
-                transition: all 0.4s cubic-bezier(0.6, 0, 0.3, 1);
+                transition: 
+                    opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    visibility 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    backdrop-filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                will-change: opacity, backdrop-filter;
+            }
+
+            .modal-overlay::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: 
+                    linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0%, transparent 30%),
+                    linear-gradient(-45deg, rgba(255, 255, 255, 0.01) 0%, transparent 40%);
+                pointer-events: none;
+                animation: subtleShimmer 8s ease-in-out infinite;
             }
 
             .modal-overlay.active {
                 opacity: 1;
                 visibility: visible;
+                backdrop-filter: blur(25px) saturate(1.1) brightness(0.7);
+                -webkit-backdrop-filter: blur(25px) saturate(1.1) brightness(0.7);
             }
 
             .modal-content {
                 background: #ffffff;
-                border-radius: 16px;
-                max-width: 700px;
-                width: 90%;
-                max-height: 85vh;
-                overflow-y: auto;
+                clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 0 100%);
+                max-width: 1200px;
+                width: 88vw;
+                max-height: 88vh;
+                min-height: 650px;
+                margin: 6vh auto;
                 position: relative;
-                transform: scale(0.8) translateY(40px);
-                transition: transform 0.4s cubic-bezier(0.6, 0, 0.3, 1);
-                box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
-                font-family: Maison Neue Mono, sans-serif;
-                border: 1px solid rgba(0, 0, 0, 0.08);
+                transform: scale(0.94) translateY(30px);
+                filter: blur(4px);
+                opacity: 0;
+                transition: 
+                    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                    filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                    opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                box-shadow: 
+                    0 40px 120px rgba(0, 0, 0, 0.25),
+                    0 20px 60px rgba(0, 0, 0, 0.15),
+                    0 0 0 1px rgba(255, 255, 255, 0.05);
+                font-family: 'Maison Neue Mono', sans-serif;
+                will-change: transform, opacity, filter;
+                transform-origin: center;
+                backface-visibility: hidden;
+                perspective: 1000px;
+                display: grid;
+                grid-template-areas: 
+                    "header header"
+                    "body sidebar";
+                grid-template-columns: 1fr 320px;
+                grid-template-rows: auto 1fr;
+                gap: 0 32px;
+                overflow: hidden;
             }
 
             .modal-overlay.active .modal-content {
                 transform: scale(1) translateY(0);
+                filter: blur(0px);
+                opacity: 1;
+                transition-delay: 0.1s;
+            }
+
+            /* Executive Modal Grid Layout */
+            .modal-executive-grid {
+                display: grid;
+                grid-template-areas: 
+                    "header header"
+                    "content sidebar"
+                    "actions actions";
+                grid-template-columns: 1fr 350px;
+                grid-template-rows: auto 1fr auto;
+                gap: 0;
+                height: 100%;
+                min-height: 600px;
+                border-radius: 20px;
+                overflow: hidden;
             }
 
             .modal-header {
-                padding: 2.5rem 2.5rem 1.5rem;
-                border-bottom: 1px solid var(--cool-smoke);
+                grid-area: header;
+                padding: 2.5rem 3rem 2rem;
+                background: linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.98) 0%, 
+                    rgba(248, 248, 248, 0.95) 100%);
+                backdrop-filter: blur(25px) saturate(1.1);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
                 position: relative;
-                background: linear-gradient(135deg, var(--white-smoke) 0%, var(--white) 100%);
-                border-radius: 16px 16px 0 0;
+                animation: modalHeaderSlide 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                animation-delay: 0.3s;
+                animation-fill-mode: both;
+                opacity: 0;
+                transform: translateY(-20px);
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                grid-template-areas: "rune content close";
+                align-items: start;
+                gap: 1.5rem;
             }
 
-            /* Enhanced Modal Role Runes */
-            .modal-rune {
+            .modal-header::after {
+                content: "";
                 position: absolute;
-                top: 2rem;
-                left: 2.5rem;
-                width: 36px;
-                height: 36px;
-                opacity: 0.7;
-                transition: all 0.4s ease;
-                color: var(--black);
-                background: rgba(0, 0, 0, 0.08);
-                border-radius: 8px;
+                bottom: 0;
+                left: 3rem;
+                width: 80px;
+                height: 2px;
+                background: linear-gradient(90deg, 
+                    var(--burnt-ocre) 0%, 
+                    transparent 100%);
+                opacity: 0.4;
+            }
+
+            /* Project-Specific Modal Runes */
+            .modal-rune {
+                grid-area: rune;
+                position: relative;
+                width: 44px;
+                height: 44px;
+                background: linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.9) 0%, 
+                    rgba(248, 248, 248, 0.7) 100%);
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                box-shadow: 
+                    0 4px 16px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border: 1px solid rgba(0, 0, 0, 0.15);
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                color: var(--black);
+                font-size: 1.25rem;
+                z-index: 1;
             }
 
             .modal-rune:hover {
-                opacity: 0.9;
-                transform: scale(1.08) rotate(2deg);
-                background: rgba(0, 0, 0, 0.12);
-                border-color: rgba(0, 0, 0, 0.25);
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                opacity: 1;
+                transform: scale(1.03) rotate(1deg);
+                box-shadow: 
+                    0 8px 25px rgba(0, 0, 0, 0.12),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+                border-color: rgba(0, 0, 0, 0.12);
             }
 
             .modal-rune svg {
@@ -435,64 +528,559 @@
             }
 
             .modal-close {
-                position: absolute;
-                top: 1.5rem;
-                right: 1.5rem;
-                background: rgba(0, 0, 0, 0.04);
-                border: none;
-                font-size: 1.25rem;
-                cursor: pointer;
-                padding: 0.75rem;
-                border-radius: 50%;
-                transition: all 0.3s ease;
-                color: #555;
+                grid-area: close;
+                position: relative;
                 width: 40px;
                 height: 40px;
+                background: rgba(0, 0, 0, 0.04);
+                border: 1px solid rgba(0, 0, 0, 0.08);
+                clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-weight: 300;
-                border: 1px solid rgba(0, 0, 0, 0.05);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-size: 18px;
+                color: var(--coal);
+                font-weight: 400;
+                animation: modalCloseSlide 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                animation-delay: 0.4s;
+                animation-fill-mode: both;
+                opacity: 0;
+                transform: translateX(20px) scale(0.9);
+                z-index: 10;
+            }
+
+            .modal-close::before {
+                content: '×';
+                line-height: 1;
             }
 
             .modal-close:hover {
-                background: rgba(0, 0, 0, 0.08);
-                color: #333;
-                transform: scale(1.05);
-                border-color: rgba(0, 0, 0, 0.1);
+                background: rgba(220, 125, 90, 0.08);
+                border-color: var(--burnt-ocre);
+                color: var(--burnt-ocre);
+                transform: translateY(-1px) scale(1.05);
+            }
+
+            .modal-close:focus {
+                outline: 2px solid var(--burnt-ocre);
+                outline-offset: 2px;
+            }
+
+            .modal-content-header {
+                grid-area: content;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 44px;
             }
 
             .modal-title {
-                margin: 0 0 0 3.5rem;
+                margin: 0;
                 font-family: Aeonik Pro, sans-serif;
-                font-size: 1.5rem;
+                font-size: 2rem;
                 color: var(--black);
                 font-weight: 700;
-                line-height: 120%;
-                letter-spacing: 0;
+                line-height: 105%;
+                letter-spacing: -0.02em;
+                animation: modalTitleSlide 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                animation-delay: 0.5s;
+                animation-fill-mode: both;
+                opacity: 0;
+                transform: translateY(15px);
+                position: relative;
+                z-index: 1;
             }
 
             .modal-subtitle {
-                margin: 0.75rem 0 0 3.5rem;
-                color: var(--black);
-                font-size: 0.875rem;
-                font-weight: 400;
-                opacity: 0.6;
+                margin: 0.375rem 0 0 0;
+                font-family: Maison Neue Mono, monospace;
+                font-size: 0.8rem;
+                color: rgba(0, 0, 0, 0.55);
+                font-weight: 300;
+                line-height: 140%;
                 letter-spacing: 0.04em;
                 text-transform: uppercase;
-                line-height: 130%;
+                animation: modalSubtitleSlide 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                animation-delay: 0.6s;
+                animation-fill-mode: both;
+                opacity: 0;
+                transform: translateY(15px);
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Unified scroll context - single scrolling area */
+            .modal-scroll-wrapper {
+                grid-area: body / body / sidebar / sidebar;
+                overflow-y: auto;
+                scrollbar-width: thin;
+                scrollbar-color: var(--cool-smoke) transparent;
+                padding: 0 60px 60px 60px;
+                display: grid;
+                grid-template-columns: 1fr 320px;
+                gap: 32px;
+                align-items: start;
+            }
+            
+            .modal-scroll-wrapper::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            .modal-scroll-wrapper::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            
+            .modal-scroll-wrapper::-webkit-scrollbar-thumb {
+                background: var(--cool-smoke);
+                border-radius: 3px;
             }
 
             .modal-body {
-                padding: 2rem 2.5rem 2.5rem;
-                color: var(--black);
+                grid-area: unset;
+                padding: 0;
+                overflow: visible;
+                line-height: 1.65;
+                font-size: 15px;
+                color: var(--coal);
+                animation: modalBodySlide 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                animation-delay: 0.7s;
+                animation-fill-mode: both;
+                opacity: 0;
+                transform: translateY(20px);
+                max-width: 72ch;
+            }
+
+            .modal-sidebar {
+                grid-area: unset;
+                position: sticky;
+                top: 24px;
+                padding: 24px;
+                background: rgba(248, 248, 248, 0.4);
+                border: 1px solid rgba(0, 0, 0, 0.04);
+                clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+                overflow: visible;
+                max-height: calc(88vh - 200px);
+                animation: modalSidebarSlide 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                animation-delay: 0.9s;
+                animation-fill-mode: both;
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            .sidebar-module {
+                margin-bottom: 28px;
+                position: relative;
+            }
+
+            .sidebar-module:last-child {
+                margin-bottom: 0;
+            }
+
+            .sidebar-module-title {
+                font-family: 'Aeonik Pro', sans-serif;
+                font-weight: 500;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: var(--coal);
+                margin-bottom: 16px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+                position: relative;
+            }
+
+            .sidebar-module-title::before {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                width: 24px;
+                height: 1px;
+                background: var(--burnt-ocre);
+            }
+
+            .quick-facts {
+                display: grid;
+                gap: 0;
+            }
+
+            .quick-fact {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 16px;
+                padding: 12px 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+                font-size: 13px;
                 line-height: 1.4;
+            }
+
+            .quick-fact:last-child {
+                border-bottom: none;
+            }
+
+            .quick-fact-label {
+                color: var(--coal);
+                font-weight: 400;
+            }
+
+            .quick-fact-value {
+                color: var(--black);
+                font-weight: 500;
+                text-align: right;
+                white-space: nowrap;
+            }
+
+            .tech-stack {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 0;
+            }
+
+            .tech-chip {
+                background: rgba(0, 0, 0, 0.06);
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%);
+                padding: 6px 10px;
+                font-size: 11px;
+                font-weight: 500;
+                color: var(--black);
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                line-height: 1.2;
+                transition: all 0.2s ease;
+            }
+
+            .tech-chip:hover {
+                background: rgba(220, 125, 90, 0.08);
+                border-color: var(--burnt-ocre);
+                color: var(--burnt-ocre);
+            }
+
+            .outcome-metrics {
+                display: grid;
+                gap: 12px;
+            }
+
+            .metric-tile {
+                background: rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(0, 0, 0, 0.08);
+                clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                padding: 16px 12px;
+                text-align: center;
+                transition: all 0.2s ease;
+            }
+
+            .metric-tile:hover {
+                background: rgba(255, 255, 255, 0.95);
+                border-color: var(--burnt-ocre);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            }
+
+            .metric-number {
+                font-family: 'Aeonik Pro', sans-serif;
+                font-weight: 600;
+                font-size: 20px;
+                color: var(--burnt-ocre);
+                display: block;
+                margin-bottom: 4px;
+                letter-spacing: -0.02em;
+            }
+
+            .metric-label {
+                font-size: 10px;
+                color: var(--coal);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                font-weight: 500;
+                line-height: 1.2;
+            }
+
+            .proof-links {
+                display: grid;
+                gap: 8px;
+            }
+
+            .proof-link {
+                display: flex;
+                align-items: center;
+                padding: 12px;
+                background: rgba(255, 255, 255, 0.6);
+                border: 1px solid rgba(0, 0, 0, 0.08);
+                clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+                text-decoration: none;
+                color: var(--black);
+                font-size: 12px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .proof-link:hover {
+                background: rgba(255, 255, 255, 0.9);
+                border-color: var(--burnt-ocre);
+                transform: translateY(-1px);
+                color: var(--burnt-ocre);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            }
+
+            .proof-link::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 2px;
+                height: 100%;
+                background: var(--burnt-ocre);
+                transform: scaleY(0);
+                transition: transform 0.2s ease;
+                transform-origin: bottom;
+            }
+
+            .proof-link:hover::before {
+                transform: scaleY(1);
+            }
+
+            .proof-icon {
+                width: 16px;
+                height: 16px;
+                margin-right: 10px;
+                opacity: 0.8;
                 font-size: 14px;
-                font-family: Maison Neue Mono, sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .mini-toc {
+                position: sticky;
+                top: 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(0, 0, 0, 0.08);
+                clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+                padding: 16px;
+                margin-bottom: 4px;
+            }
+
+            .toc-item {
+                display: block;
+                padding: 8px 0 8px 12px;
+                color: var(--coal);
+                text-decoration: none;
+                font-size: 12px;
+                font-weight: 400;
+                border-left: 2px solid transparent;
+                margin-left: -12px;
+                transition: all 0.2s ease;
+                position: relative;
+            }
+
+            .toc-item:hover,
+            .toc-item.active {
+                color: var(--burnt-ocre);
+                border-left-color: var(--burnt-ocre);
+                background: rgba(220, 125, 90, 0.04);
+                font-weight: 500;
+            }
+
+            .toc-item::after {
+                content: '';
+                position: absolute;
+                right: 8px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 4px;
+                height: 4px;
+                background: var(--burnt-ocre);
+                border-radius: 50%;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            }
+
+            .toc-item.active::after {
+                opacity: 1;
+            }
+
+            .artifact-preview {
+                background: rgba(255, 255, 255, 0.8);
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                border-radius: 8px;
+                padding: 1rem;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .artifact-image {
+                width: 100%;
+                height: auto;
+                border-radius: 4px;
+                margin-bottom: 0.75rem;
+                opacity: 0.9;
+                transition: opacity 0.2s ease;
+            }
+
+            .artifact-preview:hover .artifact-image {
+                opacity: 1;
+            }
+
+            .artifact-caption {
+                font-size: 0.7rem;
+                color: var(--coal);
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .modal-impact-callout {
+                padding: 1.25rem;
+                background: transparent;
+                border-left: 3px solid var(--burnt-ocre);
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .modal-impact-callout .impact-label {
+                font-family: Maison Neue Mono, monospace;
+                font-size: 0.7rem;
+                color: var(--burnt-ocre);
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: 0.5rem;
+                display: block;
+            }
+
+            .modal-impact-callout .impact-text {
+                font-family: Maison Neue Mono, monospace;
+                font-size: 0.85rem;
+                line-height: 1.5;
+                color: var(--black);
+                margin: 0;
+            }
+
+            /* Executive Modal Animation Keyframes */
+            @keyframes modalBackdropReveal {
+                0% {
+                    opacity: 0;
+                    backdrop-filter: blur(0px);
+                }
+                100% {
+                    opacity: 1;
+                    backdrop-filter: blur(15px) saturate(1.2);
+                }
+            }
+
+            @keyframes modalContentEntrance {
+                0% {
+                    opacity: 0;
+                    transform: scale(0.85) translateY(60px);
+                    filter: blur(5px);
+                }
+                50% {
+                    opacity: 0.8;
+                    transform: scale(0.95) translateY(20px);
+                    filter: blur(2px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                    filter: blur(0px);
+                }
+            }
+
+            @keyframes modalHeaderSlide {
+                0% {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes modalCloseSlide {
+                0% {
+                    opacity: 0;
+                    transform: translateX(20px) scale(0.9);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateX(0) scale(1);
+                }
+            }
+
+            @keyframes modalTitleSlide {
+                0% {
+                    opacity: 0;
+                    transform: translateY(15px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes modalSubtitleSlide {
+                0% {
+                    opacity: 0;
+                    transform: translateY(15px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes modalBodySlide {
+                0% {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes modalStatsSlide {
+                0% {
+                    opacity: 0;
+                    transform: translateY(25px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes modalSidebarSlide {
+                0% {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
             }
 
             .modal-section {
                 margin-bottom: 2.5rem;
+                padding: 0;
+                background: transparent;
+                border: none;
+            }
+
+            .modal-section:not(:last-child) {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+                padding-bottom: 2rem;
             }
 
             .modal-section:last-child {
@@ -501,39 +1089,42 @@
 
             .modal-section-title {
                 font-family: Aeonik Pro, sans-serif;
-                font-size: 1.125rem;
+                font-size: 1.5rem;
                 font-weight: 700;
                 color: var(--black);
-                margin-bottom: 1rem;
+                margin-bottom: 1.5rem;
+                margin-top: 0;
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
                 line-height: 120%;
+                letter-spacing: -0.01em;
+            }
+
+            .modal-section-label {
+                font-family: Maison Neue Mono, monospace;
+                font-size: 0.7rem;
+                color: rgba(0, 0, 0, 0.5);
+                font-weight: 400;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: 0.75rem;
+                display: block;
             }
 
             .modal-section-icon {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 20px;
-                height: 20px;
-                margin-right: 12px;
-                opacity: 0.8;
+                width: 18px;
+                height: 18px;
+                margin-right: 0.75rem;
+                opacity: 0.6;
                 color: var(--black);
-                font-family: 'Aeonik Pro', sans-serif;
+                font-size: 0.875rem;
                 text-align: center;
                 line-height: 1;
                 transition: all 0.3s ease;
-                border-radius: 4px;
-                background: rgba(0, 0, 0, 0.05);
-                border: 1px solid rgba(0, 0, 0, 0.1);
-            }
-
-            .modal-section-icon:hover {
-                opacity: 1;
-                background: rgba(0, 0, 0, 0.1);
-                border-color: rgba(0, 0, 0, 0.2);
-                transform: scale(1.05);
             }
 
             .modal-section-icon svg {
@@ -548,133 +1139,330 @@
             }
 
             .modal-text {
-                line-height: 1.4;
+                line-height: 1.5;
                 color: var(--black);
-                margin-bottom: 1.25rem;
-                font-size: 14px;
-                font-family: Maison Neue Mono, sans-serif;
+                margin-bottom: 1.5rem;
+                font-size: 0.95rem;
+                font-family: Maison Neue Mono, monospace;
+                max-width: 68ch;
             }
 
             .modal-list {
                 list-style: none;
                 padding: 0;
-                margin: 0;
-                background: var(--white-smoke);
-                border-radius: 8px;
-                padding: 1.5rem;
-                border: 1px solid var(--cool-smoke);
+                margin: 1.5rem 0;
+                background: transparent;
+            }
+
+            .modal-list-group {
+                margin-bottom: 1.5rem;
+            }
+
+            .modal-list-group:last-child {
+                margin-bottom: 0;
+            }
+
+            .modal-list-group-title {
+                font-family: Aeonik Pro, sans-serif;
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: var(--black);
+                margin-bottom: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
             }
 
             .modal-list li {
-                padding: 0.75rem 0;
-                border-bottom: 1px solid var(--cool-smoke);
+                padding: 0.375rem 0;
                 color: var(--black);
                 display: flex;
                 align-items: flex-start;
-                gap: 0.75rem;
-                font-size: 14px;
-                line-height: 1.4;
-                font-family: Maison Neue Mono, sans-serif;
+                gap: 1rem;
+                font-size: 0.9rem;
+                line-height: 1.5;
+                font-family: Maison Neue Mono, monospace;
+                margin-bottom: 0.5rem;
+                padding-left: 1.5rem;
+                text-indent: -1.5rem;
             }
 
             .modal-list li:last-child {
-                border-bottom: none;
-                padding-bottom: 0;
+                margin-bottom: 0;
             }
 
             .modal-list li::before {
                 content: "→";
-                color: var(--black);
-                font-weight: 600;
-                font-size: 14px;
-                margin-top: 0.1rem;
+                color: rgba(0, 0, 0, 0.4);
+                font-weight: 400;
+                font-size: 0.8rem;
+                margin-top: 0.125rem;
                 flex-shrink: 0;
+                width: 1.5rem;
+                text-align: left;
+                text-indent: 0;
             }
 
             .modal-highlight {
-                background: linear-gradient(135deg, var(--black) 0%, var(--coal) 100%);
-                color: white;
-                padding: 2rem;
-                border-radius: 8px;
+                background: transparent;
+                color: var(--black);
+                padding: 1rem 0 1rem 1.5rem;
+                border-radius: 0;
                 margin: 1.5rem 0;
-                font-size: 14px;
-                line-height: 1.4;
-                font-family: Maison Neue Mono, sans-serif;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-                border: 1px solid rgba(255, 255, 255, 0.1);
+                font-size: 0.9rem;
+                line-height: 1.6;
+                font-family: Maison Neue Mono, monospace;
+                border-left: 3px solid var(--burnt-ocre);
+                position: relative;
             }
 
             .modal-highlight strong {
                 font-weight: 600;
+                color: var(--burnt-ocre);
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                display: block;
+                margin-bottom: 0.5rem;
             }
 
             .modal-stats {
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-                gap: 1.25rem;
-                margin: 2rem 0;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+                margin: 1.5rem 0 0 0;
+                animation: modalStatsSlide 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                animation-delay: 0.8s;
+                animation-fill-mode: both;
+                opacity: 0;
+                transform: translateY(25px);
             }
 
             .modal-stat {
                 text-align: center;
                 padding: 1.5rem 1rem;
-                background: rgba(0, 0, 0, 0.06);
-                border-radius: 12px;
-                transition: transform 0.3s ease;
-                border: 1px solid rgba(0, 0, 0, 0.12);
+                background: linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.9) 0%, 
+                    rgba(248, 248, 248, 0.7) 100%);
+                clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+                transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                border: 1px solid rgba(0, 0, 0, 0.06);
+                backdrop-filter: blur(10px);
+                box-shadow: 
+                    0 4px 20px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
             }
 
             .modal-stat:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
-                border-color: rgba(0, 0, 0, 0.2);
+                transform: translateY(-2px) scale(1.02);
+                box-shadow: 
+                    0 8px 30px rgba(0, 0, 0, 0.12),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+                border-color: rgba(0, 0, 0, 0.12);
+                background: linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.95) 0%, 
+                    rgba(248, 248, 248, 0.8) 100%);
             }
 
             .modal-stat-number {
                 font-family: Aeonik Pro, sans-serif;
-                font-size: 1.5rem;
+                font-size: 1.75rem;
                 font-weight: 700;
                 color: var(--black);
                 display: block;
-                line-height: 120%;
-                letter-spacing: 0;
+                line-height: 110%;
+                letter-spacing: -0.02em;
+                margin-bottom: 0.25rem;
             }
 
             .modal-stat-label {
-                font-size: 0.875rem;
-                color: var(--black);
-                margin-top: 0.5rem;
+                font-size: 0.75rem;
+                color: rgba(0, 0, 0, 0.6);
                 font-weight: 400;
                 text-transform: uppercase;
-                letter-spacing: 0.04em;
+                letter-spacing: 0.08em;
                 line-height: 130%;
-                opacity: 0.6;
-                font-family: Maison Neue Mono, sans-serif;
+                font-family: Maison Neue Mono, monospace;
+            }
+
+            @keyframes modalStatsSlide {
+                0% {
+                    opacity: 0;
+                    transform: translateY(25px);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             /* Modal responsive design */
-            @media (max-width: 768px) {
+            /* Responsive Modal Layout */
+            @media (max-width: 1024px) {
                 .modal-content {
-                    width: 95%;
-                    max-height: 90vh;
-                    border-radius: 12px;
+                    grid-template-areas: 
+                        "header"
+                        "scroll";
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto 1fr;
+                    max-width: 100%;
+                    width: 100%;
+                    height: auto;
+                    max-height: 85vh;
+                    margin: 0;
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+                    transform: translateY(100%);
+                    animation: modalBottomSheetSlide 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    animation-fill-mode: forwards;
+                    gap: 0;
+                }
+                
+                .modal-scroll-wrapper {
+                    grid-area: scroll;
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto auto;
+                    gap: 24px;
+                    padding: 24px;
                 }
                 
                 .modal-header {
-                    padding: 2rem 1.5rem 1.25rem;
+                    padding: 24px 24px 16px;
+                    gap: 16px;
+                    grid-template-columns: auto 1fr auto;
                 }
                 
                 .modal-body {
-                    padding: 1.5rem;
+                    max-width: none;
                 }
                 
+                .modal-sidebar {
+                    position: static;
+                    top: auto;
+                    padding: 20px;
+                    background: rgba(248, 248, 248, 0.6);
+                    border: 1px solid rgba(0, 0, 0, 0.08);
+                    border-top: 2px solid var(--burnt-ocre);
+                }
+                
+                .modal-sidebar .mini-toc {
+                    position: static;
+                }
+            }
+
+            @media (max-width: 640px) {
+                .modal-header {
+                    padding: 20px 20px 12px;
+                }
+                
+                .modal-scroll-wrapper {
+                    padding: 20px;
+                }
+                
+                .modal-sidebar {
+                    padding: 16px;
+                }
+            }
+                
                 .modal-title {
+                    margin-left: 3rem;
                     font-size: 1.5rem;
                 }
                 
-                .modal-stats {
-                    grid-template-columns: 1fr;
-                    gap: 1rem;
+                .modal-subtitle {
+                    margin-left: 3rem;
+                    font-size: 0.85rem;
+                }
+                
+                .modal-body {
+                    padding: 1.25rem 1.5rem 2rem;
+                }
+                
+                .modal-rune {
+                    left: 1.5rem;
+                    width: 44px;
+                    height: 44px;
+                    top: 2rem;
+                }
+                
+                .modal-close {
+                    right: 1.5rem;
+                    top: 2rem;
+                }
+            }
+
+            /* Accessibility: Reduced Motion */
+            @media (prefers-reduced-motion: reduce) {
+                .modal-overlay {
+                    transition: opacity 0.2s ease, visibility 0.2s ease;
+                }
+                
+                .modal-content {
+                    transition: opacity 0.2s ease;
+                    transform: none !important;
+                    filter: none !important;
+                }
+                
+                .modal-body,
+                .modal-sidebar,
+                .modal-close,
+                .modal-rune {
+                    animation: none !important;
+                    transform: none !important;
+                }
+                
+                .metric-tile:hover,
+                .proof-link:hover,
+                .tech-chip:hover {
+                    transform: none !important;
+                }
+            }
+
+            /* Focus Management */
+            .modal-overlay:not(.active) {
+                pointer-events: none;
+            }
+            
+            .modal-overlay.active {
+                pointer-events: auto;
+            }
+
+            /* High Contrast Support */
+            @media (prefers-contrast: high) {
+                .modal-sidebar {
+                    background: rgba(255, 255, 255, 0.95);
+                    border-color: rgba(0, 0, 0, 0.3);
+                }
+                
+                .tech-chip {
+                    background: rgba(0, 0, 0, 0.1);
+                    border-color: rgba(0, 0, 0, 0.3);
+                }
+                
+                .metric-tile {
+                    border-color: rgba(0, 0, 0, 0.2);
+                }
+            }
+
+            @keyframes modalBottomSheetSlide {
+                0% {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+                0% {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translateY(0);
+                    opacity: 1;
                 }
             }
 
@@ -1600,15 +2388,20 @@
         </script>
 
         <!-- Modal Structure -->
-        <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle">
             <div class="modal-content">
                 <div class="modal-header">
-                    <div class="modal-rune" id="modal-rune"></div>
-                    <button class="modal-close" id="modal-close">&times;</button>
-                    <h2 class="modal-title" id="modal-title"></h2>
-                    <p class="modal-subtitle" id="modal-subtitle"></p>
+                    <div class="modal-rune" id="modal-rune" aria-hidden="true"></div>
+                    <div class="modal-content-header">
+                        <h2 class="modal-title" id="modal-title"></h2>
+                        <p class="modal-subtitle" id="modal-subtitle"></p>
+                    </div>
+                    <button class="modal-close" id="modal-close" aria-label="Close modal"></button>
                 </div>
-                <div class="modal-body" id="modal-body"></div>
+                <div class="modal-scroll-wrapper">
+                    <div class="modal-body" id="modal-body"></div>
+                    <div class="modal-sidebar" id="modal-sidebar" aria-label="Project details and resources"></div>
+                </div>
             </div>
         </div>
 
@@ -1620,6 +2413,7 @@
             const modalBody = document.getElementById('modal-body');
             const modalClose = document.getElementById('modal-close');
             const modalRune = document.getElementById('modal-rune');
+            const modalSidebar = document.getElementById('modal-sidebar');
 
             // Detailed Skill-Inspired Runes for Each Modal
             const runes = {
@@ -1744,6 +2538,26 @@
                 'commercial-real-estate': {
                     title: 'Commercial Real Estate Analytics',
                     subtitle: 'Investors Alliance - Financial Analyst Intern',
+                    sidebar: {
+                        quickFacts: {
+                            'Role': 'Financial Analyst Intern',
+                            'Program': 'Summer 2024',
+                            'Location': 'Austin, TX',
+                            'Duration': '3 months'
+                        },
+                        techStack: ['Excel', 'VBA', 'SQL', 'PowerBI', 'ARGUS'],
+                        metrics: [
+                            { number: '15%', label: 'Analysis Speed Up' },
+                            { number: '$50M', label: 'Portfolio Value' },
+                            { number: '25+', label: 'Properties Modeled' }
+                        ],
+                        proofLinks: [
+                            { text: 'View Model Framework', url: '#', icon: '📊' },
+                            { text: 'Database Schema', url: '#', icon: '🏗️' },
+                            { text: 'Sample Report', url: '#', icon: '📋' }
+                        ],
+                        tocItems: ['Overview', 'Responsibilities', 'Technical Work', 'Results']
+                    },
                     content: `
                         <div class="modal-section">
                             <div class="modal-section-title">
@@ -1943,6 +2757,27 @@
                 'energy-trading': {
                     title: 'Energy Trading Specialist',
                     subtitle: 'UT Austin Energy Trading Program',
+                    sidebar: {
+                        quickFacts: {
+                            'Program': 'Energy Trading Cohort',
+                            'Institution': 'UT Austin',
+                            'Duration': 'Fall 2024',
+                            'Focus': 'Algorithmic Trading'
+                        },
+                        techStack: ['Python', 'R', 'MATLAB', 'Bloomberg Terminal', 'Excel VBA', 'SQL'],
+                        metrics: [
+                            { number: '15%', label: 'Alpha Generated' },
+                            { number: '$2M', label: 'Simulated Portfolio' },
+                            { number: '3', label: 'Market Strategies' }
+                        ],
+                        proofLinks: [
+                            { text: 'Trading Algorithm', url: '#', icon: '📈' },
+                            { text: 'Risk Model', url: '#', icon: '⚡' },
+                            { text: 'Market Analysis', url: '#', icon: '📊' },
+                            { text: 'Performance Report', url: '#', icon: '🎯' }
+                        ],
+                        tocItems: ['Overview', 'Curriculum', 'Projects', 'Performance']
+                    },
                     content: `
                         <div class="modal-section">
                             <div class="modal-section-title">
@@ -2003,6 +2838,27 @@
                 'student-leadership': {
                     title: 'Student Government Representative',
                     subtitle: 'University of Texas at Austin',
+                    sidebar: {
+                        quickFacts: {
+                            'Role': 'University Representative',
+                            'Institution': 'UT Austin',
+                            'Election': '4,000+ votes',
+                            'Term': '2023-2024'
+                        },
+                        techStack: ['Policy Analysis', 'Coalition Building', 'Budget Management', 'Strategic Planning'],
+                        metrics: [
+                            { number: '52K+', label: 'Students Represented' },
+                            { number: '4K+', label: 'Election Votes' },
+                            { number: '12', label: 'Policy Initiatives' }
+                        ],
+                        proofLinks: [
+                            { text: 'Policy Proposals', url: '#', icon: '📜' },
+                            { text: 'Election Results', url: '#', icon: '🗳️' },
+                            { text: 'Budget Report', url: '#', icon: '💰' },
+                            { text: 'Media Coverage', url: '#', icon: '📰' }
+                        ],
+                        tocItems: ['Election', 'Representation', 'Key Initiatives', 'Impact']
+                    },
                     content: `
                         <div class="modal-section">
                             <div class="modal-section-title">
@@ -2063,6 +2919,27 @@
                 'web3-innovation': {
                     title: 'Web3 Innovation Champion',
                     subtitle: 'OnionDAO Hackathon Winner',
+                    sidebar: {
+                        quickFacts: {
+                            'Event': 'OnionDAO Hackathon',
+                            'Duration': '48 hours',
+                            'Team Size': '4 developers',
+                            'Result': '1st Place Winner'
+                        },
+                        techStack: ['Solana', 'Token2022', 'Anchor', 'React', 'Web3.js', 'Rust'],
+                        metrics: [
+                            { number: '1st', label: 'Place Winner' },
+                            { number: '72', label: 'Teams Competed' },
+                            { number: '48h', label: 'Build Time' }
+                        ],
+                        proofLinks: [
+                            { text: 'Live Demo', url: '#', icon: '🚀' },
+                            { text: 'GitHub Repository', url: '#', icon: '💻' },
+                            { text: 'Demo Video', url: '#', icon: '🎥' },
+                            { text: 'Hackathon Results', url: '#', icon: '🏆' }
+                        ],
+                        tocItems: ['Victory', 'Innovation', 'Technical Stack', 'Results']
+                    },
                     content: `
                         <div class="modal-section">
                             <div class="modal-section-title">
@@ -2504,6 +3381,111 @@
                     closeModal();
                 }
             });
+            
+            // Add transition end listener to ensure complete backdrop-filter cleanup
+            modal.addEventListener('transitionend', function(e) {
+                if (e.target === modal && !modal.classList.contains('active')) {
+                    // Final cleanup to ensure backdrop-filter is completely removed
+                    modal.style.backdropFilter = 'none';
+                    modal.style.webkitBackdropFilter = 'none';
+                    
+                    // Force a style recalculation to clear any cached filters
+                    window.getComputedStyle(modal).opacity;
+                    
+                    // Reset for next opening
+                    requestAnimationFrame(() => {
+                        modal.style.backdropFilter = '';
+                        modal.style.webkitBackdropFilter = '';
+                    });
+                }
+            });
+
+            function generateSidebarContent(sidebarData) {
+                if (!sidebarData) return '';
+                
+                let html = '';
+                
+                // Mini TOC (always first and sticky)
+                if (sidebarData.tocItems && sidebarData.tocItems.length > 0) {
+                    html += `
+                        <div class="sidebar-module">
+                            <div class="mini-toc">
+                                <div class="sidebar-module-title">Contents</div>
+                                ${sidebarData.tocItems.map(item => 
+                                    `<a href="#" class="toc-item">${item}</a>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Quick Facts
+                if (sidebarData.quickFacts) {
+                    html += `
+                        <div class="sidebar-module">
+                            <div class="sidebar-module-title">Quick Facts</div>
+                            <div class="quick-facts">
+                                ${Object.entries(sidebarData.quickFacts).map(([label, value]) => 
+                                    `<div class="quick-fact">
+                                        <span class="quick-fact-label">${label}</span>
+                                        <span class="quick-fact-value">${value}</span>
+                                    </div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Tech Stack
+                if (sidebarData.techStack && sidebarData.techStack.length > 0) {
+                    html += `
+                        <div class="sidebar-module">
+                            <div class="sidebar-module-title">Tech Stack</div>
+                            <div class="tech-stack">
+                                ${sidebarData.techStack.map(tech => 
+                                    `<span class="tech-chip">${tech}</span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Outcome Metrics
+                if (sidebarData.metrics && sidebarData.metrics.length > 0) {
+                    html += `
+                        <div class="sidebar-module">
+                            <div class="sidebar-module-title">Key Metrics</div>
+                            <div class="outcome-metrics">
+                                ${sidebarData.metrics.map(metric => 
+                                    `<div class="metric-tile">
+                                        <span class="metric-number">${metric.number}</span>
+                                        <span class="metric-label">${metric.label}</span>
+                                    </div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Proof Links
+                if (sidebarData.proofLinks && sidebarData.proofLinks.length > 0) {
+                    html += `
+                        <div class="sidebar-module">
+                            <div class="sidebar-module-title">Resources</div>
+                            <div class="proof-links">
+                                ${sidebarData.proofLinks.map(link => 
+                                    `<a href="${link.url}" class="proof-link">
+                                        <span class="proof-icon">${link.icon}</span>
+                                        ${link.text}
+                                    </a>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                return html;
+            }
 
             function openModal(modalId) {
                 const data = modalData[modalId];
@@ -2511,6 +3493,9 @@
                     modalTitle.textContent = data.title;
                     modalSubtitle.textContent = data.subtitle;
                     modalBody.innerHTML = data.content;
+                    
+                    // Populate sidebar with structured content
+                    modalSidebar.innerHTML = generateSidebarContent(data.sidebar);
                     
                     // Set the appropriate rune for this modal
                     if (runes[modalId]) {
@@ -2527,6 +3512,27 @@
 
             function closeModal() {
                 modal.classList.remove('active');
+                
+                // Immediate backdrop cleanup to prevent blur persistence
+                requestAnimationFrame(() => {
+                    modal.style.backdropFilter = 'blur(0px) saturate(1) brightness(1)';
+                    modal.style.webkitBackdropFilter = 'blur(0px) saturate(1) brightness(1)';
+                });
+                
+                // Complete cleanup after transition
+                setTimeout(() => {
+                    if (!modal.classList.contains('active')) {
+                        modal.style.backdropFilter = '';
+                        modal.style.webkitBackdropFilter = '';
+                        
+                        // Force repaint to ensure backdrop-filter is cleared
+                        modal.style.transform = 'translateZ(0)';
+                        requestAnimationFrame(() => {
+                            modal.style.transform = '';
+                        });
+                    }
+                }, 450); // Slightly longer than transition duration
+                
                 document.body.style.overflow = '';
             }
         </script>
