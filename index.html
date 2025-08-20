@@ -4960,6 +4960,607 @@
                 outline: none;
             }
         </style>
+
+        <!-- Project Modal Styles -->
+        <style>
+            /* ===== PROJECT MODAL STYLES ===== */
+            
+            /* Base Modal Structure */
+            .project-modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 10000;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 200ms ease;
+                backdrop-filter: blur(4px);
+            }
+
+            .project-modal-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .project-modal {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.95);
+                width: 95vw;
+                max-width: 1400px;
+                height: 90vh;
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
+                transition: transform 200ms ease;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            }
+
+            .project-modal-overlay.active .project-modal {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            /* Corner Cut for Brand Continuity */
+            .project-modal::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 40px;
+                height: 40px;
+                background: linear-gradient(-45deg, transparent 50%, white 50%);
+                z-index: 1;
+            }
+
+            /* Header */
+            .project-modal-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 24px 32px;
+                border-bottom: 1px solid #e5e5e5;
+                background: white;
+                position: relative;
+                z-index: 2;
+            }
+
+            .project-modal-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #1a1a1a;
+                margin: 0;
+            }
+
+            .project-modal-badges {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                margin-top: 8px;
+            }
+
+            .project-badge {
+                background: #f3f4f6;
+                color: #6b7280;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .project-badge.scenario {
+                background: #fef3c7;
+                color: #92400e;
+            }
+
+            .project-badge.synthetic {
+                background: #dbeafe;
+                color: #1e40af;
+            }
+
+            .project-modal-close {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #6b7280;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                transition: all 150ms ease;
+            }
+
+            .project-modal-close:hover {
+                background: #f3f4f6;
+                color: #1a1a1a;
+            }
+
+            /* Main Content Layout */
+            .project-modal-content {
+                display: flex;
+                height: calc(100% - 80px);
+            }
+
+            .project-modal-main {
+                flex: 1;
+                padding: 32px;
+                overflow-y: auto;
+                scroll-behavior: smooth;
+            }
+
+            .project-modal-sidebar {
+                width: 320px;
+                background: #fafafa;
+                border-left: 1px solid #e5e5e5;
+                overflow-y: auto;
+                position: sticky;
+                top: 0;
+            }
+
+            /* Navigation Sections */
+            .project-section {
+                margin-bottom: 40px;
+                scroll-margin-top: 20px;
+            }
+
+            .project-section-title {
+                font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #6b7280;
+                margin-bottom: 16px;
+                padding-top: 24px;
+                border-top: 1px solid #e5e5e5;
+            }
+
+            .project-section:first-child .project-section-title {
+                border-top: none;
+                padding-top: 0;
+            }
+
+            .project-section-content {
+                line-height: 1.6;
+                color: #4b5563;
+            }
+
+            /* Sidebar Components */
+            .sidebar-section {
+                padding: 24px;
+                border-bottom: 1px solid #e5e5e5;
+            }
+
+            .sidebar-section:last-child {
+                border-bottom: none;
+            }
+
+            .sidebar-title {
+                font-weight: 600;
+                color: #1a1a1a;
+                margin-bottom: 16px;
+                font-size: 0.9rem;
+            }
+
+            /* Contents Navigation */
+            .contents-nav {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .contents-nav li {
+                margin-bottom: 8px;
+            }
+
+            .contents-nav a {
+                color: #6b7280;
+                text-decoration: none;
+                font-size: 0.875rem;
+                padding: 4px 0;
+                display: block;
+                transition: color 150ms ease;
+            }
+
+            .contents-nav a:hover,
+            .contents-nav a.active {
+                color: #1a1a1a;
+            }
+
+            /* Controls */
+            .scenario-controls {
+                margin-bottom: 20px;
+            }
+
+            .scenario-chips {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+
+            .scenario-chip {
+                background: white;
+                border: 1px solid #d1d5db;
+                color: #6b7280;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                cursor: pointer;
+                transition: all 150ms ease;
+            }
+
+            .scenario-chip.active {
+                background: #1a1a1a;
+                color: white;
+                border-color: #1a1a1a;
+            }
+
+            .parameter-control {
+                margin-bottom: 16px;
+            }
+
+            .parameter-label {
+                font-size: 0.875rem;
+                color: #4b5563;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            .parameter-slider {
+                width: 100%;
+                -webkit-appearance: none;
+                appearance: none;
+                height: 4px;
+                background: #e5e7eb;
+                border-radius: 2px;
+                outline: none;
+            }
+
+            .parameter-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                background: #1a1a1a;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+
+            /* Quick Facts */
+            .quick-facts {
+                display: grid;
+                gap: 12px;
+            }
+
+            .quick-fact {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.875rem;
+            }
+
+            .quick-fact-label {
+                color: #6b7280;
+            }
+
+            .quick-fact-value {
+                color: #1a1a1a;
+                font-weight: 500;
+            }
+
+            /* Chart Containers */
+            .chart-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+                gap: 24px;
+                margin: 24px 0;
+            }
+
+            .chart-tile {
+                background: white;
+                border: 1px solid #e5e5e5;
+                border-radius: 8px;
+                padding: 20px;
+                position: relative;
+            }
+
+            .chart-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
+            .chart-title {
+                font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #1a1a1a;
+            }
+
+            .chart-menu {
+                background: none;
+                border: none;
+                color: #6b7280;
+                cursor: pointer;
+                font-size: 1rem;
+                padding: 4px;
+                border-radius: 4px;
+                transition: background 150ms ease;
+            }
+
+            .chart-menu:hover {
+                background: #f3f4f6;
+            }
+
+            .chart-container {
+                height: 200px;
+                margin-bottom: 12px;
+            }
+
+            .chart-takeaway {
+                font-size: 0.875rem;
+                color: #6b7280;
+                line-height: 1.4;
+            }
+
+            /* Impact Stats */
+            .impact-stats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+                margin: 24px 0;
+            }
+
+            .impact-stat {
+                background: #f9fafb;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                padding: 16px;
+                text-align: center;
+            }
+
+            .impact-stat-value {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #1a1a1a;
+                margin-bottom: 4px;
+            }
+
+            .impact-stat-label {
+                font-size: 0.75rem;
+                color: #6b7280;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            /* Attachments */
+            .attachments-grid {
+                display: grid;
+                gap: 12px;
+            }
+
+            .attachment-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px;
+                background: white;
+                border: 1px solid #e5e5e5;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 150ms ease;
+            }
+
+            .attachment-item:hover {
+                background: #f9fafb;
+                border-color: #d1d5db;
+            }
+
+            .attachment-icon {
+                width: 32px;
+                height: 32px;
+                background: #f3f4f6;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.875rem;
+                color: #6b7280;
+            }
+
+            .attachment-info {
+                flex: 1;
+            }
+
+            .attachment-name {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #1a1a1a;
+                margin-bottom: 2px;
+            }
+
+            .attachment-meta {
+                font-size: 0.75rem;
+                color: #6b7280;
+            }
+
+            /* Footer */
+            .project-modal-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 32px;
+                border-top: 1px solid #e5e5e5;
+                background: #fafafa;
+            }
+
+            .synthetic-disclosure {
+                font-size: 0.75rem;
+                color: #6b7280;
+            }
+
+            .modal-navigation {
+                display: flex;
+                gap: 12px;
+            }
+
+            .nav-button {
+                background: white;
+                border: 1px solid #d1d5db;
+                color: #6b7280;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                cursor: pointer;
+                transition: all 150ms ease;
+            }
+
+            .nav-button:hover:not(:disabled) {
+                background: #f3f4f6;
+                border-color: #9ca3af;
+            }
+
+            .nav-button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            /* Data dictionary styling */
+            .data-dictionary {
+                background: #f9fafb;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                padding: 16px;
+                margin: 16px 0;
+            }
+
+            .data-dictionary-title {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: #1a1a1a;
+                margin-bottom: 12px;
+            }
+
+            .data-dictionary-item {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.75rem;
+                color: #6b7280;
+                margin-bottom: 6px;
+            }
+
+            .data-dictionary-item:last-child {
+                margin-bottom: 0;
+            }
+
+            .variable-name {
+                font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                color: #374151;
+            }
+
+            /* Chart Menu Dropdown */
+            .chart-menu-dropdown {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: white;
+                border: 1px solid #e5e5e5;
+                border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                padding: 8px 0;
+                min-width: 140px;
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-8px);
+                transition: all 150ms ease;
+            }
+
+            .chart-menu-dropdown.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+            .chart-menu-item {
+                padding: 8px 16px;
+                font-size: 0.875rem;
+                color: #4b5563;
+                cursor: pointer;
+                transition: background 150ms ease;
+            }
+
+            .chart-menu-item:hover {
+                background: #f3f4f6;
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .project-modal {
+                    width: 100vw;
+                    height: 100vh;
+                    border-radius: 0;
+                }
+
+                .project-modal-content {
+                    flex-direction: column;
+                }
+
+                .project-modal-sidebar {
+                    width: 100%;
+                    order: -1;
+                    max-height: 200px;
+                }
+
+                .contents-nav {
+                    display: flex;
+                    overflow-x: auto;
+                    padding: 0 24px;
+                    gap: 16px;
+                }
+
+                .contents-nav li {
+                    margin-bottom: 0;
+                    white-space: nowrap;
+                }
+
+                .chart-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .impact-stats {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Animation Classes */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .project-section {
+                animation: fadeInUp 0.6s ease-out;
+            }
+        </style>
+
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
         <script defer src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
         <style>
@@ -10588,6 +11189,731 @@
                 initMobileContactCTA();
                 initContactCardEffects();
             }
+
+            // ===== PROJECT MODAL SYSTEM =====
+            class ProjectModalSystem {
+                constructor() {
+                    this.currentProject = null;
+                    this.currentScenario = 'base';
+                    this.charts = {};
+                    this.projects = this.getProjectData();
+                    this.init();
+                }
+
+                init() {
+                    this.bindEvents();
+                    this.initScrollSpy();
+                }
+
+                bindEvents() {
+                    // Close modal
+                    document.getElementById('project-modal-close').addEventListener('click', () => this.closeModal());
+                    document.getElementById('project-modal-overlay').addEventListener('click', (e) => {
+                        if (e.target === e.currentTarget) this.closeModal();
+                    });
+
+                    // Keyboard navigation
+                    document.addEventListener('keydown', (e) => {
+                        if (document.getElementById('project-modal-overlay').classList.contains('active')) {
+                            if (e.key === 'Escape') this.closeModal();
+                            if (e.key === 'ArrowLeft') this.navigateProject('prev');
+                            if (e.key === 'ArrowRight') this.navigateProject('next');
+                        }
+                    });
+
+                    // Scenario controls
+                    document.querySelectorAll('.scenario-chip').forEach(chip => {
+                        chip.addEventListener('click', (e) => this.changeScenario(e.target.dataset.scenario));
+                    });
+
+                    // Parameter controls
+                    const parameterSlider = document.getElementById('primary-parameter');
+                    if (parameterSlider) {
+                        parameterSlider.addEventListener('input', (e) => {
+                            document.getElementById('parameter-value').textContent = `${e.target.value}%`;
+                            this.updateCharts();
+                        });
+                    }
+
+                    // Navigation
+                    document.getElementById('prev-project').addEventListener('click', () => this.navigateProject('prev'));
+                    document.getElementById('next-project').addEventListener('click', () => this.navigateProject('next'));
+
+                    // Contents navigation
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const targetId = e.target.getAttribute('href').substring(1);
+                            const target = document.getElementById(targetId);
+                            if (target) {
+                                target.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        });
+                    });
+                }
+
+                openModal(projectId) {
+                    this.currentProject = this.projects[projectId];
+                    if (!this.currentProject) return;
+
+                    this.populateModal();
+                    this.createCharts();
+                    
+                    const overlay = document.getElementById('project-modal-overlay');
+                    overlay.classList.add('active');
+                    overlay.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+
+                    // Update URL
+                    history.pushState({ projectId }, '', `#project-${projectId}`);
+                }
+
+                closeModal() {
+                    const overlay = document.getElementById('project-modal-overlay');
+                    overlay.classList.remove('active');
+                    overlay.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+
+                    // Clean up charts
+                    Object.values(this.charts).forEach(chart => {
+                        if (chart && chart.destroy) chart.destroy();
+                    });
+                    this.charts = {};
+
+                    // Update URL
+                    history.pushState({}, '', window.location.pathname);
+                }
+
+                populateModal() {
+                    const project = this.currentProject;
+                    
+                    // Update title
+                    document.getElementById('project-modal-title').textContent = project.title;
+                    
+                    // Update content sections
+                    document.getElementById('project-overview').textContent = project.overview;
+                    
+                    // Update methods
+                    const methodsList = document.getElementById('project-methods');
+                    methodsList.innerHTML = project.methods.map(method => `<li>${method}</li>`).join('');
+                    
+                    // Update data dictionary
+                    const dataDictionary = document.getElementById('data-dictionary-items');
+                    dataDictionary.innerHTML = project.dataDictionary.map(item => `
+                        <div class="data-dictionary-item">
+                            <span class="variable-name">${item.variable}</span>
+                            <span>${item.description}</span>
+                        </div>
+                    `).join('');
+                    
+                    // Update quick facts
+                    const quickFacts = document.getElementById('project-quick-facts');
+                    quickFacts.innerHTML = Object.entries(project.quickFacts)
+                        .map(([label, value]) => `
+                            <div class="quick-fact">
+                                <span class="quick-fact-label">${label}</span>
+                                <span class="quick-fact-value">${value}</span>
+                            </div>
+                        `).join('');
+
+                    // Update impact stats
+                    const impactStats = document.getElementById('project-impact-stats');
+                    impactStats.innerHTML = project.impactStats.map(stat => `
+                        <div class="impact-stat">
+                            <div class="impact-stat-value">${stat.value}</div>
+                            <div class="impact-stat-label">${stat.label}</div>
+                        </div>
+                    `).join('');
+
+                    // Update impact description
+                    document.getElementById('project-impact-description').textContent = project.impactDescription;
+
+                    // Update risks
+                    const risksList = document.getElementById('project-risks');
+                    risksList.innerHTML = project.risks.map(risk => `<li>${risk}</li>`).join('');
+
+                    // Update attachments
+                    const attachments = document.getElementById('project-artifacts-grid');
+                    attachments.innerHTML = project.attachments.map(att => `
+                        <div class="attachment-item" onclick="openAttachment('${att.file}')">
+                            <div class="attachment-icon">${att.icon}</div>
+                            <div class="attachment-info">
+                                <div class="attachment-name">${att.name}</div>
+                                <div class="attachment-meta">${att.meta}</div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Update sidebar attachments
+                    const sidebarAttachments = document.getElementById('project-sidebar-attachments');
+                    sidebarAttachments.innerHTML = project.attachments.slice(0, 2).map(att => `
+                        <div class="attachment-item" onclick="openAttachment('${att.file}')">
+                            <div class="attachment-icon">${att.icon}</div>
+                            <div class="attachment-info">
+                                <div class="attachment-name">${att.name}</div>
+                                <div class="attachment-meta">${att.meta}</div>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Update key metrics
+                    const keyMetrics = document.getElementById('project-key-metrics');
+                    keyMetrics.innerHTML = Object.entries(project.keyMetrics)
+                        .map(([label, value]) => `
+                            <div class="quick-fact">
+                                <span class="quick-fact-label">${label}</span>
+                                <span class="quick-fact-value">${value}</span>
+                            </div>
+                        `).join('');
+                }
+
+                changeScenario(scenario) {
+                    this.currentScenario = scenario;
+                    
+                    // Update active state
+                    document.querySelectorAll('.scenario-chip').forEach(chip => {
+                        chip.classList.toggle('active', chip.dataset.scenario === scenario);
+                    });
+                    
+                    // Update badge
+                    document.getElementById('current-scenario').textContent = 
+                        scenario.charAt(0).toUpperCase() + scenario.slice(1);
+                    
+                    // Update charts
+                    this.updateCharts();
+                }
+
+                createCharts() {
+                    if (!window.Chart) return; // Chart.js not loaded
+                    
+                    const project = this.currentProject;
+                    const chartsContainer = document.getElementById('project-charts');
+                    
+                    chartsContainer.innerHTML = project.charts.map((chart, index) => `
+                        <div class="chart-tile">
+                            <div class="chart-header">
+                                <div class="chart-title">${chart.title}</div>
+                                <button class="chart-menu" onclick="toggleChartMenu(this)">•••</button>
+                                <div class="chart-menu-dropdown">
+                                    <div class="chart-menu-item" onclick="downloadChart('chart-${index}', 'png')">Download PNG</div>
+                                    <div class="chart-menu-item" onclick="downloadChart('chart-${index}', 'csv')">Download CSV</div>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="project-chart-${index}"></canvas>
+                            </div>
+                            <div class="chart-takeaway">${chart.takeaway}</div>
+                        </div>
+                    `).join('');
+
+                    // Create actual charts
+                    project.charts.forEach((chartConfig, index) => {
+                        this.createChart(`project-chart-${index}`, chartConfig);
+                    });
+                }
+
+                createChart(canvasId, config) {
+                    const canvas = document.getElementById(canvasId);
+                    if (!canvas || !window.Chart) return;
+                    
+                    const ctx = canvas.getContext('2d');
+                    
+                    const chartConfig = {
+                        type: config.type,
+                        data: config.data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: {
+                                    grid: { color: '#f3f4f6' },
+                                    ticks: { 
+                                        font: { family: 'SF Mono, monospace', size: 10 }
+                                    }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { font: { family: 'SF Mono, monospace', size: 10 } }
+                                }
+                            },
+                            animation: {
+                                duration: 800,
+                                easing: 'easeOutQuart'
+                            }
+                        }
+                    };
+
+                    this.charts[canvasId] = new Chart(ctx, chartConfig);
+                }
+
+                updateCharts() {
+                    // Simulate data updates based on scenario and parameters
+                    Object.values(this.charts).forEach(chart => {
+                        if (chart && chart.update) {
+                            chart.update('none');
+                        }
+                    });
+                }
+
+                navigateProject(direction) {
+                    const projectIds = Object.keys(this.projects);
+                    const currentIndex = projectIds.indexOf(this.currentProject.id);
+                    let newIndex;
+                    
+                    if (direction === 'prev') {
+                        newIndex = currentIndex > 0 ? currentIndex - 1 : projectIds.length - 1;
+                    } else {
+                        newIndex = currentIndex < projectIds.length - 1 ? currentIndex + 1 : 0;
+                    }
+                    
+                    this.openModal(projectIds[newIndex]);
+                }
+
+                initScrollSpy() {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                const id = entry.target.id;
+                                document.querySelectorAll('.nav-link').forEach(link => {
+                                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                                });
+                            }
+                        });
+                    }, { rootMargin: '-50% 0px -50% 0px' });
+
+                    document.querySelectorAll('.project-section').forEach(section => {
+                        observer.observe(section);
+                    });
+                }
+
+                getProjectData() {
+                    return {
+                        'commercial-real-estate': {
+                            id: 'commercial-real-estate',
+                            title: 'Commercial Real Estate Analytics',
+                            overview: 'Built comprehensive DCF models and cash flow forecasts for commercial real estate evaluations, redesigning database infrastructure for enhanced analytical efficiency and portfolio optimization.',
+                            methods: [
+                                'Developed multi-scenario DCF models with sensitivity analysis',
+                                'Integrated market data feeds and cap rate benchmarking',
+                                'Built automated cash flow forecasting with lease rollover modeling',
+                                'Implemented risk-adjusted return calculations',
+                                'Created database optimization for 10K+ property records'
+                            ],
+                            dataDictionary: [
+                                { variable: 'noi_margin', description: 'Net Operating Income / Gross Revenue (%)' },
+                                { variable: 'cap_rate', description: 'Capitalization Rate (% annual)' },
+                                { variable: 'irr', description: 'Internal Rate of Return (% annual)' },
+                                { variable: 'sample_window', description: 'Q1 2023 - Q4 2024 (24 months)' }
+                            ],
+                            quickFacts: {
+                                'Duration': '8 months',
+                                'Portfolio Size': '$45M AUM',
+                                'Properties': '12 assets',
+                                'Team Size': '4 analysts'
+                            },
+                            impactStats: [
+                                { value: '18.4%', label: 'IRR Improvement' },
+                                { value: '$4.2M', label: 'Value Creation' },
+                                { value: '67%', label: 'Analysis Speed' }
+                            ],
+                            impactDescription: 'Redesigned analytical framework increased portfolio decision speed by 67% while improving risk-adjusted returns through enhanced scenario modeling and automated sensitivity analysis.',
+                            risks: [
+                                'Market cap rate assumptions subject to interest rate volatility',
+                                'Lease rollover timing affects cash flow predictability',
+                                'Construction cost inflation impacts development scenarios',
+                                'Local market dynamics not fully captured in regional models'
+                            ],
+                            keyMetrics: {
+                                'Current IRR': '14.8%',
+                                'Cap Rate': '6.8%',
+                                'NOI Margin': '74%'
+                            },
+                            attachments: [
+                                { icon: '📄', name: 'DCF Model.pdf', meta: '2.3 MB • Updated Dec 15', file: 'dcf-model.pdf' },
+                                { icon: '📊', name: 'market-data.csv', meta: '156 KB • Updated Dec 10', file: 'market-data.csv' }
+                            ],
+                            charts: [
+                                {
+                                    title: 'DCF to Equity · $ Millions (Base)',
+                                    type: 'bar',
+                                    data: {
+                                        labels: ['Purchase', 'NOI Growth', 'CapEx', 'Exit Value', 'Equity Return'],
+                                        datasets: [{
+                                            data: [12.5, 3.2, -1.1, 8.4, 23.0],
+                                            backgroundColor: ['#6b7280', '#d97706', '#dc2626', '#059669', '#1f2937']
+                                        }]
+                                    },
+                                    takeaway: 'Property value driven primarily by NOI optimization; cap rate sensitivity creates ±$2.1M range.'
+                                },
+                                {
+                                    title: 'IRR vs Discount Rate · % Annual',
+                                    type: 'line',
+                                    data: {
+                                        labels: ['6%', '7%', '8%', '9%', '10%', '11%', '12%'],
+                                        datasets: [{
+                                            data: [16.8, 15.9, 14.8, 13.6, 12.3, 10.9, 9.4],
+                                            borderColor: '#d97706',
+                                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                                            borderWidth: 2,
+                                            fill: true
+                                        }]
+                                    },
+                                    takeaway: 'IRR is most sensitive to exit cap; +50bps ↓ IRR ≈ 110bps in base scenario.'
+                                }
+                            ]
+                        },
+                        'blockchain-cofounder': {
+                            id: 'blockchain-cofounder',
+                            title: 'Blockchain Protocol Development',
+                            overview: 'Architected innovative blockchain project on Bittensor protocol, secured $10K DormDAO grant for decentralized governance initiatives with focus on scalability and consensus mechanisms.',
+                            methods: [
+                                'Designed consensus algorithm for 1000+ TPS throughput',
+                                'Implemented smart contract architecture with gas optimization',
+                                'Built validator network with economic incentive structures',
+                                'Created governance token with utility-based economics',
+                                'Developed stress testing framework for network performance'
+                            ],
+                            dataDictionary: [
+                                { variable: 'tps', description: 'Transactions Per Second (peak)' },
+                                { variable: 'validator_count', description: 'Active network validators' },
+                                { variable: 'gas_cost', description: 'Average transaction cost (gwei)' },
+                                { variable: 'uptime', description: 'Network availability (%)' }
+                            ],
+                            quickFacts: {
+                                'Duration': '6 months',
+                                'Grant Amount': '$10K',
+                                'Network TPS': '1,200',
+                                'Validators': '150+'
+                            },
+                            impactStats: [
+                                { value: '1,200', label: 'Peak TPS' },
+                                { value: '99.8%', label: 'Uptime' },
+                                { value: '150+', label: 'Validators' }
+                            ],
+                            impactDescription: 'Delivered scalable blockchain infrastructure with industry-leading throughput while maintaining decentralization through innovative consensus mechanisms.',
+                            risks: [
+                                'Network scalability challenges during high transaction volumes',
+                                'Validator incentive alignment requires ongoing economic tuning',
+                                'Regulatory uncertainty around governance token classification',
+                                'Interoperability constraints with existing blockchain networks'
+                            ],
+                            keyMetrics: {
+                                'Peak TPS': '1,200',
+                                'Avg Gas Cost': '0.02 gwei',
+                                'Network Uptime': '99.8%'
+                            },
+                            attachments: [
+                                { icon: '⚡', name: 'Protocol Whitepaper.pdf', meta: '1.8 MB • Updated Nov 28', file: 'whitepaper.pdf' },
+                                { icon: '💾', name: 'smart-contracts.sol', meta: '89 KB • Updated Dec 5', file: 'contracts.sol' }
+                            ],
+                            charts: [
+                                {
+                                    title: 'TPS vs Network Load · Transactions/Second',
+                                    type: 'line',
+                                    data: {
+                                        labels: ['0%', '20%', '40%', '60%', '80%', '100%'],
+                                        datasets: [{
+                                            data: [1200, 1180, 1150, 1100, 950, 800],
+                                            borderColor: '#d97706',
+                                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                                            borderWidth: 2,
+                                            fill: true
+                                        }]
+                                    },
+                                    takeaway: 'Network maintains >80% peak performance under 60% load; graceful degradation beyond threshold.'
+                                }
+                            ]
+                        },
+                        'energy-trading': {
+                            id: 'energy-trading',
+                            title: 'Energy Commodities Trading',
+                            overview: 'Advanced energy commodities analysis and algorithmic trading strategies development at UTEXAS Energy Trading cohort program focusing on volatility modeling and risk management.',
+                            methods: [
+                                'Built volatility forecasting models using GARCH methodology',
+                                'Developed mean-reversion trading strategies for natural gas',
+                                'Implemented real-time risk monitoring with VaR calculations',
+                                'Created automated execution system with latency optimization',
+                                'Analyzed seasonal patterns and weather derivative impacts'
+                            ],
+                            dataDictionary: [
+                                { variable: 'sharpe_ratio', description: 'Risk-adjusted return metric' },
+                                { variable: 'max_drawdown', description: 'Peak-to-trough decline (%)' },
+                                { variable: 'var_95', description: 'Value at Risk (95% confidence)' },
+                                { variable: 'volatility', description: 'Annualized price volatility (%)' }
+                            ],
+                            quickFacts: {
+                                'Duration': '4 months',
+                                'Strategies': '6 algorithms',
+                                'Max Drawdown': '2.8%',
+                                'Sharpe Ratio': '1.84'
+                            },
+                            impactStats: [
+                                { value: '1.84', label: 'Sharpe Ratio' },
+                                { value: '2.8%', label: 'Max Drawdown' },
+                                { value: '24.3%', label: 'Annual Return' }
+                            ],
+                            impactDescription: 'Developed high-frequency trading algorithms achieving superior risk-adjusted returns through advanced volatility modeling and systematic execution.',
+                            risks: [
+                                'Market microstructure changes affect algorithm performance',
+                                'Regulatory shifts in energy markets impact trading strategies',
+                                'Weather pattern deviations from historical models',
+                                'Execution latency risks during high volatility periods'
+                            ],
+                            keyMetrics: {
+                                'Annual Return': '24.3%',
+                                'Volatility': '15.2%',
+                                'Win Rate': '68%'
+                            },
+                            attachments: [
+                                { icon: '📈', name: 'Trading Strategy.pdf', meta: '2.1 MB • Updated Oct 15', file: 'strategy.pdf' },
+                                { icon: '🔄', name: 'backtest-results.xlsx', meta: '445 KB • Updated Oct 20', file: 'backtest.xlsx' }
+                            ],
+                            charts: [
+                                {
+                                    title: 'Cumulative Returns · % Performance',
+                                    type: 'line',
+                                    data: {
+                                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                                        datasets: [{
+                                            data: [0, 4.2, 8.1, 12.8, 18.3, 24.3],
+                                            borderColor: '#d97706',
+                                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                                            borderWidth: 2,
+                                            fill: true
+                                        }]
+                                    },
+                                    takeaway: 'Consistent monthly gains with low correlation to broader energy market movements.'
+                                }
+                            ]
+                        }
+                    };
+                }
+            }
+
+            // Global functions for external calls
+            function toggleChartMenu(button) {
+                const dropdown = button.nextElementSibling;
+                dropdown.classList.toggle('active');
+                
+                // Close other dropdowns
+                document.querySelectorAll('.chart-menu-dropdown').forEach(dd => {
+                    if (dd !== dropdown) dd.classList.remove('active');
+                });
+            }
+
+            function downloadChart(chartId, format) {
+                console.log(`Downloading ${chartId} as ${format}`);
+                // Close dropdown
+                document.querySelectorAll('.chart-menu-dropdown').forEach(dd => {
+                    dd.classList.remove('active');
+                });
+            }
+
+            function openAttachment(filename) {
+                console.log(`Opening attachment: ${filename}`);
+            }
+
+            // Initialize the project modal system
+            let projectModalSystem;
+            
+            // Override the existing openModal function to use project modals for specific IDs
+            const originalOpenModal = window.openModal || function() {};
+            
+            window.openModal = function(modalId) {
+                // Check if this is a project modal
+                const projectIds = ['commercial-real-estate', 'blockchain-cofounder', 'energy-trading', 'investment-analyst', 'student-leadership', 'web3-innovation'];
+                
+                if (projectIds.includes(modalId)) {
+                    if (!projectModalSystem) {
+                        projectModalSystem = new ProjectModalSystem();
+                    }
+                    projectModalSystem.openModal(modalId);
+                } else {
+                    // Use original modal system for career highlights
+                    originalOpenModal(modalId);
+                }
+            };
+
+            // Initialize project modal system on DOM ready
+            document.addEventListener('DOMContentLoaded', () => {
+                if (!projectModalSystem) {
+                    projectModalSystem = new ProjectModalSystem();
+                }
+            });
+
+            // Handle browser back/forward for project modals
+            window.addEventListener('popstate', (e) => {
+                if (e.state && e.state.projectId) {
+                    if (!projectModalSystem) {
+                        projectModalSystem = new ProjectModalSystem();
+                    }
+                    projectModalSystem.openModal(e.state.projectId);
+                } else if (projectModalSystem) {
+                    projectModalSystem.closeModal();
+                }
+            });
         </script>
+
+        <!-- Project Modal Structure -->
+        <div id="project-modal-overlay" class="project-modal-overlay" role="dialog" aria-labelledby="project-modal-title" aria-hidden="true">
+            <div class="project-modal">
+                <!-- Header -->
+                <div class="project-modal-header">
+                    <div>
+                        <h1 id="project-modal-title" class="project-modal-title">Project Title</h1>
+                        <div class="project-modal-badges">
+                            <span class="project-badge scenario" id="current-scenario">Base</span>
+                            <span class="project-badge synthetic">Synthetic</span>
+                        </div>
+                    </div>
+                    <button class="project-modal-close" aria-label="Close project details" id="project-modal-close">×</button>
+                </div>
+
+                <!-- Main Content -->
+                <div class="project-modal-content">
+                    <!-- Left Column - Narrative -->
+                    <div class="project-modal-main">
+                        <!-- Overview -->
+                        <section class="project-section" id="overview">
+                            <h2 class="project-section-title">Overview</h2>
+                            <div class="project-section-content" id="project-overview">
+                                Project overview will be populated here...
+                            </div>
+                        </section>
+
+                        <!-- Methods & Data -->
+                        <section class="project-section" id="methods">
+                            <h2 class="project-section-title">Methods & Data</h2>
+                            <div class="project-section-content">
+                                <ul id="project-methods">
+                                    <!-- Methods will be populated by JavaScript -->
+                                </ul>
+                                
+                                <div class="data-dictionary" id="project-data-dictionary">
+                                    <div class="data-dictionary-title">Data Dictionary</div>
+                                    <div id="data-dictionary-items">
+                                        <!-- Data dictionary items will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Results -->
+                        <section class="project-section" id="results">
+                            <h2 class="project-section-title">Results</h2>
+                            <div class="project-section-content">
+                                <div class="chart-grid" id="project-charts">
+                                    <!-- Charts will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Impact -->
+                        <section class="project-section" id="impact">
+                            <h2 class="project-section-title">Impact</h2>
+                            <div class="project-section-content">
+                                <div class="impact-stats" id="project-impact-stats">
+                                    <!-- Impact stats will be populated by JavaScript -->
+                                </div>
+                                <p id="project-impact-description"></p>
+                            </div>
+                        </section>
+
+                        <!-- Risks & Limitations -->
+                        <section class="project-section" id="risks">
+                            <h2 class="project-section-title">Risks & Sensitivities</h2>
+                            <div class="project-section-content">
+                                <ul id="project-risks">
+                                    <!-- Risks will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                        </section>
+
+                        <!-- Artifacts -->
+                        <section class="project-section" id="artifacts">
+                            <h2 class="project-section-title">Artifacts</h2>
+                            <div class="project-section-content">
+                                <div class="attachments-grid" id="project-artifacts-grid">
+                                    <!-- Attachments will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <div class="project-modal-sidebar">
+                        <!-- Contents -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Contents</div>
+                            <ul class="contents-nav">
+                                <li><a href="#overview" class="nav-link">Overview</a></li>
+                                <li><a href="#methods" class="nav-link">Methods</a></li>
+                                <li><a href="#results" class="nav-link">Results</a></li>
+                                <li><a href="#impact" class="nav-link">Impact</a></li>
+                                <li><a href="#risks" class="nav-link">Risks</a></li>
+                                <li><a href="#artifacts" class="nav-link">Artifacts</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Quick Facts -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Quick Facts</div>
+                            <div class="quick-facts" id="project-quick-facts">
+                                <!-- Quick facts will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Assumptions & Controls -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Assumptions & Controls</div>
+                            <div class="scenario-controls">
+                                <div class="scenario-chips">
+                                    <button class="scenario-chip active" data-scenario="base">Base</button>
+                                    <button class="scenario-chip" data-scenario="bull">Bull</button>
+                                    <button class="scenario-chip" data-scenario="bear">Bear</button>
+                                </div>
+                                <div class="parameter-control">
+                                    <label class="parameter-label">Primary Parameter: <span id="parameter-value">8.5%</span></label>
+                                    <input type="range" class="parameter-slider" id="primary-parameter" min="6" max="12" step="0.5" value="8.5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Key Metrics -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Key Metrics</div>
+                            <div class="quick-facts" id="project-key-metrics">
+                                <!-- Key metrics will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Attachments -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Attachments</div>
+                            <div class="attachments-grid" id="project-sidebar-attachments">
+                                <!-- Sidebar attachments will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="project-modal-footer">
+                    <div class="synthetic-disclosure">
+                        Charts and numbers are synthetic for portfolio demonstration.
+                    </div>
+                    <div class="modal-navigation">
+                        <button class="nav-button" id="prev-project">← Previous</button>
+                        <button class="nav-button" id="next-project">Next →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load Chart.js for project modals -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </body>
 </html>
