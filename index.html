@@ -26,6 +26,17 @@
         <link href="https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63c5ab3a7129213d35bdeff2_faivcon.png" rel="shortcut icon" type="image/x-icon"/>
         <link href="https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/6400d853b215d6a6baf8fc77_riot-webclip.jpg" rel="apple-touch-icon"/>
         <style>
+            /* Design System Variables Override */
+            :root {
+                --black: #000000;
+                --white: #ffffff;
+                --coal: #474747;
+                --linen: #ebe2dd;
+                --white-smoke: #eeeeee;
+                --cool-smoke: #e5e7eb;
+                --burnt-ocre: #9f9087;
+            }
+
             .nav__link:after {
                 content: "";
                 position: absolute;
@@ -230,7 +241,7 @@
                 filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
             }
 
-            /* Executive Modal System */
+            /* Executive Modal System - Enhanced Smooth Transitions */
             .modal-overlay {
                 position: fixed;
                 top: 0;
@@ -250,11 +261,36 @@
                 opacity: 0 !important;
                 visibility: hidden !important;
                 transition: 
-                    opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                    visibility 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                    backdrop-filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    visibility 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    backdrop-filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
                 will-change: opacity, backdrop-filter;
                 transform: translateX(100vw) !important; /* Move completely off screen */
+            }
+
+            /* Preload shimmer effect */
+            .modal-overlay::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 40px;
+                height: 40px;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                border-top: 2px solid rgba(255, 255, 255, 0.8);
+                border-radius: 50%;
+                animation: modalSpinner 0.8s linear infinite;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .modal-overlay.loading::after {
+                opacity: 1;
+            }
+
+            @keyframes modalSpinner {
+                to { transform: translate(-50%, -50%) rotate(360deg); }
             }
 
             .modal-overlay::before {
@@ -281,6 +317,24 @@
                 transform: translateX(0) !important; /* Bring back to view */
             }
 
+            /* Exit transition class for smooth closing */
+            .modal-overlay.closing {
+                transition: 
+                    opacity 0.4s cubic-bezier(0.4, 0, 1, 1),
+                    visibility 0.4s cubic-bezier(0.4, 0, 1, 1),
+                    backdrop-filter 0.5s cubic-bezier(0.4, 0, 1, 1);
+            }
+
+            .modal-overlay.closing .modal-content {
+                transform: scale(0.92) translateY(40px) rotateX(-4deg);
+                filter: blur(4px);
+                opacity: 0;
+                transition: 
+                    transform 0.4s cubic-bezier(0.4, 0, 1, 1),
+                    filter 0.3s cubic-bezier(0.4, 0, 1, 1),
+                    opacity 0.3s cubic-bezier(0.4, 0, 1, 1);
+            }
+
             .modal-content {
                 background: #ffffff;
                 clip-path: polygon(0 0, calc(100% - 40px) 0, 100% 40px, 100% 100%, 0 100%);
@@ -290,20 +344,20 @@
                 min-height: 650px;
                 margin: 6vh auto;
                 position: relative;
-                transform: scale(0.94) translateY(30px);
-                filter: blur(4px);
+                transform: scale(0.88) translateY(60px) rotateX(8deg);
+                filter: blur(8px);
                 opacity: 0;
                 transition: 
-                    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-                    filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                    opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                    filter 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
                 box-shadow: 
                     0 40px 120px rgba(0, 0, 0, 0.25),
                     0 20px 60px rgba(0, 0, 0, 0.15),
                     0 0 0 1px rgba(255, 255, 255, 0.05);
                 font-family: 'Maison Neue Mono', sans-serif;
                 will-change: transform, opacity, filter;
-                transform-origin: center;
+                transform-origin: center bottom;
                 backface-visibility: hidden;
                 perspective: 1000px;
                 display: grid;
@@ -317,10 +371,10 @@
             }
 
             .modal-overlay.active .modal-content {
-                transform: scale(1) translateY(0);
+                transform: scale(1) translateY(0) rotateX(0deg);
                 filter: blur(0px);
                 opacity: 1;
-                transition-delay: 0.1s;
+                transition-delay: 0.2s;
             }
 
             /* Executive Modal Grid Layout */
@@ -467,35 +521,35 @@
 
             .modal-title {
                 margin: 0;
-                font-family: Aeonik Pro, sans-serif;
+                font-family: 'Aeonik Pro', sans-serif;
                 font-size: 2rem;
                 color: var(--black);
                 font-weight: 700;
-                line-height: 105%;
+                line-height: 1.05;
                 letter-spacing: -0.02em;
-                animation: modalTitleSlide 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                animation-delay: 0.5s;
+                animation: modalTitleSlide 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+                animation-delay: 0.4s;
                 animation-fill-mode: both;
                 opacity: 0;
-                transform: translateY(15px);
+                transform: translateY(20px);
                 position: relative;
                 z-index: 1;
             }
 
             .modal-subtitle {
                 margin: 0.375rem 0 0 0;
-                font-family: Maison Neue Mono, monospace;
+                font-family: 'Maison Neue Mono', monospace;
                 font-size: 0.8rem;
-                color: rgba(0, 0, 0, 0.55);
+                color: var(--coal);
                 font-weight: 300;
-                line-height: 140%;
+                line-height: 1.4;
                 letter-spacing: 0.04em;
                 text-transform: uppercase;
-                animation: modalSubtitleSlide 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                animation: modalSubtitleSlide 0.8s cubic-bezier(0.16, 1, 0.3, 1);
                 animation-delay: 0.6s;
                 animation-fill-mode: both;
                 opacity: 0;
-                transform: translateY(15px);
+                transform: translateY(20px);
                 position: relative;
                 z-index: 1;
             }
@@ -533,11 +587,11 @@
                 line-height: 1.65;
                 font-size: 15px;
                 color: var(--coal);
-                animation: modalBodySlide 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                animation-delay: 0.7s;
+                animation: modalBodySlide 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+                animation-delay: 0.8s;
                 animation-fill-mode: both;
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(24px);
                 max-width: 72ch;
             }
 
@@ -908,26 +962,15 @@
             @keyframes modalTitleSlide {
                 0% {
                     opacity: 0;
-                    transform: translateY(15px);
+                    transform: translateY(24px) scale(0.98);
                 }
                 100% {
                     opacity: 1;
-                    transform: translateY(0);
+                    transform: translateY(0) scale(1);
                 }
             }
 
             @keyframes modalSubtitleSlide {
-                0% {
-                    opacity: 0;
-                    transform: translateY(15px);
-                }
-                100% {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            @keyframes modalBodySlide {
                 0% {
                     opacity: 0;
                     transform: translateY(20px);
@@ -938,14 +981,25 @@
                 }
             }
 
-            @keyframes modalStatsSlide {
+            @keyframes modalBodySlide {
                 0% {
                     opacity: 0;
-                    transform: translateY(25px);
+                    transform: translateY(24px) scale(0.99);
                 }
                 100% {
                     opacity: 1;
-                    transform: translateY(0);
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            @keyframes modalStatsSlide {
+                0% {
+                    opacity: 0;
+                    transform: translateY(30px) scale(0.98);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
                 }
             }
 
@@ -977,7 +1031,7 @@
             }
 
             .modal-section-title {
-                font-family: Aeonik Pro, sans-serif;
+                font-family: 'Aeonik Pro', sans-serif;
                 font-size: 1.5rem;
                 font-weight: 700;
                 color: var(--black);
@@ -986,34 +1040,51 @@
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
-                line-height: 120%;
+                line-height: 1.2;
                 letter-spacing: -0.01em;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                padding: 0.5rem 0;
+                border-radius: 8px;
+            }
+
+            .modal-section-title:hover {
+                color: var(--coal);
+                transform: translateX(4px);
             }
 
             .modal-section-label {
-                font-family: Maison Neue Mono, monospace;
+                font-family: 'Maison Neue Mono', monospace;
                 font-size: 0.7rem;
-                color: rgba(0, 0, 0, 0.5);
+                color: var(--coal);
                 font-weight: 400;
                 text-transform: uppercase;
                 letter-spacing: 0.08em;
                 margin-bottom: 0.75rem;
                 display: block;
+                opacity: 0.8;
             }
 
             .modal-section-icon {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                width: 18px;
-                height: 18px;
+                width: 24px;
+                height: 24px;
                 margin-right: 0.75rem;
-                opacity: 0.6;
-                color: var(--black);
+                background: var(--cool-smoke);
+                color: var(--coal);
                 font-size: 0.875rem;
                 text-align: center;
                 line-height: 1;
-                transition: all 0.3s ease;
+                border-radius: 6px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .modal-section-title:hover .modal-section-icon {
+                transform: rotate(5deg) scale(1.1);
+                background: var(--burnt-ocre);
+                color: var(--white);
             }
 
             .modal-section-icon svg {
@@ -1052,7 +1123,7 @@
             }
 
             .modal-list-group-title {
-                font-family: Aeonik Pro, sans-serif;
+                font-family: 'Aeonik Pro', sans-serif;
                 font-size: 0.9rem;
                 font-weight: 600;
                 color: var(--black);
@@ -1063,13 +1134,13 @@
 
             .modal-list li {
                 padding: 0.375rem 0;
-                color: var(--black);
+                color: var(--coal);
                 display: flex;
                 align-items: flex-start;
                 gap: 1rem;
                 font-size: 0.9rem;
                 line-height: 1.5;
-                font-family: Maison Neue Mono, monospace;
+                font-family: 'Maison Neue Mono', monospace;
                 margin-bottom: 0.5rem;
                 padding-left: 1.5rem;
                 text-indent: -1.5rem;
@@ -1081,7 +1152,7 @@
 
             .modal-list li::before {
                 content: "→";
-                color: rgba(0, 0, 0, 0.4);
+                color: var(--burnt-ocre);
                 font-weight: 400;
                 font-size: 0.8rem;
                 margin-top: 0.125rem;
@@ -1119,11 +1190,11 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 1rem;
                 margin: 1.5rem 0 0 0;
-                animation: modalStatsSlide 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                animation-delay: 0.8s;
+                animation: modalStatsSlide 1s cubic-bezier(0.16, 1, 0.3, 1);
+                animation-delay: 1s;
                 animation-fill-mode: both;
                 opacity: 0;
-                transform: translateY(25px);
+                transform: translateY(30px);
             }
 
             .modal-stat {
@@ -1153,23 +1224,24 @@
             }
 
             .modal-stat-number {
-                font-family: Aeonik Pro, sans-serif;
+                font-family: 'Aeonik Pro', sans-serif;
                 font-size: 1.75rem;
                 font-weight: 700;
                 color: var(--black);
                 display: block;
-                line-height: 110%;
+                line-height: 1.1;
                 letter-spacing: -0.02em;
                 margin-bottom: 0.25rem;
             }
 
             .modal-stat-label {
                 font-size: 0.75rem;
-                color: rgba(0, 0, 0, 0.6);
+                color: var(--coal);
                 font-weight: 400;
                 text-transform: uppercase;
                 letter-spacing: 0.08em;
-                line-height: 130%;
+                line-height: 1.3;
+                font-family: 'Maison Neue Mono', monospace;
                 font-family: Maison Neue Mono, monospace;
             }
 
@@ -1409,25 +1481,161 @@
                 border: 1px solid rgba(0, 0, 0, 0.1);
                 border-radius: 0;
                 padding: 1.5rem;
-                transition: all 0.3s ease;
+                transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
                 cursor: pointer;
                 position: relative;
                 clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+                overflow: hidden;
+                will-change: transform;
+            }
+
+            .experience-grid-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, 
+                    rgba(0, 0, 0, 0.02) 0%, 
+                    rgba(71, 71, 71, 0.04) 100%);
+                opacity: 0;
+                transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                pointer-events: none;
+                z-index: 1;
             }
 
             .experience-grid-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-                border-color: rgba(0, 0, 0, 0.2);
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 
+                    0 16px 40px rgba(0, 0, 0, 0.15),
+                    0 8px 24px rgba(0, 0, 0, 0.12),
+                    0 0 0 1px rgba(0, 0, 0, 0.05);
+                border-color: rgba(0, 0, 0, 0.25);
+                clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 0 100%);
+            }
+
+            .experience-grid-card:hover::before {
+                opacity: 1;
             }
 
             .experience-grid-card:hover .grid-card-title {
-                text-decoration: underline;
-                text-decoration-color: rgba(0, 0, 0, 0.3);
+                color: var(--coal);
+                transform: translateY(-2px);
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
 
             .experience-grid-card:hover .grid-card-chevron {
-                transform: translateX(2px);
+                transform: translateX(4px) scale(1.1);
+                color: var(--burnt-ocre);
+            }
+
+            /* Enhanced interactions for experience card content */
+            .experience-grid-card .grid-card-header {
+                position: relative;
+                z-index: 2;
+                transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+
+            .experience-grid-card:hover .grid-card-header {
+                transform: translateY(-1px);
+            }
+
+            .experience-grid-card .grid-card-description {
+                position: relative;
+                z-index: 2;
+                transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+
+            .experience-grid-card:hover .grid-card-description {
+                color: var(--coal);
+                transform: translateY(-1px);
+            }
+
+            .experience-grid-card .grid-card-badges {
+                position: relative;
+                z-index: 2;
+                transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+
+            .experience-grid-card:hover .grid-card-badges {
+                transform: translateY(-1px);
+            }
+
+            .experience-grid-card:hover .grid-card-badges .badge {
+                background: var(--cool-smoke);
+                color: var(--black);
+                border-color: var(--burnt-ocre);
+            }
+
+            /* Sophisticated corner animation for experience cards */
+            .experience-grid-card::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 20px;
+                height: 20px;
+                background: linear-gradient(-45deg, transparent 50%, var(--burnt-ocre) 50%);
+                opacity: 0;
+                transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                z-index: 3;
+            }
+
+            .experience-grid-card:hover::after {
+                opacity: 0.8;
+                width: 25px;
+                height: 25px;
+            }
+
+            /* Shimmer effect for premium feel */
+            .experience-grid-card .shimmer {
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.4),
+                    transparent
+                );
+                transition: left 0.6s ease;
+                z-index: 2;
+            }
+
+            .experience-grid-card:hover .shimmer {
+                left: 100%;
+            }
+
+            /* Ensure all content is above overlay effects */
+            .experience-grid-card > * {
+                position: relative;
+                z-index: 4;
+            }
+
+            /* Grid-wide hover state management for staggered effects */
+            .experience-grid:hover .experience-grid-card:not(:hover) {
+                opacity: 0.7;
+                transform: scale(0.98);
+                transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+
+            /* Staggered animation timing for grid entry */
+            .experience-grid-card:nth-child(1) { animation-delay: 0.1s; }
+            .experience-grid-card:nth-child(2) { animation-delay: 0.2s; }
+            .experience-grid-card:nth-child(3) { animation-delay: 0.3s; }
+            .experience-grid-card:nth-child(4) { animation-delay: 0.4s; }
+            .experience-grid-card:nth-child(5) { animation-delay: 0.5s; }
+            .experience-grid-card:nth-child(6) { animation-delay: 0.6s; }
+
+            /* Enhanced focus states for accessibility */
+            .experience-grid-card:focus {
+                outline: 2px solid var(--burnt-ocre);
+                outline-offset: 2px;
+                transform: translateY(-4px);
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
             }
 
             .grid-card-header {
@@ -4965,7 +5173,7 @@
         <style>
             /* ===== PROJECT MODAL STYLES ===== */
             
-            /* Base Modal Structure */
+            /* Base Modal Structure - Enhanced Smooth Transitions */
             .project-modal-overlay {
                 position: fixed;
                 top: 0;
@@ -4976,32 +5184,67 @@
                 z-index: 10000;
                 opacity: 0;
                 visibility: hidden;
-                transition: all 200ms ease;
-                backdrop-filter: blur(4px);
+                transition: 
+                    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                    visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                    backdrop-filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+                backdrop-filter: blur(0px);
+                -webkit-backdrop-filter: blur(0px);
+                will-change: opacity, backdrop-filter;
             }
 
             .project-modal-overlay.active {
                 opacity: 1;
                 visibility: visible;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+
+            /* Exit transition for project modals */
+            .project-modal-overlay.closing {
+                transition: 
+                    opacity 0.4s cubic-bezier(0.4, 0, 1, 1),
+                    visibility 0.4s cubic-bezier(0.4, 0, 1, 1),
+                    backdrop-filter 0.4s cubic-bezier(0.4, 0, 1, 1);
+            }
+
+            .project-modal-overlay.closing .project-modal {
+                transform: translate(-50%, -50%) scale(0.88) translateY(30px);
+                opacity: 0;
+                filter: blur(2px);
+                transition: 
+                    transform 0.4s cubic-bezier(0.4, 0, 1, 1),
+                    opacity 0.3s cubic-bezier(0.4, 0, 1, 1),
+                    filter 0.3s cubic-bezier(0.4, 0, 1, 1);
             }
 
             .project-modal {
                 position: fixed;
                 top: 50%;
                 left: 50%;
-                transform: translate(-50%, -50%) scale(0.95);
+                transform: translate(-50%, -50%) scale(0.85) translateY(40px);
                 width: 95vw;
                 max-width: 1400px;
                 height: 90vh;
                 background: white;
                 border-radius: 8px;
                 overflow: hidden;
-                transition: transform 200ms ease;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                transition: 
+                    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 
+                    0 20px 40px rgba(0, 0, 0, 0.3),
+                    0 40px 80px rgba(0, 0, 0, 0.2);
+                opacity: 0;
+                will-change: transform, opacity;
+                filter: blur(2px);
             }
 
             .project-modal-overlay.active .project-modal {
-                transform: translate(-50%, -50%) scale(1);
+                transform: translate(-50%, -50%) scale(1) translateY(0);
+                opacity: 1;
+                filter: blur(0px);
+                transition-delay: 0.1s;
             }
 
             /* Corner Cut for Brand Continuity */
@@ -5022,17 +5265,20 @@
                 align-items: center;
                 justify-content: space-between;
                 padding: 24px 32px;
-                border-bottom: 1px solid #e5e5e5;
-                background: white;
+                border-bottom: 1px solid var(--cool-smoke);
+                background: var(--white);
                 position: relative;
                 z-index: 2;
             }
 
             .project-modal-title {
+                font-family: 'Aeonik Pro', sans-serif;
                 font-size: 1.5rem;
-                font-weight: 600;
-                color: #1a1a1a;
+                font-weight: 700;
+                color: var(--black);
                 margin: 0;
+                line-height: 1.2;
+                letter-spacing: -0.01em;
             }
 
             .project-modal-badges {
@@ -5305,7 +5551,14 @@
 
             .chart-container {
                 height: 200px;
+                width: 100%;
                 margin-bottom: 12px;
+                position: relative;
+            }
+
+            .chart-container canvas {
+                max-height: 200px !important;
+                width: 100% !important;
             }
 
             .chart-takeaway {
@@ -5561,6 +5814,1289 @@
             }
         </style>
 
+        <!-- Career Modal Styles -->
+        <style>
+            /* ===== ENHANCED ARTIFACT CARDS & EVIDENCE SECTION ===== */
+            
+            /* Evidence Section Grouping */
+            .evidence-group {
+                margin-bottom: 24px;
+            }
+
+            .evidence-group-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+
+            .evidence-group-pill {
+                background: #f3f4f6;
+                color: #6b7280;
+                padding: 4px 12px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .evidence-view-toggle {
+                margin-left: auto;
+                display: flex;
+                gap: 4px;
+            }
+
+            .view-toggle-btn {
+                background: none;
+                border: 1px solid #d1d5db;
+                padding: 6px 8px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.75rem;
+                color: #6b7280;
+                transition: all 120ms ease;
+            }
+
+            .view-toggle-btn.active {
+                background: #1a1a1a;
+                color: white;
+                border-color: #1a1a1a;
+            }
+
+            /* Artifact Cards - Corner-cut design */
+            .career-artifacts-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin: 16px 0;
+            }
+
+            .career-artifacts-grid.grid-view {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 16px;
+            }
+
+            .career-artifact-card {
+                position: relative;
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                padding: 14px;
+                cursor: pointer;
+                transition: all 120ms ease;
+                animation: artifactCardEnter 200ms ease-out;
+                overflow: hidden;
+            }
+
+            /* Corner cut for artifact cards */
+            .career-artifact-card::before {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 16px;
+                height: 16px;
+                background: linear-gradient(45deg, transparent 50%, white 50%);
+                z-index: 1;
+            }
+
+            .career-artifact-card:hover {
+                border-color: #d97706;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                transform: translateY(-1px);
+            }
+
+            .career-artifact-card:focus-within {
+                outline: none;
+                border-color: #1a1a1a;
+                box-shadow: 0 0 0 1px #1a1a1a;
+            }
+
+            .artifact-card-content {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .artifact-icon-container {
+                position: relative;
+                flex-shrink: 0;
+                width: 24px;
+                height: 24px;
+            }
+
+            .artifact-file-icon {
+                font-size: 1.25rem;
+                color: #6b7280;
+            }
+
+            .artifact-status-dot {
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                width: 8px;
+                height: 8px;
+                background: #059669;
+                border: 1.5px solid white;
+                border-radius: 50%;
+            }
+
+            .artifact-main-content {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .artifact-title {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #1a1a1a;
+                margin-bottom: 2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                transition: text-decoration 120ms ease;
+            }
+
+            .career-artifact-card:hover .artifact-title {
+                text-decoration: underline;
+            }
+
+            .artifact-meta {
+                font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                font-size: 0.75rem;
+                color: #6b7280;
+                margin-bottom: 4px;
+            }
+
+            .artifact-description {
+                font-size: 0.75rem;
+                color: #6b7280;
+                line-height: 1.4;
+                margin-top: 4px;
+            }
+
+            .artifact-actions {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                margin-left: auto;
+                flex-shrink: 0;
+            }
+
+            .artifact-action-btn {
+                background: none;
+                border: none;
+                padding: 6px;
+                border-radius: 4px;
+                cursor: pointer;
+                color: #6b7280;
+                font-size: 0.75rem;
+                transition: all 120ms ease;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+
+            .artifact-action-btn.primary {
+                background: #f3f4f6;
+                color: #1a1a1a;
+                font-weight: 500;
+                padding: 6px 10px;
+            }
+
+            .artifact-action-btn:hover {
+                background: #e5e7eb;
+                color: #1a1a1a;
+            }
+
+            .artifact-action-btn.primary:hover {
+                background: #d1d5db;
+            }
+
+            /* Progress indicator */
+            .artifact-progress {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: #d97706;
+                transform: scaleX(0);
+                transform-origin: left;
+                transition: transform 300ms ease;
+            }
+
+            .artifact-progress.active {
+                transform: scaleX(1);
+            }
+
+            /* Show all toggle */
+            .evidence-show-all {
+                margin-top: 16px;
+                text-align: center;
+            }
+
+            .evidence-show-all button {
+                background: none;
+                border: 1px solid #d1d5db;
+                color: #6b7280;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.8125rem;
+                transition: all 120ms ease;
+            }
+
+            .evidence-show-all button:hover {
+                border-color: #1a1a1a;
+                color: #1a1a1a;
+            }
+
+            /* Inline Preview Drawer */
+            .evidence-preview-drawer {
+                margin-top: 20px;
+                background: #fafafa;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                overflow: hidden;
+                transition: all 200ms ease;
+                max-height: 0;
+                opacity: 0;
+            }
+
+            .evidence-preview-drawer.active {
+                max-height: 500px;
+                opacity: 1;
+            }
+
+            .preview-drawer-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 16px;
+                background: white;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .preview-drawer-title {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #1a1a1a;
+            }
+
+            .preview-drawer-controls {
+                display: flex;
+                gap: 8px;
+            }
+
+            .preview-control-btn {
+                background: none;
+                border: 1px solid #d1d5db;
+                padding: 4px 8px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.75rem;
+                color: #6b7280;
+                transition: all 120ms ease;
+            }
+
+            .preview-control-btn:hover {
+                border-color: #1a1a1a;
+                color: #1a1a1a;
+            }
+
+            .preview-drawer-content {
+                padding: 16px;
+                height: 360px;
+                overflow: auto;
+            }
+
+            /* Animation keyframes */
+            @keyframes artifactCardEnter {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* ===== ENHANCED CAREER MODAL REFINEMENTS ===== */
+            
+            /* Base Modal Structure - Refined Smooth Transitions */
+            .career-modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.75);
+                z-index: 9000;
+                opacity: 0;
+                visibility: hidden;
+                transition: 
+                    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                    visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                    backdrop-filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+                backdrop-filter: blur(0px);
+                -webkit-backdrop-filter: blur(0px);
+                will-change: opacity, backdrop-filter;
+            }
+
+            .career-modal-overlay.active {
+                opacity: 1;
+                visibility: visible;
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+
+            /* Exit transition for career modals */
+            .career-modal-overlay.closing {
+                transition: 
+                    opacity 0.35s cubic-bezier(0.4, 0, 1, 1),
+                    visibility 0.35s cubic-bezier(0.4, 0, 1, 1),
+                    backdrop-filter 0.4s cubic-bezier(0.4, 0, 1, 1);
+            }
+
+            .career-modal-overlay.closing .career-modal {
+                transform: translate(-50%, -50%) scale(0.92) translateY(25px);
+                opacity: 0;
+                filter: blur(1px);
+                transition: 
+                    transform 0.35s cubic-bezier(0.4, 0, 1, 1),
+                    opacity 0.3s cubic-bezier(0.4, 0, 1, 1),
+                    filter 0.25s cubic-bezier(0.4, 0, 1, 1);
+            }
+
+            .career-modal {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.9) translateY(30px);
+                width: 95vw;
+                max-width: 1200px;
+                height: 85vh;
+                background: white;
+                border-radius: 6px;
+                overflow: hidden;
+                transition: 
+                    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                    filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 
+                    0 16px 32px rgba(0, 0, 0, 0.2),
+                    0 32px 64px rgba(0, 0, 0, 0.15);
+                opacity: 0;
+                filter: blur(1px);
+                will-change: transform, opacity, filter;
+            }
+
+            .career-modal-overlay.active .career-modal {
+                transform: translate(-50%, -50%) scale(1) translateY(0);
+                opacity: 1;
+                filter: blur(0px);
+                transition-delay: 0.1s;
+            }
+
+            /* Corner Cut for Brand Continuity */
+            .career-modal::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 32px;
+                height: 32px;
+                background: linear-gradient(-45deg, transparent 50%, white 50%);
+                z-index: 1;
+            }
+
+            /* Header - Refined spacing and badge positioning */
+            .career-modal-header {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                padding: 16px 32px 20px;
+                border-bottom: 1px solid var(--cool-smoke);
+                background: var(--white);
+                position: relative;
+                z-index: 2;
+            }
+
+            .career-modal-header-content {
+                flex: 1;
+            }
+
+            .career-modal-overline {
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: #6b7280;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                margin-bottom: 4px;
+            }
+
+            .career-modal-title-row {
+                display: flex;
+                align-items: baseline;
+                gap: 12px;
+                margin-bottom: 0;
+            }
+
+            .career-modal-title {
+                font-family: 'Aeonik Pro', sans-serif;
+                font-size: 1.375rem;
+                font-weight: 700;
+                color: var(--black);
+                margin: 0;
+                line-height: 1.3;
+                flex: 1;
+                letter-spacing: -0.01em;
+            }
+
+            .career-modal-badges {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                flex-shrink: 0;
+            }
+
+            .career-badge {
+                background: var(--cool-smoke);
+                color: var(--coal);
+                padding: 3px 6px;
+                border-radius: 3px;
+                font-size: 0.6875rem;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                font-family: 'Maison Neue Mono', monospace;
+            }
+
+            .career-modal-close {
+                background: none;
+                border: none;
+                font-size: 1rem;
+                cursor: pointer;
+                color: var(--coal);
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                transition: all 120ms ease;
+                margin-top: -4px;
+                flex-shrink: 0;
+            }
+
+            .career-modal-close:hover {
+                background: var(--cool-smoke);
+                color: var(--black);
+            }
+
+            /* Main Content Layout */
+            .career-modal-content {
+                display: flex;
+                height: calc(100% - 80px);
+            }
+
+            .career-modal-main {
+                flex: 1;
+                padding: 32px;
+                overflow-y: auto;
+                scroll-behavior: smooth;
+            }
+
+            .career-modal-sidebar {
+                width: 300px;
+                background: #fafafa;
+                border-left: 1px solid #e5e7eb;
+                overflow-y: auto;
+                position: sticky;
+                top: 0;
+            }
+
+            /* Navigation Sections - Enhanced spacing rhythm */
+            .career-section {
+                margin-bottom: 32px;
+                scroll-margin-top: 20px;
+            }
+
+            .career-section-title {
+                font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #6b7280;
+                margin-bottom: 16px;
+                padding-top: 20px;
+                position: relative;
+            }
+
+            .career-section:first-child .career-section-title {
+                padding-top: 0;
+            }
+
+            .career-section:not(:first-child) .career-section-title::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 20%;
+                height: 1px;
+                background: #e5e7eb;
+            }
+
+            /* Section label caps for key sections */
+            .career-section[id="results"] .career-section-title::after,
+            .career-section[id="evidence"] .career-section-title::after {
+                content: '';
+                position: absolute;
+                top: -12px;
+                left: 0;
+                right: 0;
+                height: 8px;
+                background: linear-gradient(to bottom, rgba(243, 244, 246, 0.5), transparent);
+                pointer-events: none;
+            }
+
+            .career-section-content {
+                line-height: 1.6;
+                color: #4b5563;
+            }
+
+            .career-section-content ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .career-section-content li {
+                margin-bottom: 8px;
+                padding-left: 16px;
+                position: relative;
+            }
+
+            .career-section-content li::before {
+                content: '•';
+                color: #d97706;
+                position: absolute;
+                left: 0;
+                font-weight: bold;
+            }
+
+            /* Impact Stats - Refined tiles with better typography */
+            .career-impact-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 16px;
+                margin: 20px 0;
+            }
+
+            .career-impact-stat {
+                text-align: center;
+                padding: 16px 12px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                position: relative;
+                transition: all 120ms ease;
+            }
+
+            .career-impact-stat:hover {
+                border-color: #d1d5db;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            }
+
+            .career-impact-value {
+                font-family: 'Aeonik Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #1a1a1a;
+                margin-bottom: 4px;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .career-impact-label {
+                font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                font-size: 0.75rem;
+                color: #6b7280;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                font-weight: 500;
+                line-height: 1.2;
+            }
+
+            /* Tooltip for metric definitions */
+            .career-impact-stat::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #1a1a1a;
+                color: white;
+                padding: 6px 8px;
+                border-radius: 4px;
+                font-size: 0.6875rem;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 120ms ease;
+                margin-bottom: 4px;
+            }
+
+            .career-impact-stat:hover::after,
+            .career-impact-stat:focus-within::after {
+                opacity: 1;
+            }
+
+            /* Chart Container */
+            .career-chart-container {
+                margin: 24px 0;
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                padding: 20px;
+            }
+
+            .career-chart-title {
+                font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                color: #1a1a1a;
+                margin-bottom: 16px;
+            }
+
+            .career-chart-canvas {
+                height: 240px !important;
+                width: 100% !important;
+                max-height: 240px !important;
+            }
+
+            .career-chart-caption {
+                font-size: 0.8125rem;
+                color: #6b7280;
+                margin-top: 12px;
+                font-style: italic;
+            }
+
+            /* Artifacts Grid - Enhanced Mini Cards */
+            .career-artifacts-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 16px;
+                margin: 20px 0;
+            }
+
+            .career-artifacts-grid.list-view {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .career-artifact-item {
+                position: relative;
+                background: white;
+                border: 1px solid var(--cool-smoke, #e5e7eb);
+                border-radius: 6px;
+                padding: 0;
+                cursor: pointer;
+                transition: all 120ms ease;
+                overflow: hidden;
+                animation: fadeInUp 0.4s ease-out;
+            }
+
+            /* Corner cut for mini section cards */
+            .career-artifact-item::before {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 16px;
+                height: 16px;
+                background: linear-gradient(45deg, transparent 50%, white 50%);
+                z-index: 1;
+            }
+
+            .career-artifact-item:hover {
+                border-color: var(--coal, #1a1a1a);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            }
+
+            .career-artifact-item:hover .career-artifact-title {
+                text-decoration: underline;
+            }
+
+            .career-artifact-item:focus-within {
+                border-color: var(--coal, #1a1a1a);
+                outline: 1px solid var(--coal, #1a1a1a);
+                outline-offset: 1px;
+            }
+
+            .career-artifact-content {
+                padding: 14px 16px 0;
+            }
+
+            .career-artifact-header {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                margin-bottom: 8px;
+            }
+
+            .career-artifact-icon-container {
+                position: relative;
+                flex-shrink: 0;
+                width: 20px;
+                height: 20px;
+                margin-top: 2px;
+            }
+
+            .career-artifact-icon {
+                font-size: 16px;
+                color: #6b7280;
+                line-height: 1;
+            }
+
+            .career-artifact-status-dot {
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                border: 1px solid white;
+            }
+
+            .career-artifact-status-dot.updated {
+                background: #d97706;
+            }
+
+            .career-artifact-status-dot.new {
+                background: #059669;
+            }
+
+            .career-artifact-main {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .career-artifact-title {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #1a1a1a;
+                margin: 0 0 4px 0;
+                line-height: 1.3;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .career-artifact-meta {
+                font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+                font-size: 0.75rem;
+                color: #6b7280;
+                margin: 0 0 6px 0;
+                font-variant-numeric: tabular-nums;
+            }
+
+            .career-artifact-description {
+                font-size: 0.8125rem;
+                color: #4b5563;
+                line-height: 1.4;
+                margin: 0 0 12px 0;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .career-artifact-actions {
+                border-top: 1px solid #f3f4f6;
+                padding: 10px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: #fafafa;
+            }
+
+            .career-artifact-actions-left {
+                display: flex;
+                gap: 8px;
+            }
+
+            .career-artifact-action {
+                background: none;
+                border: none;
+                padding: 6px 8px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 100ms ease;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 0.75rem;
+                color: #6b7280;
+            }
+
+            .career-artifact-action:hover {
+                background: #e5e7eb;
+                color: #1a1a1a;
+            }
+
+            .career-artifact-action-icon {
+                width: 12px;
+                height: 12px;
+                stroke-width: 2;
+            }
+
+            .career-artifact-menu {
+                position: relative;
+            }
+
+            .career-artifact-menu-trigger {
+                background: none;
+                border: none;
+                padding: 6px;
+                border-radius: 4px;
+                cursor: pointer;
+                color: #6b7280;
+                transition: all 100ms ease;
+            }
+
+            .career-artifact-menu-trigger:hover {
+                background: #e5e7eb;
+                color: #1a1a1a;
+            }
+
+            /* Type Icons */
+            .career-artifact-icon.pdf::before { content: '📄'; }
+            .career-artifact-icon.xlsx::before { content: '📊'; }
+            .career-artifact-icon.csv::before { content: '📋'; }
+            .career-artifact-icon.png::before { content: '🖼️'; }
+            .career-artifact-icon.md::before { content: '📝'; }
+            .career-artifact-icon.zip::before { content: '📦'; }
+            .career-artifact-icon.mp4::before { content: '🎬'; }
+
+            /* Group Headers */
+            .career-artifacts-group {
+                margin-bottom: 24px;
+            }
+
+            .career-artifacts-group-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 12px;
+                position: sticky;
+                top: 0;
+                background: white;
+                z-index: 2;
+                padding: 8px 0;
+            }
+
+            .career-artifacts-group-pill {
+                background: #f3f4f6;
+                color: #4b5563;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 120ms ease;
+            }
+
+            .career-artifacts-group-pill:hover {
+                background: #e5e7eb;
+                color: #1a1a1a;
+            }
+
+            .career-artifacts-controls {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .career-artifacts-view-toggle {
+                display: flex;
+                background: #f3f4f6;
+                border-radius: 6px;
+                padding: 2px;
+            }
+
+            .career-artifacts-view-button {
+                background: none;
+                border: none;
+                padding: 4px 8px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.75rem;
+                color: #6b7280;
+                transition: all 100ms ease;
+            }
+
+            .career-artifacts-view-button.active {
+                background: white;
+                color: #1a1a1a;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Inline Preview Drawer */
+            .career-preview-drawer {
+                display: none;
+                background: #fafafa;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                margin: 8px 0;
+                overflow: hidden;
+                animation: slideDown 160ms ease-out;
+            }
+
+            .career-preview-drawer.active {
+                display: block;
+            }
+
+            .career-preview-header {
+                padding: 12px 16px;
+                border-bottom: 1px solid #e5e7eb;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: white;
+            }
+
+            .career-preview-title {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #1a1a1a;
+            }
+
+            .career-preview-close {
+                background: none;
+                border: none;
+                padding: 4px;
+                cursor: pointer;
+                color: #6b7280;
+                border-radius: 4px;
+                transition: all 100ms ease;
+            }
+
+            .career-preview-close:hover {
+                background: #e5e7eb;
+                color: #1a1a1a;
+            }
+
+            .career-preview-content {
+                height: 400px;
+                padding: 16px;
+                overflow: auto;
+            }
+
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    max-height: 0;
+                    transform: translateY(-8px);
+                }
+                to {
+                    opacity: 1;
+                    max-height: 500px;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Sidebar Components */
+            .sidebar-section {
+                padding: 20px;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .sidebar-section:last-child {
+                border-bottom: none;
+            }
+
+            .sidebar-title {
+                font-weight: 600;
+                color: #1a1a1a;
+                margin-bottom: 14px;
+                font-size: 0.875rem;
+            }
+
+            /* Career Quick Facts - Definition list style */
+            .career-quick-facts {
+                display: grid;
+                gap: 8px;
+            }
+
+            .career-quick-fact {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 12px;
+                font-size: 0.8125rem;
+                align-items: baseline;
+            }
+
+            .career-quick-fact-label {
+                color: #6b7280;
+                font-weight: 500;
+            }
+
+            .career-quick-fact-value {
+                color: #1a1a1a;
+                font-weight: 600;
+                font-variant-numeric: tabular-nums;
+                text-align: right;
+            }
+
+            /* Skills - Refined pills */
+            .career-skills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                max-height: calc(2.5rem * 3);
+                overflow: hidden;
+            }
+
+            .career-skill-chip {
+                background: white;
+                border: 1px solid #d1d5db;
+                color: #4b5563;
+                padding: 6px 10px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                line-height: 1;
+                transition: all 120ms ease;
+            }
+
+            .career-skill-chip:hover {
+                border-color: #9ca3af;
+                background: #f9fafb;
+            }
+
+            /* Recognition */
+            .career-recognition {
+                font-size: 0.8125rem;
+                color: #4b5563;
+                font-style: italic;
+                line-height: 1.5;
+                position: relative;
+                padding-left: 12px;
+            }
+
+            .career-recognition::before {
+                content: '"';
+                position: absolute;
+                left: 0;
+                top: 0;
+                color: #d1d5db;
+                font-size: 1.25rem;
+                line-height: 1;
+            }
+
+            /* Enhanced Contents Navigation */
+            .contents-nav {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .contents-nav li {
+                margin-bottom: 4px;
+            }
+
+            .contents-nav a {
+                color: #6b7280;
+                text-decoration: none;
+                font-size: 0.8125rem;
+                padding: 6px 0;
+                display: block;
+                transition: all 80ms ease;
+                position: relative;
+                border-radius: 3px;
+                padding-left: 12px;
+            }
+
+            .contents-nav a:hover {
+                color: #1a1a1a;
+                background: rgba(243, 244, 246, 0.5);
+            }
+
+            .contents-nav a.active {
+                color: #1a1a1a;
+                font-weight: 600;
+            }
+
+            .contents-nav a.active::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 2px;
+                height: 16px;
+                background: #d97706;
+                border-radius: 1px;
+                animation: tocUnderline 80ms ease-out;
+            }
+
+            @keyframes tocUnderline {
+                from {
+                    width: 0;
+                    opacity: 0;
+                }
+                to {
+                    width: 2px;
+                    opacity: 1;
+                }
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .career-modal {
+                    width: 100%;
+                    height: 100vh;
+                    border-radius: 0;
+                }
+
+                .career-modal-content {
+                    flex-direction: column;
+                }
+
+                .career-modal-sidebar {
+                    width: 100%;
+                    background: white;
+                    border-left: none;
+                    border-top: 1px solid #e5e7eb;
+                    position: static;
+                }
+
+                .career-impact-stats {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 12px;
+                }
+
+                .career-artifacts-grid {
+                    grid-template-columns: 1fr;
+                    gap: 8px;
+                }
+                
+                .career-artifacts-grid.grid-view {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                
+                .career-artifact-card {
+                    padding: 12px;
+                }
+                
+                .artifact-main-content {
+                    min-width: 0;
+                }
+                
+                .artifact-title {
+                    font-size: 0.875rem;
+                }
+                
+                .artifact-meta {
+                    font-size: 0.75rem;
+                }
+                
+                .artifact-description {
+                    font-size: 0.75rem;
+                }
+                
+                .artifact-actions {
+                    flex-shrink: 0;
+                    gap: 4px;
+                }
+                
+                .artifact-action-btn {
+                    min-width: auto;
+                    padding: 4px 8px;
+                    font-size: 0.75rem;
+                }
+                
+                .artifact-action-btn.primary {
+                    padding: 6px 12px;
+                }
+                
+                /* Evidence groups mobile */
+                .evidence-group {
+                    margin-bottom: 20px;
+                }
+                
+                .evidence-group-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                }
+                
+                .evidence-view-toggle {
+                    align-self: flex-end;
+                }
+                
+                .view-toggle-btn {
+                    padding: 4px 8px;
+                    font-size: 0.75rem;
+                }
+                
+                /* Preview drawer mobile */
+                .evidence-preview-drawer {
+                    height: 50vh;
+                    border-radius: 16px 16px 0 0;
+                }
+                
+                .preview-drawer-header {
+                    padding: 12px 16px;
+                }
+                
+                .preview-drawer-title {
+                    font-size: 0.875rem;
+                }
+                
+                .preview-control-btn {
+                    padding: 4px 8px;
+                    font-size: 0.75rem;
+                }
+
+                .career-chart-canvas {
+                    height: 200px;
+                }
+            }
+
+            /* Animation keyframes */
+            @keyframes countUp {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .career-impact-stat {
+                animation: fadeInUp 0.5s ease-out;
+            }
+        </style>
+
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
         <script defer src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
         <style>
@@ -5604,8 +7140,85 @@
             }
 
             .portfolio-card:hover .portfolio-card__arrow {
-                background-color: #000;
-                color: #fff;
+                background-color: var(--black);
+                color: var(--white);
+                transform: translate(2px, -2px) scale(1.1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Arrow transition setup */
+            .portfolio-card__arrow {
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            /* Enhanced hover effects for project cards - matching career highlights */
+            .portfolio-card__wrap {
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .portfolio-card__wrap:hover {
+                transform: translateY(-4px);
+                box-shadow: 
+                    0 8px 25px rgba(0, 0, 0, 0.15),
+                    0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .portfolio-card__wrap:hover .card-shape {
+                filter: brightness(1.02);
+            }
+
+            .portfolio-card__wrap:hover .portfolio-card__title {
+                color: var(--coal);
+                transform: translateX(2px);
+                transition: all 0.2s ease;
+                letter-spacing: -0.01em;
+            }
+
+            .portfolio-card__title {
+                transition: all 0.2s ease;
+            }
+
+            .portfolio-card__wrap:hover .portfolio-card__description {
+                color: var(--black);
+                transition: color 0.2s ease;
+            }
+
+            /* Subtle scale effect on the card content */
+            .portfolio-card__content {
+                transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .portfolio-card__wrap:hover .portfolio-card__content {
+                transform: scale(1.02);
+            }
+
+            /* Enhanced corner-cut animation */
+            .portfolio-card__wrap .card-shape {
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .portfolio-card__wrap:hover .card-shape.outline {
+                opacity: 0.3;
+                transform: scale(1.01);
+            }
+
+            .portfolio-card__wrap:hover .card-shape:not(.outline) {
+                transform: translateX(-1px) translateY(-1px);
+            }
+
+            /* Reduce opacity of non-hovered cards for focus */
+            .portfolio-card__wrap {
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            .portfolio-grid:hover .portfolio-card__wrap:not(:hover) {
+                opacity: 0.7;
+                transform: scale(0.98);
+            }
+
+            /* Smooth transitions back to normal state */
+            .portfolio-card__wrap:not(:hover) {
+                transition-delay: 0.1s;
             }
 
             .partner-card:nth-child(even) {
@@ -5848,7 +7461,7 @@
                 <div id="w-node-c4237df9-3421-f446-2dc3-2517d65cd0ad-ecdd2ac2" class="portfolio w-dyn-list">
                     <div role="list" class="portfolio-grid w-dyn-items">
                         <div role="listitem" class="portfolio-card w-dyn-item">
-                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="commercial-real-estate">
+                            <a href="#" class="portfolio-card__wrap w-inline-block" data-modal="investors-alliance">
                                 <div class="card-shape outline w-embed">
                                     <svg viewBox="0 0 305 356" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                                         <path d="M0.5 355.5V0.5H304.5V315.793L264.793 355.5H0.5Z" stroke="#fff"/>
@@ -7456,7 +9069,7 @@
                         ],
                         proofLinks: [
                             { text: 'Trading Algorithm', url: '#', icon: '📈' },
-                            { text: 'Risk Model', url: '#', icon: '⚡' },
+                            { text: 'Risk Model', url: '#', icon: 'ANALYTICS' },
                             { text: 'Market Analysis', url: '#', icon: '📊' },
                             { text: 'Performance Report', url: '#', icon: '🎯' }
                         ],
@@ -7617,7 +9230,7 @@
                             { number: '48h', label: 'Build Time' }
                         ],
                         proofLinks: [
-                            { text: 'Live Demo', url: '#', icon: '🚀' },
+                            { text: 'Live Demo', url: '#', icon: 'LAUNCH' },
                             { text: 'GitHub Repository', url: '#', icon: '💻' },
                             { text: 'Demo Video', url: '#', icon: '🎥' },
                             { text: 'Hackathon Results', url: '#', icon: '🏆' }
@@ -7760,7 +9373,7 @@
 
                         <div class="modal-section">
                             <div class="modal-section-title">
-                                <span class="modal-section-icon">🧮</span>
+                                <span class="modal-section-icon">CALC</span>
                                 Mathematical Models
                             </div>
                             <ul class="modal-list">
@@ -7808,7 +9421,7 @@
                     content: `
                         <div class="modal-section">
                             <div class="modal-section-title">
-                                <span class="modal-section-icon">🤖</span>
+                                <span class="modal-section-icon">AI</span>
                                 Research Overview
                             </div>
                             <p class="modal-text">Development and backtesting of machine learning-driven trading algorithms for cryptocurrency and traditional energy commodity markets, focusing on high-frequency and medium-frequency strategies.</p>
@@ -7820,7 +9433,7 @@
 
                         <div class="modal-section">
                             <div class="modal-section-title">
-                                <span class="modal-section-icon">🧠</span>
+                                <span class="modal-section-icon">ML</span>
                                 ML Algorithms
                             </div>
                             <ul class="modal-list">
@@ -7868,7 +9481,7 @@
                     content: `
                         <div class="modal-section">
                             <div class="modal-section-title">
-                                <span class="modal-section-icon">🧠</span>
+                                <span class="modal-section-icon">STUDY</span>
                                 Research Question
                             </div>
                             <p class="modal-text">Empirical analysis of investor sentiment and market psychology in emerging crypto-asset markets using sentiment analysis of social media data and traditional behavioral finance theories.</p>
@@ -8078,7 +9691,7 @@
 
                         <div class="modal-section">
                             <div class="modal-section-title">
-                                <span class="modal-section-icon">⚡</span>
+                                <span class="modal-section-icon">LEAD</span>
                                 Leadership & Strategy
                             </div>
                             <ul class="modal-list">
@@ -8122,7 +9735,7 @@
                         ],
                         proofLinks: [
                             { text: 'Trading Model', url: '#', icon: '📈' },
-                            { text: 'Risk Framework', url: '#', icon: '⚠️' },
+                            { text: 'Risk Framework', url: '#', icon: 'RISK' },
                             { text: 'Performance Report', url: '#', icon: '📊' }
                         ],
                         tocItems: ['Overview', 'Trading Strategies', 'Risk Management', 'Performance']
@@ -8130,7 +9743,7 @@
                     content: `
                         <div class="modal-section">
                             <div class="modal-section-title">
-                                <span class="modal-section-icon">⚡</span>
+                                <span class="modal-section-icon">ENERGY</span>
                                 Energy Markets Focus
                             </div>
                             <p>Specialized in energy commodity trading with focus on risk management and quantitative analysis strategies for power generation and renewable energy markets.</p>
@@ -8642,6 +10255,7 @@
                 // Generate grid HTML
                 const gridHTML = filteredProjects.map(project => `
                     <div class="experience-grid-card" data-modal="${project.id}" onclick="openModal('${project.id}')">
+                        <div class="shimmer"></div>
                         <div class="grid-card-header">
                             <h3 class="grid-card-title">${project.title}</h3>
                             ${project.highlight_badge ? `
@@ -11007,7 +12621,7 @@
                 
                 navigator.clipboard.writeText(text).then(() => {
                     // Button feedback - change label temporarily
-                    button.textContent = 'Copied ✓';
+                    button.textContent = 'Copied';
                     button.classList.add('copied');
                     button.setAttribute('aria-live', 'polite');
                     
@@ -11030,7 +12644,7 @@
                     document.body.removeChild(textArea);
                     
                     // Button feedback for fallback
-                    button.textContent = 'Copied ✓';
+                    button.textContent = 'Copied';
                     button.classList.add('copied');
                     showToast(`${text.includes('@') ? 'Email' : 'Number'} copied`, button);
                     
@@ -11274,9 +12888,17 @@
                     overlay.setAttribute('aria-hidden', 'true');
                     document.body.style.overflow = '';
 
-                    // Clean up charts
-                    Object.values(this.charts).forEach(chart => {
-                        if (chart && chart.destroy) chart.destroy();
+                    // Clean up charts with better error handling
+                    Object.keys(this.charts).forEach(chartKey => {
+                        if (this.charts[chartKey]) {
+                            try {
+                                if (this.charts[chartKey].destroy) {
+                                    this.charts[chartKey].destroy();
+                                }
+                            } catch (error) {
+                                console.warn(`Error destroying chart ${chartKey}:`, error);
+                            }
+                        }
                     });
                     this.charts = {};
 
@@ -11418,12 +13040,20 @@
                     
                     const ctx = canvas.getContext('2d');
                     
+                    // Clean up existing chart if it exists
+                    if (this.charts[canvasId] && this.charts[canvasId].destroy) {
+                        this.charts[canvasId].destroy();
+                    }
+                    
                     const chartConfig = {
                         type: config.type,
                         data: config.data,
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
+                            interaction: {
+                                intersect: false,
+                            },
                             plugins: {
                                 legend: { display: false }
                             },
@@ -11442,11 +13072,18 @@
                             animation: {
                                 duration: 800,
                                 easing: 'easeOutQuart'
+                            },
+                            onResize: function(chart, size) {
+                                chart.canvas.parentNode.style.height = '200px';
                             }
                         }
                     };
 
-                    this.charts[canvasId] = new Chart(ctx, chartConfig);
+                    try {
+                        this.charts[canvasId] = new Chart(ctx, chartConfig);
+                    } catch (error) {
+                        console.error('Error creating project chart:', error);
+                    }
                 }
 
                 updateCharts() {
@@ -11606,7 +13243,7 @@
                                 'Network Uptime': '99.8%'
                             },
                             attachments: [
-                                { icon: '⚡', name: 'Protocol Whitepaper.pdf', meta: '1.8 MB • Updated Nov 28', file: 'whitepaper.pdf' },
+                                { icon: 'DOC', name: 'Protocol Whitepaper.pdf', meta: '1.8 MB • Updated Nov 28', file: 'whitepaper.pdf' },
                                 { icon: '💾', name: 'smart-contracts.sol', meta: '89 KB • Updated Dec 5', file: 'contracts.sol' }
                             ],
                             charts: [
@@ -11688,6 +13325,200 @@
                                     takeaway: 'Consistent monthly gains with low correlation to broader energy market movements.'
                                 }
                             ]
+                        },
+                        'investment-analyst': {
+                            id: 'investment-analyst',
+                            title: 'Investment Analyst',
+                            overview: 'Conducted comprehensive due diligence for blockchain investments at Texas Blockchain, developing standardized frameworks for token economics analysis and risk assessment across Layer-1, DeFi, and Gaming protocols.',
+                            methods: [
+                                'Built a standardized diligence rubric (token, team, tech, traction, tokenomics)',
+                                'Ran scenario models for circulating supply & emissions',
+                                'Produced one-pager "go/no-go" memos and risk heatmaps',
+                                'Coordinated with research fellows for cross-checks',
+                                'Analyzed tokenomics sustainability and utility design'
+                            ],
+                            dataDictionary: [
+                                { variable: 'risk_score', description: 'Composite risk rating (1-10 scale)' },
+                                { variable: 'allocation_pct', description: 'Recommended portfolio allocation (%)' },
+                                { variable: 'diligence_score', description: 'Overall project assessment (1-100)' },
+                                { variable: 'time_to_decision', description: 'Analysis completion time (days)' }
+                            ],
+                            quickFacts: {
+                                'Duration': '1 semester',
+                                'Role': 'Analyst',
+                                'Team Size': '4',
+                                'Coverage': 'Layer-1/DeFi/Gaming',
+                                'Location': 'Austin, TX'
+                            },
+                            impactStats: [
+                                { value: '10+', label: 'Projects Analyzed' },
+                                { value: '$120K', label: 'AUM Coverage' },
+                                { value: '2.1x', label: 'Decision Speed' }
+                            ],
+                            impactDescription: 'Developed systematic investment framework that accelerated decision-making by 2.1x while maintaining rigorous risk assessment standards across diverse blockchain protocols.',
+                            risks: [
+                                'Token economic models subject to market dynamics',
+                                'Regulatory uncertainty affects project viability',
+                                'Technical complexity may obscure fundamental risks',
+                                'Market sentiment can override fundamental analysis'
+                            ],
+                            keyMetrics: {
+                                'Projects Analyzed': '10+',
+                                'Avg Risk Score': '6.2/10',
+                                'Recommendation Rate': '70%'
+                            },
+                            attachments: [
+                                { icon: '📄', name: 'Investment-memo.pdf', meta: '1.2 MB • Updated Nov 15', file: 'investment-memo.pdf' },
+                                { icon: '📊', name: 'dd-rubric.csv', meta: '45 KB • Updated Nov 10', file: 'dd-rubric.csv' },
+                                { icon: '🔍', name: 'risk-matrix.png', meta: '230 KB • Updated Nov 12', file: 'risk-matrix.png' }
+                            ],
+                            charts: [
+                                {
+                                    title: 'Allocation vs Risk Bucket · % Distribution',
+                                    type: 'bar',
+                                    data: {
+                                        labels: ['Low Risk', 'Medium Risk', 'High Risk'],
+                                        datasets: [
+                                            {
+                                                label: 'Proposed Allocation',
+                                                data: [45, 35, 20],
+                                                backgroundColor: '#d97706'
+                                            },
+                                            {
+                                                label: 'Actual Allocation',
+                                                data: [50, 30, 20],
+                                                backgroundColor: '#059669'
+                                            }
+                                        ]
+                                    },
+                                    takeaway: 'Framework aligned proposals toward lower risk buckets without sacrificing thesis fit.'
+                                }
+                            ]
+                        },
+                        'student-leadership': {
+                            id: 'student-leadership',
+                            title: 'Student Leadership',
+                            overview: 'Elected representative for 52,000+ students at UT Austin, leading campus-wide governance initiatives, policy advocacy, and cross-organizational coalitions to drive institutional change and student engagement.',
+                            methods: [
+                                'Organized campus-wide town halls, produced policy briefs',
+                                'Led voter outreach and digital communications',
+                                'Coordinated cross-org coalitions for proposals',
+                                'Developed stakeholder engagement strategies',
+                                'Implemented feedback collection and analysis systems'
+                            ],
+                            dataDictionary: [
+                                { variable: 'turnout_rate', description: 'Voter participation (% of eligible)' },
+                                { variable: 'policy_adoption', description: 'Successful policy implementations' },
+                                { variable: 'engagement_score', description: 'Student participation index' },
+                                { variable: 'coalition_size', description: 'Cross-org partnership count' }
+                            ],
+                            quickFacts: {
+                                'Constituency': '52k+ students',
+                                'Term': '1 year',
+                                'Committees': '3',
+                                'Initiatives': '12',
+                                'Location': 'Austin, TX'
+                            },
+                            impactStats: [
+                                { value: '4K+', label: 'Votes (Turnout)' },
+                                { value: '12', label: 'Initiatives Championed' },
+                                { value: '3', label: 'Policies Adopted' }
+                            ],
+                            impactDescription: 'Drove significant policy changes through collaborative leadership, achieving 8% turnout increase and successfully advocating for student-centered reforms across academic and campus life domains.',
+                            risks: [
+                                'Competing stakeholder interests require careful balance',
+                                'Institutional inertia can slow policy implementation',
+                                'Student engagement varies by issue and timing',
+                                'Budget constraints limit program expansion'
+                            ],
+                            keyMetrics: {
+                                'Voter Turnout': '8%',
+                                'Policy Success Rate': '75%',
+                                'Coalition Partners': '15'
+                            },
+                            attachments: [
+                                { icon: '📋', name: 'policy-briefs.pdf', meta: '2.8 MB • Updated Dec 1', file: 'policy-briefs.pdf' },
+                                { icon: '📈', name: 'campaign-summary.pdf', meta: '1.5 MB • Updated Nov 20', file: 'campaign-summary.pdf' },
+                                { icon: '📰', name: 'press-mentions.pdf', meta: '890 KB • Updated Dec 5', file: 'press-mentions.pdf' }
+                            ],
+                            charts: [
+                                {
+                                    title: 'Turnout by College · % Distribution',
+                                    type: 'doughnut',
+                                    data: {
+                                        labels: ['Engineering', 'Business', 'Liberal Arts', 'Natural Sciences', 'Other'],
+                                        datasets: [{
+                                            data: [28, 24, 18, 16, 14],
+                                            backgroundColor: ['#d97706', '#059669', '#6b7280', '#dc2626', '#1f2937']
+                                        }]
+                                    },
+                                    takeaway: 'Turnout broadly distributed; engagement strongest in Engineering & Business.'
+                                }
+                            ]
+                        },
+                        'web3-innovation': {
+                            id: 'web3-innovation',
+                            title: 'Web3 Innovation',
+                            overview: 'Led winning team at OnionDAO hackathon developing cross-chain payroll automation platform with innovative vesting mechanics, escrow logic, and compliance guardrails for decentralized organizations.',
+                            methods: [
+                                'Designed vesting + approval flows across chains',
+                                'Implemented escrow logic + payout proofs',
+                                'Built a minimal admin UI; wrote scoring narrative',
+                                'Integrated multi-chain wallet connectivity',
+                                'Developed smart contract testing framework'
+                            ],
+                            dataDictionary: [
+                                { variable: 'execution_score', description: 'Technical implementation rating (1-10)' },
+                                { variable: 'innovation_score', description: 'Novel approach assessment (1-10)' },
+                                { variable: 'usefulness_score', description: 'Market applicability rating (1-10)' },
+                                { variable: 'build_time', description: 'Development duration (hours)' }
+                            ],
+                            quickFacts: {
+                                'Role': 'Team Lead',
+                                'Team': '4 members',
+                                'Track': 'Payroll/Infrastructure',
+                                'Duration': '48h',
+                                'Location': 'Austin, TX'
+                            },
+                            impactStats: [
+                                { value: '1st', label: 'Place' },
+                                { value: '72', label: 'Competing Teams' },
+                                { value: '48h', label: 'Build Time' }
+                            ],
+                            impactDescription: 'Delivered innovative cross-chain payroll solution that impressed judges with technical execution and real-world applicability, demonstrating leadership in fast-paced development environment.',
+                            risks: [
+                                'Cross-chain bridging introduces security vectors',
+                                'Gas optimization challenges across different networks',
+                                'Regulatory compliance varies by jurisdiction',
+                                'User experience complexity in multi-chain flows'
+                            ],
+                            keyMetrics: {
+                                'Judge Score': '9.2/10',
+                                'Innovation Rating': '9.5/10',
+                                'Technical Score': '8.8/10'
+                            },
+                            attachments: [
+                                { icon: '🎬', name: 'demo-video.mp4', meta: '15.2 MB • Updated Oct 28', file: 'demo-video.mp4' },
+                                { icon: '📊', name: 'pitch-deck.pdf', meta: '3.4 MB • Updated Oct 28', file: 'pitch-deck.pdf' },
+                                { icon: '💻', name: 'repo-link.md', meta: '2 KB • Updated Oct 29', file: 'repo-link.md' }
+                            ],
+                            charts: [
+                                {
+                                    title: 'Judge Scores by Category · Rating (1-10)',
+                                    type: 'radar',
+                                    data: {
+                                        labels: ['Innovation', 'Technical Execution', 'Usefulness', 'UX', 'Pitch'],
+                                        datasets: [{
+                                            data: [9.5, 8.8, 9.0, 7.5, 9.2],
+                                            borderColor: '#d97706',
+                                            backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                                            borderWidth: 2,
+                                            pointBackgroundColor: '#d97706'
+                                        }]
+                                    },
+                                    takeaway: 'Strength in innovation & execution; UX prioritized within time constraints.'
+                                }
+                            ]
                         }
                     };
                 }
@@ -11716,31 +13547,987 @@
                 console.log(`Opening attachment: ${filename}`);
             }
 
+            // ===== CAREER MODAL SYSTEM =====
+            
+            class CareerModalSystem {
+                constructor() {
+                    this.currentCareer = null;
+                    this.charts = {};
+                    this.careers = this.getCareerData();
+                    this.init();
+                }
+
+                init() {
+                    this.bindEvents();
+                    this.initScrollSpy();
+                }
+
+                bindEvents() {
+                    // Close modal
+                    document.getElementById('career-modal-close').addEventListener('click', () => this.closeModal());
+                    document.getElementById('career-modal-overlay').addEventListener('click', (e) => {
+                        if (e.target === e.currentTarget) this.closeModal();
+                    });
+
+                    // Keyboard navigation
+                    document.addEventListener('keydown', (e) => {
+                        if (document.getElementById('career-modal-overlay').classList.contains('active')) {
+                            if (e.key === 'Escape') this.closeModal();
+                        }
+                    });
+
+                    // Contents navigation
+                    document.querySelectorAll('#career-contents-nav .nav-link').forEach(link => {
+                        link.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const targetId = e.target.getAttribute('href').substring(1);
+                            const target = document.getElementById(targetId);
+                            if (target) {
+                                target.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        });
+                    });
+                }
+
+                openModal(careerId) {
+                    this.currentCareer = this.careers[careerId];
+                    if (!this.currentCareer) return;
+
+                    this.populateModal();
+                    this.createChart();
+                    
+                    const overlay = document.getElementById('career-modal-overlay');
+                    overlay.classList.add('active');
+                    overlay.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+
+                    // Add count-up animation
+                    setTimeout(() => this.animateCounters(), 200);
+                }
+
+                closeModal() {
+                    const overlay = document.getElementById('career-modal-overlay');
+                    overlay.classList.remove('active');
+                    overlay.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+
+                    // Clean up chart with better error handling
+                    if (this.charts.career) {
+                        try {
+                            if (this.charts.career.destroy) {
+                                this.charts.career.destroy();
+                            }
+                        } catch (error) {
+                            console.warn('Error destroying career chart:', error);
+                        }
+                        this.charts.career = null;
+                    }
+                }
+
+                populateModal() {
+                    const career = this.currentCareer;
+                    
+                    // Update header with new structure
+                    document.getElementById('career-modal-overline').textContent = career.overline;
+                    document.getElementById('career-modal-title').textContent = career.title;
+                    
+                    // Update header structure to include title row
+                    const headerContent = document.querySelector('.career-modal-header-content');
+                    if (!headerContent) {
+                        const header = document.querySelector('.career-modal-header');
+                        const existingContent = header.querySelector('div');
+                        existingContent.classList.add('career-modal-header-content');
+                        
+                        const titleElement = document.getElementById('career-modal-title');
+                        const badgesElement = document.querySelector('.career-modal-badges');
+                        
+                        // Create title row
+                        const titleRow = document.createElement('div');
+                        titleRow.className = 'career-modal-title-row';
+                        titleRow.appendChild(titleElement);
+                        titleRow.appendChild(badgesElement);
+                        
+                        existingContent.appendChild(titleRow);
+                    }
+                    
+                    // Show/hide synthetic badge
+                    const syntheticBadge = document.querySelector('.career-badge');
+                    if (career.synthetic) {
+                        syntheticBadge.style.display = 'inline-block';
+                        syntheticBadge.textContent = 'SYNTHETIC';
+                    } else {
+                        syntheticBadge.style.display = 'none';
+                    }
+                    
+                    // Update content sections
+                    document.getElementById('career-overview').textContent = career.overview;
+                    
+                    // Update actions
+                    const actionsList = document.getElementById('career-actions');
+                    actionsList.innerHTML = career.actions.map(action => `<li>${action}</li>`).join('');
+                    
+                    // Update impact stats with tooltips
+                    const impactStats = document.getElementById('career-impact-stats');
+                    impactStats.innerHTML = career.impactStats.map((stat, index) => `
+                        <div class="career-impact-stat" data-tooltip="${this.getMetricTooltip(stat.label)}">
+                            <div class="career-impact-value" data-target="${stat.value}">${stat.value}</div>
+                            <div class="career-impact-label">${stat.label}</div>
+                        </div>
+                    `).join('');
+                    
+                    // Update artifacts with enhanced cards
+                    this.populateArtifacts(career.artifacts);
+                    
+                    // Update quick facts
+                    const quickFacts = document.getElementById('career-quick-facts');
+                    quickFacts.innerHTML = Object.entries(career.quickFacts)
+                        .map(([label, value]) => `
+                            <div class="career-quick-fact">
+                                <span class="career-quick-fact-label">${label}</span>
+                                <span class="career-quick-fact-value">${value}</span>
+                            </div>
+                        `).join('');
+
+                    // Update skills (max 8 as specified)
+                    const skills = document.getElementById('career-skills');
+                    const limitedSkills = career.skills.slice(0, 8);
+                    skills.innerHTML = limitedSkills.map(skill => 
+                        `<div class="career-skill-chip">${skill}</div>`
+                    ).join('');
+
+                    // Update recognition
+                    document.getElementById('career-recognition').textContent = career.recognition;
+                }
+
+                populateArtifacts(artifacts) {
+                    const container = document.getElementById('career-artifacts-grid');
+                    
+                    // Group artifacts by type
+                    const groupedArtifacts = this.groupArtifactsByType(artifacts);
+                    
+                    let html = '';
+                    Object.entries(groupedArtifacts).forEach(([type, typeArtifacts]) => {
+                        if (typeArtifacts.length === 0) return;
+                        
+                        html += `
+                            <div class="evidence-group">
+                                <div class="evidence-group-header">
+                                    <div class="evidence-group-pill">${type}</div>
+                                    ${typeArtifacts.length >= 4 ? `
+                                        <div class="evidence-view-toggle">
+                                            <button class="view-toggle-btn active" data-view="list">List</button>
+                                            <button class="view-toggle-btn" data-view="grid">Grid</button>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <div class="career-artifacts-grid" data-group="${type}">
+                                    ${this.renderArtifactCards(typeArtifacts.slice(0, 6))}
+                                </div>
+                                ${typeArtifacts.length > 6 ? `
+                                    <div class="evidence-show-all">
+                                        <button onclick="careerModalSystem.showAllArtifacts('${type}')">
+                                            Show all files (${typeArtifacts.length})
+                                        </button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                        <div class="evidence-disclaimer">
+                            Synthetic files for portfolio demonstration
+                        </div>
+                        <div class="evidence-preview-drawer" id="evidence-preview-drawer">
+                            <div class="preview-drawer-header">
+                                <div class="preview-drawer-title">Preview</div>
+                                <div class="preview-drawer-controls">
+                                    <button class="preview-control-btn">Zoom</button>
+                                    <button class="preview-control-btn">Download</button>
+                                    <button class="preview-control-btn" onclick="careerModalSystem.closePreview()">Close</button>
+                                </div>
+                            </div>
+                            <div class="preview-drawer-content" id="preview-drawer-content">
+                                <!-- Preview content will be loaded here -->
+                            </div>
+                        </div>
+                    `;
+                    
+                    container.innerHTML = html;
+                    
+                    // Bind view toggle events
+                    document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => this.toggleArtifactView(e));
+                    });
+                }
+
+                renderArtifactCards(artifacts) {
+                    return artifacts.map((artifact, index) => `
+                        <div class="career-artifact-card" style="animation-delay: ${index * 50}ms">
+                            <div class="artifact-progress"></div>
+                            <div class="artifact-card-content">
+                                <div class="artifact-icon-container">
+                                    <div class="artifact-file-icon">${this.getFileIcon(artifact.file)}</div>
+                                    ${Math.random() > 0.7 ? '<div class="artifact-status-dot"></div>' : ''}
+                                </div>
+                                <div class="artifact-main-content">
+                                    <div class="artifact-title">${artifact.name}</div>
+                                    <div class="artifact-meta">${this.formatArtifactMeta(artifact)}</div>
+                                    ${artifact.description ? `<div class="artifact-description">${artifact.description}</div>` : ''}
+                                </div>
+                                <div class="artifact-actions">
+                                    <button class="artifact-action-btn primary" onclick="careerModalSystem.openArtifact('${artifact.file}')">
+                                        Open
+                                    </button>
+                                    <button class="artifact-action-btn" onclick="careerModalSystem.downloadArtifact('${artifact.file}')">
+                                        ↓
+                                    </button>
+                                    <button class="artifact-action-btn" onclick="careerModalSystem.showArtifactMenu(this, '${artifact.file}')">
+                                        ⋯
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                groupArtifactsByType(artifacts) {
+                    const groups = { Models: [], Memos: [], Data: [], Visuals: [] };
+                    
+                    artifacts.forEach(artifact => {
+                        const ext = artifact.file.split('.').pop().toLowerCase();
+                        if (['xlsx', 'xls', 'csv'].includes(ext)) {
+                            if (artifact.name.toLowerCase().includes('model')) {
+                                groups.Models.push(artifact);
+                            } else {
+                                groups.Data.push(artifact);
+                            }
+                        } else if (['pdf', 'doc', 'docx', 'md'].includes(ext)) {
+                            groups.Memos.push(artifact);
+                        } else if (['png', 'jpg', 'jpeg', 'svg', 'gif'].includes(ext)) {
+                            groups.Visuals.push(artifact);
+                        } else {
+                            groups.Data.push(artifact);
+                        }
+                    });
+                    
+                    return groups;
+                }
+
+                getFileIcon(filename) {
+                    const ext = filename.split('.').pop().toLowerCase();
+                    const iconMap = {
+                        pdf: '📄', xlsx: '📊', xls: '📊', csv: '📊',
+                        png: '🖼️', jpg: '🖼️', jpeg: '🖼️', gif: '🖼️',
+                        md: '📝', txt: '📝', doc: '📝', docx: '📝',
+                        zip: '📦', mp4: '🎬'
+                    };
+                    return iconMap[ext] || '📎';
+                }
+
+                formatArtifactMeta(artifact) {
+                    const ext = artifact.file.split('.').pop().toUpperCase();
+                    return `${ext} · ${artifact.meta}`;
+                }
+
+                getMetricTooltip(label) {
+                    const tooltips = {
+                        'Properties Evaluated': 'Number of real estate assets analyzed',
+                        'Aggregate Asset Value': 'Total value of properties reviewed',
+                        'Model Turnaround Time': 'Improvement in analysis speed',
+                        'DormDAO Grant': 'Funding secured for blockchain development',
+                        'Core Modules Delivered': 'Major project components completed',
+                        'Governance Proposals Passed': 'Successful community proposals',
+                        'Projects Analyzed': 'Investment opportunities reviewed',
+                        'Total Proposals': 'Combined value of investment recommendations',
+                        'Decision Speed vs Baseline': 'Improvement in analysis efficiency'
+                    };
+                    return tooltips[label] || 'Performance metric';
+                }
+
+                toggleArtifactView(e) {
+                    const btn = e.target;
+                    const group = btn.closest('.evidence-group');
+                    const grid = group.querySelector('.career-artifacts-grid');
+                    const allBtns = group.querySelectorAll('.view-toggle-btn');
+                    
+                    allBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    if (btn.dataset.view === 'grid') {
+                        grid.classList.add('grid-view');
+                    } else {
+                        grid.classList.remove('grid-view');
+                    }
+                }
+
+                openArtifact(filename) {
+                    console.log(`Opening artifact: ${filename}`);
+                    // Simulate loading
+                    const drawer = document.getElementById('evidence-preview-drawer');
+                    const content = document.getElementById('preview-drawer-content');
+                    
+                    content.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6b7280;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 8px;">📄</div>
+                                <div>Preview: ${filename}</div>
+                                <div style="font-size: 0.75rem; margin-top: 4px;">Full preview coming soon</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    drawer.classList.add('active');
+                }
+
+                downloadArtifact(filename) {
+                    console.log(`Downloading artifact: ${filename}`);
+                    // Show progress animation
+                    const progress = document.querySelector(`[onclick*="${filename}"]`)
+                        ?.closest('.career-artifact-card')
+                        ?.querySelector('.artifact-progress');
+                    
+                    if (progress) {
+                        progress.classList.add('active');
+                        setTimeout(() => {
+                            progress.classList.remove('active');
+                        }, 1200);
+                    }
+                }
+
+                showArtifactMenu(button, filename) {
+                    console.log(`Showing menu for: ${filename}`);
+                    // TODO: Implement overflow menu
+                }
+
+                closePreview() {
+                    document.getElementById('evidence-preview-drawer').classList.remove('active');
+                }
+
+                createChart() {
+                    if (!window.Chart) {
+                        console.warn('Chart.js not loaded');
+                        return;
+                    }
+                    
+                    const career = this.currentCareer;
+                    const chartContainer = document.getElementById('career-chart-container');
+                    
+                    chartContainer.innerHTML = `
+                        <div class="career-chart-title">${career.chart.title}</div>
+                        <div style="position: relative; height: 240px; width: 100%;">
+                            <canvas class="career-chart-canvas" id="career-chart-canvas"></canvas>
+                        </div>
+                        <div class="career-chart-caption">${career.chart.caption}</div>
+                    `;
+
+                    const canvas = document.getElementById('career-chart-canvas');
+                    if (!canvas) {
+                        console.warn('Canvas not found');
+                        return;
+                    }
+                    
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Clean up any existing chart
+                    if (this.charts.career && this.charts.career.destroy) {
+                        this.charts.career.destroy();
+                    }
+                    
+                    const chartConfig = {
+                        type: career.chart.type,
+                        data: career.chart.data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            interaction: {
+                                intersect: false,
+                            },
+                            plugins: {
+                                legend: { 
+                                    display: career.chart.type === 'bar' && career.chart.data.datasets.length > 1,
+                                    position: 'top',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 20,
+                                        font: { family: 'SF Mono, monospace', size: 10 }
+                                    }
+                                },
+                                tooltip: {
+                                    titleFont: { family: 'SF Mono, monospace' },
+                                    bodyFont: { family: 'SF Mono, monospace' }
+                                }
+                            },
+                            scales: this.getScalesConfig(career.chart.type),
+                            animation: {
+                                duration: 600,
+                                easing: 'easeOutQuart'
+                            },
+                            onResize: function(chart, size) {
+                                chart.canvas.style.height = '240px';
+                            }
+                        }
+                    };
+
+                    try {
+                        this.charts.career = new Chart(ctx, chartConfig);
+                    } catch (error) {
+                        console.error('Error creating chart:', error);
+                    }
+                }
+
+                getScalesConfig(chartType) {
+                    if (chartType === 'doughnut' || chartType === 'radar') {
+                        return {};
+                    }
+                    
+                    if (chartType === 'scatter') {
+                        return {
+                            x: {
+                                title: { display: true, text: 'Implied Upside (%)', font: { family: 'SF Mono, monospace', size: 10 } },
+                                grid: { color: '#f3f4f6' },
+                                ticks: { font: { family: 'SF Mono, monospace', size: 10 } }
+                            },
+                            y: {
+                                title: { display: true, text: 'Risk Score (lower better)', font: { family: 'SF Mono, monospace', size: 10 } },
+                                grid: { color: '#f3f4f6' },
+                                ticks: { font: { family: 'SF Mono, monospace', size: 10 } }
+                            }
+                        };
+                    }
+                    
+                    return {
+                        y: {
+                            grid: { color: '#f3f4f6' },
+                            ticks: { 
+                                font: { family: 'SF Mono, monospace', size: 10 }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'SF Mono, monospace', size: 10 } }
+                        }
+                    };
+                }
+
+                animateCounters() {
+                    const counters = document.querySelectorAll('.career-impact-value[data-target]');
+                    counters.forEach(counter => {
+                        const target = counter.getAttribute('data-target');
+                        const isNumber = !isNaN(target.replace(/[^\d.-]/g, ''));
+                        
+                        if (isNumber) {
+                            const numericTarget = parseFloat(target.replace(/[^\d.-]/g, ''));
+                            const suffix = target.replace(/[\d.-]/g, '');
+                            
+                            let current = 0;
+                            const increment = numericTarget / 30;
+                            const timer = setInterval(() => {
+                                current += increment;
+                                if (current >= numericTarget) {
+                                    counter.textContent = target;
+                                    clearInterval(timer);
+                                } else {
+                                    counter.textContent = Math.floor(current) + suffix;
+                                }
+                            }, 50);
+                        }
+                    });
+                }
+
+                initScrollSpy() {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                const id = entry.target.id;
+                                document.querySelectorAll('#career-contents-nav .nav-link').forEach(link => {
+                                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                                });
+                            }
+                        });
+                    }, { rootMargin: '-50% 0px -50% 0px' });
+
+                    document.querySelectorAll('.career-section').forEach(section => {
+                        observer.observe(section);
+                    });
+                }
+
+                getCareerData() {
+                    return {
+                        'investors-alliance': {
+                            id: 'investors-alliance',
+                            overline: 'Investors Alliance • Commercial Real Estate Intern',
+                            title: 'Acquisitions & Asset-Management Pro Formas',
+                            synthetic: true,
+                            overview: 'Built acquisition and asset-management pro formas (IRR/NPV, cash-flow modeling). Conducted market research, rent comps, and lender package support.',
+                            actions: [
+                                'Produced standardized pro forma templates (IRR/NPV, sensitivities)',
+                                'Built rent-comp sheets and integrated market data feeds',
+                                'Drafted lender package exhibits (DSCR, LTV, debt yields)',
+                                'QA cycles to reduce model error and turnaround time'
+                            ],
+                            impactStats: [
+                                { value: '12', label: 'Properties Evaluated' },
+                                { value: '$75M', label: 'Aggregate Asset Value' },
+                                { value: '−35%', label: 'Model Turnaround Time' }
+                            ],
+                            chart: {
+                                title: 'Value Drivers on Base Underwriting (Δ in $MM)',
+                                type: 'bar',
+                                data: {
+                                    labels: ['NOI', 'CapEx', 'Cap Rate', 'Debt Terms'],
+                                    datasets: [
+                                        {
+                                            label: 'Positive',
+                                            data: [3.2, 0.8, 0, 0.5],
+                                            backgroundColor: '#059669'
+                                        },
+                                        {
+                                            label: 'Negative',
+                                            data: [0, 0, -2.1, -0.7],
+                                            backgroundColor: '#dc2626'
+                                        }
+                                    ]
+                                },
+                                caption: 'Primary valuation sensitivity from cap rate and NOI deltas.'
+                            },
+                            artifacts: [
+                                {
+                                    name: "ProForma Financial Model",
+                                    file: "proforma-template.xlsx",
+                                    meta: "245 KB",
+                                    description: "Dynamic cash flow model with sensitivity analysis for property investments"
+                                },
+                                {
+                                    name: "Market Rent Comparables",
+                                    file: "rentcomp-snapshot.pdf",
+                                    meta: "1.8 MB", 
+                                    description: "Comprehensive rent analysis across 12 comparable properties"
+                                },
+                                {
+                                    name: "Lender Package Documentation",
+                                    file: "lender-package.pdf",
+                                    meta: "3.2 MB",
+                                    description: "Complete financing package with risk assessment and projections"
+                                },
+                                {
+                                    name: "Property Performance Dashboard", 
+                                    file: "performance_dashboard.xlsx",
+                                    meta: "1.1 MB",
+                                    description: "Real-time tracking of NOI, occupancy, and key performance metrics"
+                                },
+                                {
+                                    name: "Due Diligence Checklist",
+                                    file: "due_diligence_checklist.pdf",
+                                    meta: "567 KB",
+                                    description: "Standardized evaluation framework for acquisition analysis"
+                                },
+                                {
+                                    name: "Market Analysis Visualization",
+                                    file: "market_trends.png",
+                                    meta: "2.3 MB",
+                                    description: "Geographic heatmap showing rental growth patterns across Austin MSA"
+                                }
+                            ],
+                            quickFacts: {
+                                'Duration': 'Summer 2025 – Present',
+                                'Location': 'Austin, TX',
+                                'Team': '4',
+                                'Scope': '12 assets'
+                            },
+                            skills: ['Excel/VBA', 'SQL', 'Tableau', 'DCF', 'Sensitivity'],
+                            recognition: 'Trusted for lender materials and IC prep'
+                        },
+                        'vc-backed-startup': {
+                            id: 'vc-backed-startup',
+                            overline: 'VC-Backed Startup • Co-Founder (Remote)',
+                            title: 'Blockchain Protocol & Governance Initiative',
+                            synthetic: true,
+                            overview: 'Architected a blockchain project on the Bittensor protocol with Collab Currency; coordinated governance design and technical requirements under DormDAO sponsorship.',
+                            actions: [
+                                'Authored protocol spec (consensus, emissions, validator incentives)',
+                                'Coordinated DormDAO grant milestones and deliverables',
+                                'Defined governance token design & proposal flow',
+                                'Managed sprint planning with engineers and research partners'
+                            ],
+                            impactStats: [
+                                { value: '$10K', label: 'DormDAO Grant' },
+                                { value: '3', label: 'Core Modules Delivered' },
+                                { value: '2', label: 'Governance Proposals Passed' }
+                            ],
+                            chart: {
+                                title: 'Module Completion Timeline (Jan–Jun)',
+                                type: 'line',
+                                data: {
+                                    labels: ['Week 4', 'Week 8', 'Week 12', 'Week 16', 'Week 20', 'Week 24'],
+                                    datasets: [
+                                        {
+                                            label: 'Planned Milestones',
+                                            data: [1, 2, 3, 4, 5, 6],
+                                            borderColor: '#6b7280',
+                                            backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                                            borderDash: [5, 5]
+                                        },
+                                        {
+                                            label: 'Actual Completion',
+                                            data: [1, 2, 3, 4, 6, 6],
+                                            borderColor: '#d97706',
+                                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                                            borderWidth: 2,
+                                            fill: true
+                                        }
+                                    ]
+                                },
+                                caption: 'Stayed on track; governance shipped 2 weeks early.'
+                            },
+                            artifacts: [
+                                {
+                                    name: "Protocol Whitepaper",
+                                    file: "protocol-whitepaper.pdf",
+                                    meta: "2.1 MB",
+                                    description: "Technical specification for decentralized consensus mechanism"
+                                },
+                                {
+                                    name: "Governance Framework Design",
+                                    file: "governance-design.md",
+                                    meta: "34 KB",
+                                    description: "Token economics and proposal flow documentation"
+                                },
+                                {
+                                    name: "Proof of Concept Repository",
+                                    file: "poc-repository",
+                                    meta: "GitHub",
+                                    description: "Smart contract implementations and testing framework"
+                                },
+                                {
+                                    name: "Grant Milestone Report",
+                                    file: "milestone_report_q2.pdf",
+                                    meta: "1.4 MB",
+                                    description: "Progress summary and deliverable documentation for DormDAO"
+                                },
+                                {
+                                    name: "Tokenomics Model",
+                                    file: "tokenomics_simulation.xlsx",
+                                    meta: "892 KB",
+                                    description: "Economic modeling of emissions, staking rewards, and governance participation"
+                                }
+                            ],
+                            quickFacts: {
+                                'Duration': 'Jan 2025 – Jun 2025',
+                                'Team': '3',
+                                'Partner': 'Collab Currency',
+                                'Sponsor': 'DormDAO'
+                            },
+                            skills: ['Solidity', 'Bittensor', 'Python', 'Spec Writing', 'Governance'],
+                            recognition: 'Grant awarded; proposals approved'
+                        },
+                        'texas-blockchain': {
+                            id: 'texas-blockchain',
+                            overline: 'Texas Blockchain • Investment Team',
+                            title: 'Early-Stage Fintech & Web3 Diligence',
+                            synthetic: true,
+                            overview: 'Build valuation models (DCF, trading comps) and draft investment memos allocating $5–8k across fintech/blockchain. Perform due diligence on protocols and businesses; analyze unit economics and market structure.',
+                            actions: [
+                                'Built standardized DCF and comps frameworks per vertical',
+                                'Created tokenomics & emissions analyses for Web3 deals',
+                                'Wrote IC memos with risk rationale and position sizing',
+                                'Maintained pipeline board and decision logs'
+                            ],
+                            impactStats: [
+                                { value: '11', label: 'Projects Analyzed' },
+                                { value: '$48K', label: 'Total Proposals' },
+                                { value: '2.0×', label: 'Decision Speed vs Baseline' }
+                            ],
+                            chart: {
+                                title: 'Proposed vs Approved Allocation by Risk Bucket',
+                                type: 'bar',
+                                data: {
+                                    labels: ['Low', 'Medium', 'High'],
+                                    datasets: [
+                                        {
+                                            label: 'Proposed %',
+                                            data: [30, 50, 20],
+                                            backgroundColor: '#d97706'
+                                        },
+                                        {
+                                            label: 'Approved %',
+                                            data: [25, 60, 15],
+                                            backgroundColor: '#059669'
+                                        }
+                                    ]
+                                },
+                                caption: 'Framework biased toward medium-risk deals with clearer unit economics.'
+                            },
+                            artifacts: [
+                                { icon: '📋', name: 'IC_Memo_Template.pdf', meta: '1.5 MB • Updated Nov 20', file: 'ic-memo-template.pdf' },
+                                { icon: '📊', name: 'DD_Rubric.csv', meta: '28 KB • Updated Nov 15', file: 'dd-rubric.csv' },
+                                { icon: '💰', name: 'Tokenomics_Model.xlsx', meta: '187 KB • Updated Nov 25', file: 'tokenomics-model.xlsx' }
+                            ],
+                            quickFacts: {
+                                'Duration': 'Sep 2024 – Present',
+                                'Location': 'Austin, TX',
+                                'Track': 'Fintech/Web3',
+                                'Team': '4'
+                            },
+                            skills: ['Excel', 'Python', 'Comps', 'Tokenomics', 'Memo Writing'],
+                            recognition: 'Presented to Investment Committee'
+                        },
+                        'utexas-energy-trading': {
+                            id: 'utexas-energy-trading',
+                            overline: 'UTEXAS Energy Trading Program',
+                            title: 'Power & Natural Gas Fundamentals',
+                            synthetic: true,
+                            overview: 'Track ERCOT power and U.S. natural gas fundamentals; monitor price drivers and spreads. Apply derivatives concepts (futures/options); contribute to strategy research and backtesting.',
+                            actions: [
+                                'Built daily gas/power dashboard (SP, DA/RT, basis)',
+                                'Backtested simple mean-revert & spread strategies',
+                                'Logged weather & outage drivers into notes',
+                                'Assisted with futures/options payoff analysis'
+                            ],
+                            impactStats: [
+                                { value: '$2.0M', label: 'Simulation Portfolio' },
+                                { value: '+1.5%', label: 'Monthly Alpha (Sim)' },
+                                { value: '3', label: 'Research Notes Published' }
+                            ],
+                            chart: {
+                                title: 'PnL vs Benchmark (Sim)',
+                                type: 'line',
+                                data: {
+                                    labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                                    datasets: [
+                                        {
+                                            label: 'Strategy PnL (cum)',
+                                            data: [0, 1.2, 3.1, 4.8, 7.2, 9.8],
+                                            borderColor: '#d97706',
+                                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                                            borderWidth: 2,
+                                            fill: true
+                                        },
+                                        {
+                                            label: 'Benchmark (cum)',
+                                            data: [0, 0.8, 1.9, 2.6, 3.1, 4.2],
+                                            borderColor: '#6b7280',
+                                            backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                                            borderWidth: 2,
+                                            fill: true
+                                        }
+                                    ]
+                                },
+                                caption: 'Alpha generated primarily during vol spikes; sizes are simulated.'
+                            },
+                            artifacts: [
+                                { icon: '📓', name: 'Strategy_Backtest.ipynb', meta: 'PDF • 3.4 MB • Updated Aug 15', file: 'strategy-backtest.pdf' },
+                                { icon: '📊', name: 'Fundamentals_Dashboard.png', meta: '892 KB • Updated Aug 20', file: 'fundamentals-dashboard.png' },
+                                { icon: '📝', name: 'Weekly_Notes.pdf', meta: '2.1 MB • Updated Aug 18', file: 'weekly-notes.pdf' }
+                            ],
+                            quickFacts: {
+                                'Duration': 'Mar 2025 – Present',
+                                'Location': 'Austin, TX',
+                                'Instruments': 'Futures/Options',
+                                'Cohort': '15'
+                            },
+                            skills: ['Excel', 'Python', 'Backtesting', 'Derivatives', 'ERCOT'],
+                            recognition: 'Cited in program\'s weekly brief'
+                        },
+                        'student-leadership': {
+                            id: 'student-leadership',
+                            overline: 'UT Austin • Elected Representative',
+                            title: 'Student Leadership',
+                            synthetic: true,
+                            overview: 'Elected representative for 52,000+ students at UT Austin, leading campus-wide governance initiatives, policy advocacy, and cross-organizational coalitions to drive institutional change and student engagement.',
+                            actions: [
+                                'Organized campus-wide town halls, produced policy briefs',
+                                'Led voter outreach and digital communications',
+                                'Coordinated cross-org coalitions for proposals',
+                                'Developed stakeholder engagement strategies',
+                                'Implemented feedback collection and analysis systems'
+                            ],
+                            impactStats: [
+                                { value: '4K+', label: 'Votes (Turnout)' },
+                                { value: '12', label: 'Initiatives Championed' },
+                                { value: '3', label: 'Policies Adopted' }
+                            ],
+                            chart: {
+                                title: 'Turnout by College · % Distribution',
+                                type: 'doughnut',
+                                data: {
+                                    labels: ['Engineering', 'Business', 'Liberal Arts', 'Natural Sciences', 'Other'],
+                                    datasets: [{
+                                        data: [28, 24, 18, 16, 14],
+                                        backgroundColor: ['#d97706', '#059669', '#6b7280', '#dc2626', '#1f2937']
+                                    }]
+                                },
+                                caption: 'Turnout broadly distributed; engagement strongest in Engineering & Business.'
+                            },
+                            artifacts: [
+                                { icon: '📋', name: 'policy-briefs.pdf', meta: '2.8 MB • Updated Dec 1', file: 'policy-briefs.pdf' },
+                                { icon: '📈', name: 'campaign-summary.pdf', meta: '1.5 MB • Updated Nov 20', file: 'campaign-summary.pdf' },
+                                { icon: '📰', name: 'press-mentions.pdf', meta: '890 KB • Updated Dec 5', file: 'press-mentions.pdf' }
+                            ],
+                            quickFacts: {
+                                'Constituency': '52k+ students',
+                                'Term': '1 year',
+                                'Committees': '3',
+                                'Initiatives': '12'
+                            },
+                            skills: ['Leadership', 'Public Speaking', 'Stakeholder Mgmt', 'Comms'],
+                            recognition: 'Elected by campus-wide vote'
+                        },
+                        'web3-innovation': {
+                            id: 'web3-innovation',
+                            overline: 'OnionDAO • Hackathon Champion',
+                            title: 'Web3 Innovation',
+                            synthetic: true,
+                            overview: 'Led winning team at OnionDAO hackathon developing cross-chain payroll automation platform with innovative vesting mechanics, escrow logic, and compliance guardrails for decentralized organizations.',
+                            actions: [
+                                'Designed vesting + approval flows across chains',
+                                'Implemented escrow logic + payout proofs',
+                                'Built a minimal admin UI; wrote scoring narrative',
+                                'Integrated multi-chain wallet connectivity',
+                                'Developed smart contract testing framework'
+                            ],
+                            impactStats: [
+                                { value: '1st', label: 'Place' },
+                                { value: '72', label: 'Competing Teams' },
+                                { value: '48h', label: 'Build Time' }
+                            ],
+                            chart: {
+                                title: 'Judge Scores by Category · Rating (1-10)',
+                                type: 'radar',
+                                data: {
+                                    labels: ['Innovation', 'Technical Execution', 'Usefulness', 'UX', 'Pitch'],
+                                    datasets: [{
+                                        data: [9.5, 8.8, 9.0, 7.5, 9.2],
+                                        borderColor: '#d97706',
+                                        backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                                        borderWidth: 2,
+                                        pointBackgroundColor: '#d97706'
+                                    }]
+                                },
+                                caption: 'Strength in innovation & execution; UX prioritized within time constraints.'
+                            },
+                            artifacts: [
+                                { icon: '🎬', name: 'demo-video.mp4', meta: '15.2 MB • Updated Oct 28', file: 'demo-video.mp4' },
+                                { icon: '📊', name: 'pitch-deck.pdf', meta: '3.4 MB • Updated Oct 28', file: 'pitch-deck.pdf' },
+                                { icon: '💻', name: 'repo-link.md', meta: '2 KB • Updated Oct 29', file: 'repo-link.md' }
+                            ],
+                            quickFacts: {
+                                'Role': 'Team Lead',
+                                'Team': '4 members',
+                                'Track': 'Payroll/Infrastructure',
+                                'Duration': '48h'
+                            },
+                            skills: ['Solidity', 'Hardhat', 'React', 'EVM'],
+                            recognition: 'Hackathon Champion'
+                        },
+                        'capital-research': {
+                            id: 'capital-research',
+                            overline: 'Independent / Capital Research',
+                            title: 'Sector Notes & Valuation Screens',
+                            synthetic: true,
+                            overview: 'Produced recurring research notes on coverage names; combined simple DCF/relative screens with macro context to identify asymmetric setups.',
+                            actions: [
+                                'Built weekly valuation screen (DCF vs comps vs price)',
+                                'Authored one-page notes (thesis, risks, catalysts)',
+                                'Maintained watchlist with alerting thresholds',
+                                'Presented summaries to peers for feedback'
+                            ],
+                            impactStats: [
+                                { value: '18', label: 'Notes Published' },
+                                { value: '12', label: 'Tickers Covered' },
+                                { value: '3', label: 'Sectors Tracked' }
+                            ],
+                            chart: {
+                                title: 'Implied Upside vs Risk Flag (Coverage Universe)',
+                                type: 'scatter',
+                                data: {
+                                    datasets: [{
+                                        label: 'Coverage Names',
+                                        data: [
+                                            {x: 15, y: 7, r: 8},
+                                            {x: 25, y: 5, r: 12},
+                                            {x: 8, y: 9, r: 6},
+                                            {x: 35, y: 4, r: 15},
+                                            {x: 12, y: 8, r: 7},
+                                            {x: 45, y: 6, r: 10},
+                                            {x: 28, y: 3, r: 14},
+                                            {x: 18, y: 7, r: 9}
+                                        ],
+                                        backgroundColor: '#d97706',
+                                        borderColor: '#92400e',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                caption: 'Prioritized high-upside, lower-risk names on weekly lists.'
+                            },
+                            artifacts: [
+                                { icon: '📊', name: 'Weekly_Screens.csv', meta: '156 KB • Updated Dec 10', file: 'weekly-screens.csv' },
+                                { icon: '📄', name: 'Sample_Note.pdf', meta: '1.2 MB • Updated Dec 8', file: 'sample-note.pdf' },
+                                { icon: '📋', name: 'Screen_Methodology.md', meta: '18 KB • Updated Dec 5', file: 'screen-methodology.md' }
+                            ],
+                            quickFacts: {
+                                'Period': 'Rolling',
+                                'Cadence': 'Weekly',
+                                'Universe': 'US Equities',
+                                'Method': 'DCF/Comps'
+                            },
+                            skills: ['Excel', 'Python', 'DCF', 'Relative Valuation', 'Writing'],
+                            recognition: 'Shared across student investing group'
+                        }
+                    };
+                }
+            }
+
+            // Global function for external calls
+            function openCareerAttachment(filename) {
+                console.log(`Opening career attachment: ${filename}`);
+            }
+
             // Initialize the project modal system
             let projectModalSystem;
+            let careerModalSystem;
             
             // Override the existing openModal function to use project modals for specific IDs
             const originalOpenModal = window.openModal || function() {};
             
             window.openModal = function(modalId) {
-                // Check if this is a project modal
-                const projectIds = ['commercial-real-estate', 'blockchain-cofounder', 'energy-trading', 'investment-analyst', 'student-leadership', 'web3-innovation'];
+                // Check if this is a project modal (deeper technical projects)
+                const projectIds = ['commercial-real-estate', 'blockchain-cofounder', 'energy-trading'];
+                
+                // Check if this is a career modal (narrative career highlights)
+                const careerIds = ['investment-analyst', 'student-leadership', 'web3-innovation', 'investors-alliance', 'vc-backed-startup', 'texas-blockchain', 'utexas-energy-trading', 'capital-research'];
                 
                 if (projectIds.includes(modalId)) {
                     if (!projectModalSystem) {
                         projectModalSystem = new ProjectModalSystem();
                     }
                     projectModalSystem.openModal(modalId);
+                } else if (careerIds.includes(modalId)) {
+                    if (!careerModalSystem) {
+                        careerModalSystem = new CareerModalSystem();
+                    }
+                    // Map some existing IDs to the new career modal IDs
+                    const careerMapping = {
+                        'investment-analyst': 'texas-blockchain',
+                        'student-leadership': 'student-leadership',
+                        'web3-innovation': 'web3-innovation',
+                        'investors-alliance': 'investors-alliance' // Direct mapping
+                    };
+                    const mappedId = careerMapping[modalId] || modalId;
+                    careerModalSystem.openModal(mappedId);
                 } else {
-                    // Use original modal system for career highlights
+                    // Use original modal system for other highlights
                     originalOpenModal(modalId);
                 }
             };
 
-            // Initialize project modal system on DOM ready
+            // Initialize both modal systems on DOM ready
             document.addEventListener('DOMContentLoaded', () => {
                 if (!projectModalSystem) {
                     projectModalSystem = new ProjectModalSystem();
+                }
+                if (!careerModalSystem) {
+                    careerModalSystem = new CareerModalSystem();
                 }
             });
 
@@ -11908,6 +14695,113 @@
                     <div class="modal-navigation">
                         <button class="nav-button" id="prev-project">← Previous</button>
                         <button class="nav-button" id="next-project">Next →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Career Modal Structure -->
+        <div id="career-modal-overlay" class="career-modal-overlay" role="dialog" aria-labelledby="career-modal-title" aria-hidden="true">
+            <div class="career-modal">
+                <!-- Header -->
+                <div class="career-modal-header">
+                    <div class="career-modal-header-content">
+                        <div class="career-modal-overline" id="career-modal-overline">Organization • Role</div>
+                        <div class="career-modal-title-row">
+                            <h1 id="career-modal-title" class="career-modal-title">Position Title</h1>
+                            <div class="career-modal-badges">
+                                <span class="career-badge synthetic">Synthetic</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="career-modal-close" aria-label="Close career details" id="career-modal-close">×</button>
+                </div>
+
+                <!-- Main Content -->
+                <div class="career-modal-content">
+                    <!-- Left Column - Narrative -->
+                    <div class="career-modal-main">
+                        <!-- Overview -->
+                        <section class="career-section" id="overview">
+                            <h2 class="career-section-title">Overview</h2>
+                            <div class="career-section-content" id="career-overview">
+                                Career overview will be populated here...
+                            </div>
+                        </section>
+
+                        <!-- Actions -->
+                        <section class="career-section" id="actions">
+                            <h2 class="career-section-title">Actions</h2>
+                            <div class="career-section-content">
+                                <ul id="career-actions">
+                                    <!-- Actions will be populated by JavaScript -->
+                                </ul>
+                            </div>
+                        </section>
+
+                        <!-- Results -->
+                        <section class="career-section" id="results">
+                            <h2 class="career-section-title">Results & Impact</h2>
+                            <div class="career-section-content">
+                                <div class="career-impact-stats" id="career-impact-stats">
+                                    <!-- Impact stats will be populated by JavaScript -->
+                                </div>
+                                <div class="career-chart-container" id="career-chart-container">
+                                    <!-- Chart will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Evidence -->
+                        <section class="career-section" id="evidence">
+                            <h2 class="career-section-title">Evidence</h2>
+                            <div class="career-section-content">
+                                <div class="career-artifacts-grid" id="career-artifacts-grid">
+                                    <!-- Artifacts will be populated by JavaScript -->
+                                </div>
+                                <div class="career-evidence-footer">
+                                    <p class="career-evidence-disclaimer">Charts and numbers are synthetic for portfolio demonstration purposes.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <div class="career-modal-sidebar">
+                        <!-- Contents -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Contents</div>
+                            <ul class="contents-nav" id="career-contents-nav">
+                                <li><a href="#overview" class="nav-link">Overview</a></li>
+                                <li><a href="#actions" class="nav-link">Actions</a></li>
+                                <li><a href="#results" class="nav-link">Results</a></li>
+                                <li><a href="#evidence" class="nav-link">Evidence</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Quick Facts -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Quick Facts</div>
+                            <div class="career-quick-facts" id="career-quick-facts">
+                                <!-- Quick facts will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Tools & Skills -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Tools & Skills</div>
+                            <div class="career-skills" id="career-skills">
+                                <!-- Skills will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Recognition -->
+                        <div class="sidebar-section">
+                            <div class="sidebar-title">Recognition</div>
+                            <div class="career-recognition" id="career-recognition">
+                                <!-- Recognition will be populated by JavaScript -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
