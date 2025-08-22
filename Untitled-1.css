@@ -93,7 +93,7 @@ pre {
 }
 
 code, kbd, pre, samp {
-  font-family: monospace;
+  font-family: 'Söhne Mono', monospace;
   font-size: 1em;
 }
 
@@ -2071,7 +2071,7 @@ textarea.w-input, textarea.w-select {
 
 body {
   color: var(--black);
-  font-family: Maison Neue Mono, sans-serif;
+  font-family: 'Söhne', sans-serif;
   font-size: 14px;
   line-height: 20px;
 }
@@ -2183,6 +2183,7 @@ a:visited {
 
 .nav__link {
   color: var(--white);
+  font-family: 'Söhne Schmal', sans-serif;
   letter-spacing: .04em;
   text-transform: uppercase;
 }
@@ -2206,7 +2207,7 @@ a:visited {
 .h0 {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne Breit', sans-serif;
   font-size: 6.75rem;
   font-weight: 400;
   line-height: 100%;
@@ -2254,7 +2255,7 @@ a:visited {
 .h2 {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne', sans-serif;
   font-size: 3.75rem;
   font-weight: 400;
   line-height: 110%;
@@ -2305,7 +2306,7 @@ a:visited {
 .h3 {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 120%;
@@ -2627,7 +2628,7 @@ a:visited {
 }
 
 .text-p {
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne', sans-serif;
   font-size: 1.125rem;
   font-weight: 400;
   line-height: 170%;
@@ -2675,7 +2676,7 @@ a:visited {
 .h1 {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne Breit', sans-serif;
   font-size: 5.25rem;
   font-weight: 400;
   line-height: 100%;
@@ -2759,7 +2760,7 @@ a:visited {
 .page-content h2 {
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne', sans-serif;
 }
 
 .page-content p {
@@ -2770,7 +2771,7 @@ a:visited {
 }
 
 .page-content h4 {
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne', sans-serif;
 }
 
 .hero-group {
@@ -2889,7 +2890,7 @@ a:visited {
   color: #fff;
   margin-bottom: 5rem;
   margin-left: 5rem;
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne Breit', sans-serif;
   font-size: 6.75rem;
   line-height: 115%;
   transition: opacity .3s;
@@ -3181,30 +3182,106 @@ a:visited {
   grid-area: span 1 / span 1 / span 1 / span 1;
 }
 
+/*
+ * FONT IMPLEMENTATION NOTES:
+ * The Söhne font family URLs below are placeholders pointing to klim.co.nz
+ * These URLs need to be replaced with actual hosted font files or CDN links
+ * for the Söhne font family before production deployment.
+ * 
+ * Font mapping implemented:
+ * - Primary (body & headings): Söhne
+ * - Display (hero & big titles): Söhne Breit 
+ * - Utility (nav, badges, pills): Söhne Schmal
+ * - Data (metrics, charts, code): Söhne Mono
+ */
+
+/* Söhne Font Family - Primary (body & headings) */
 @font-face {
-  font-family: 'Aeonik Pro';
-  src: url('https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63b3ef5ba6da8a81b9e8bfd0_AeonikPro-Black.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Aeonik Pro';
-  src: url('https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63b3ef5bd222e770edc29c7f_AeonikPro-Regular.woff2') format('woff2');
+  font-family: 'Söhne';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Maison Neue Mono';
-  src: url('https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63b3ef7e2ac12cbd5bce6c5c_MaisonNeueMono-Regular.woff2') format('woff2');
+  font-family: 'Söhne';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Söhne';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Söhne Breit - Display (hero & big titles) */
+@font-face {
+  font-family: 'Söhne Breit';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-breit-regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Aeonik Pro';
-  src: url('https://cdn.prod.website-files.com/638f18bec1c3ba6c00dd2ac1/63c590724f4e802f5b54ab8a_AeonikProTRIAL-Bold.woff2') format('woff2');
+  font-family: 'Söhne Breit';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-breit-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Söhne Breit';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-breit-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Söhne Schmal - Utility (eyebrows, pills, nav, badges) */
+@font-face {
+  font-family: 'Söhne Schmal';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-schmal-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Söhne Schmal';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-schmal-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Söhne Schmal';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-schmal-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Söhne Mono - Data (metrics, charts, code, IDs) */
+@font-face {
+  font-family: 'Söhne Mono';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-mono-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Söhne Mono';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-mono-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Söhne Mono';
+  src: url('https://fonts.klim.co.nz/fonts/soehne/soehne-mono-bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

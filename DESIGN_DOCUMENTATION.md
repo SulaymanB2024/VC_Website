@@ -49,17 +49,42 @@ This is a sophisticated personal portfolio website for Sulayman Bowles, a financ
 ## Typography & Hierarchy System
 
 ### Advanced Font Stack Implementation
+
+#### Söhne Font Family System
+The website now implements a comprehensive Söhne font family system for enhanced typography:
+
+1. **Primary Family (Söhne)**: Used for body text and standard headings
+   - Body text, paragraphs, and general content
+   - Standard headings (H2, H3, H4)
+   - Card titles and secondary content
+
+2. **Display Family (Söhne Breit)**: Used for hero sections and large titles
+   - Hero titles (.h0, .h1)
+   - Swiper titles and prominent displays
+   - Maximum visual impact elements
+
+3. **Utility Family (Söhne Schmal)**: Used for navigation and utility elements
+   - Navigation links with uppercase styling
+   - Pills, badges, and labels
+   - Eyebrow text and secondary navigation
+
+4. **Data Family (Söhne Mono)**: Used for technical content and data display
+   - Code blocks and inline code
+   - Chart labels and data visualization
+   - Metrics, IDs, and tabular data
+   - Variable names and technical identifiers
+
 ```css
 /* Primary body text system */
 body {
-  font-family: Maison Neue Mono, sans-serif;
+  font-family: 'Söhne', sans-serif;
   font-size: 14px;
   line-height: 20px; /* 1.43 ratio for optimal readability */
 }
 
 /* Headline hierarchy */
 .h0 { /* Hero titles - maximum impact */
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne Breit', sans-serif;
   font-size: clamp(2.5rem, 8vw, 6rem);
   font-weight: 700;
   line-height: 0.9; /* Tight leading for dramatic effect */
@@ -69,9 +94,9 @@ body {
 #### Detailed Typographic Hierarchy
 1. **H0 (Hero Level)**: `clamp(2.5rem, 8vw, 6rem)` - Responsive scaling with viewport units
 2. **H1 Section Headers**: `2rem` with 120% line height for readability
-3. **H2 Subsections**: `1.5rem` with Aeonik Pro, 700 weight
+3. **H2 Subsections**: `1.5rem` with Söhne, 700 weight
 4. **H3 Card Titles**: `1.25rem` maintaining visual hierarchy
-5. **Body Text**: `14px` Maison Neue Mono with 20px line height
+5. **Body Text**: `14px` Söhne with 20px line height
 6. **Caption/Labels**: `12px` uppercase with letter-spacing for secondary info
 
 #### Professional Typography Treatments
@@ -98,7 +123,7 @@ body {
 #### Modal Typography Architecture
 ```css
 .modal-title {
-  font-family: Aeonik Pro, sans-serif;
+  font-family: 'Söhne', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 120%;
@@ -106,9 +131,9 @@ body {
 }
 ```
 - **Content Hierarchy**: Clear distinction between headers and body text
-- **Reading Optimization**: 14px body text with monospace for scanning
+- **Reading Optimization**: 14px body text with Söhne for scanning
 - **List Formatting**: Custom bullets (→) with gap spacing
-- **Technical Content**: Monospace maintains alignment for data/metrics
+- **Technical Content**: Söhne Mono maintains alignment for data/metrics
 
 ## Advanced Color Theory & Application
 
