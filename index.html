@@ -1464,17 +1464,159 @@
                 border-color: var(--black);
             }
 
-            .filter-chip.more-filters {
-                color: var(--text-secondary);
-                border-style: dashed;
-            }
-
             /* Experience Grid Cards */
             .experience-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
                 gap: 2rem;
                 margin-top: 2rem;
+                position: relative;
+            }
+
+            /* Filter Animation Styles - Anti-Flicker & Performance Optimized */
+            .experience-grid-card {
+                transform-origin: center center;
+                will-change: auto;
+                backface-visibility: hidden;
+                transform: translate3d(0, 0, 0);
+                position: relative;
+                opacity: 1;
+                transition: opacity 0.2s ease;
+            }
+
+            /* Pre-animation state to prevent flicker */
+            .experience-grid.filtering .experience-grid-card {
+                will-change: transform, opacity;
+            }
+
+            .experience-grid-card.filter-exit {
+                animation: filterExit 0.3s cubic-bezier(0.25, 0, 0.5, 1) forwards;
+                z-index: 1;
+                will-change: transform, opacity;
+            }
+
+            .experience-grid-card.filter-enter {
+                opacity: 0;
+                transform: translate3d(0, 12px, 0) scale(0.95);
+                animation: filterEnter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                z-index: 2;
+                will-change: transform, opacity;
+            }
+
+            .experience-grid-card.filter-move {
+                transition: transform 0.3s cubic-bezier(0.25, 0, 0.5, 1);
+                z-index: 3;
+                will-change: transform;
+            }
+
+            /* Prevent any flash of unstyled content */
+            .experience-grid.preparing-animation .experience-grid-card {
+                opacity: 1;
+                pointer-events: none;
+            }
+
+            /* High-performance keyframes - Minimal repaints */
+            @keyframes filterExit {
+                0% {
+                    opacity: 1;
+                    transform: translate3d(0, 0, 0) scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translate3d(0, -12px, 0) scale(0.95);
+                    pointer-events: none;
+                }
+            }
+
+            @keyframes filterEnter {
+                0% {
+                    opacity: 0;
+                    transform: translate3d(0, 12px, 0) scale(0.95);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translate3d(0, 0, 0) scale(1);
+                }
+            }
+
+            /* Anti-flicker grid transitions */
+            .experience-grid.filtering {
+                contain: layout style;
+                position: relative;
+            }
+
+            .experience-grid.filtering .experience-grid-card:not(.filter-exit):not(.filter-enter):not(.filter-move) {
+                transition: transform 0.3s cubic-bezier(0.25, 0, 0.5, 1);
+                will-change: auto;
+            }
+
+            /* Immediate preparation state to prevent layout shift */
+            .experience-grid.preparing-animation {
+                contain: layout style;
+            }
+
+            /* Remove complex overlay and performance optimizations */
+            @media (prefers-reduced-motion: no-preference) {
+                .experience-grid-card {
+                    contain: layout;
+                }
+                
+                /* Ensure smooth compositing */
+                .experience-grid.filtering,
+                .experience-grid.preparing-animation {
+                    transform: translateZ(0);
+                }
+            }
+
+            /* Respect reduced motion preferences */
+            @media (prefers-reduced-motion: reduce) {
+                .experience-grid-card.filter-exit,
+                .experience-grid-card.filter-enter,
+                .experience-grid-card.filter-move {
+                    animation: none !important;
+                    transition: opacity 0.2s ease !important;
+                    transform: none !important;
+                }
+                
+                .experience-grid.filtering .experience-grid-card:not(.filter-exit):not(.filter-enter):not(.filter-move) {
+                    transition: opacity 0.2s ease !important;
+                    transform: none !important;
+                }
+            }
+
+            /* Critical performance optimization - Force GPU acceleration */
+            @media (prefers-reduced-motion: no-preference) {
+                .experience-grid.filtering,
+                .experience-grid.preparing-animation {
+                    transform: translateZ(0);
+                }
+                
+                .experience-grid-card {
+                    contain: layout;
+                    transform: translateZ(0);
+                }
+                
+                .experience-grid-card.filter-exit,
+                .experience-grid-card.filter-enter,
+                .experience-grid-card.filter-move {
+                    transform: translateZ(0);
+                }
+
+                /* Prevent any visual jumps during state changes */
+                .experience-grid.filtering .experience-grid-card,
+                .experience-grid.preparing-animation .experience-grid-card {
+                    position: relative;
+                    z-index: auto;
+                }
+            }
+
+            /* Additional flicker prevention */
+            .experience-grid-card.filter-enter {
+                animation-fill-mode: both;
+            }
+
+            .experience-grid-card.filter-exit {
+                animation-fill-mode: forwards;
             }
 
             .experience-grid-card {
@@ -2092,42 +2234,6 @@
                 transform: rotate(15deg);
                 background: var(--black);
                 color: var(--white);
-            }
-
-            /* View All Projects Link */
-            .experience-cta {
-                text-align: left;
-            }
-
-            .experience-view-all {
-                font-family: 'Maison Neue Mono', sans-serif;
-                font-size: 0.875rem;
-                font-weight: 500;
-                color: var(--coal);
-                text-decoration: none;
-                transition: all 0.3s ease;
-                position: relative;
-                display: inline-block;
-            }
-
-            .experience-view-all::after {
-                content: "";
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: -2px;
-                background: var(--coal);
-                height: 1px;
-                width: 0;
-                transition: width 0.2s cubic-bezier(0.42, 0.15, 0.41, 0.89);
-            }
-
-            .experience-view-all:hover::after {
-                width: 100%;
-            }
-
-            .experience-view-all:hover {
-                color: var(--black);
             }
 
             /* ===== QUICK-VIEW MODAL STYLES ===== */
@@ -2927,262 +3033,6 @@
                 max-height: 100%;
                 border: 1px solid rgba(0, 0, 0, 0.08);
                 background: var(--white);
-            }
-
-            /* ===== MORE FILTERS POPOVER STYLES ===== */
-            
-            .more-filters-popover {
-                position: absolute;
-                top: calc(100% + 8px);
-                right: 0;
-                width: 600px;
-                max-width: 90vw;
-                background: var(--white);
-                border: 1px solid rgba(0, 0, 0, 0.08);
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-                z-index: 200;
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(-8px);
-                transition: all 180ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
-            }
-
-            .more-filters-popover.active {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-
-            .filters-header {
-                padding: 1.5rem 2rem 1rem;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-                clip-path: polygon(20px 0, 100% 0, 100% 100%, 0 100%, 0 20px);
-                background: rgba(248, 248, 248, 0.6);
-            }
-
-            .filters-header h3 {
-                font-family: 'Maison Neue Mono', sans-serif;
-                font-size: 0.75rem;
-                font-weight: 600;
-                color: var(--black);
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-                margin: 0;
-            }
-
-            .filters-body {
-                padding: 2rem;
-                max-height: 400px;
-                overflow-y: auto;
-            }
-
-            .filter-section {
-                margin-bottom: 1.5rem;
-            }
-
-            .filter-section:last-child {
-                margin-bottom: 0;
-            }
-
-            .filter-label {
-                font-family: 'Maison Neue Mono', sans-serif;
-                font-size: 0.75rem;
-                font-weight: 600;
-                color: var(--black);
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-                margin-bottom: 0.75rem;
-                display: block;
-            }
-
-            .filter-chips-grid {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-
-            .filter-multi-chip {
-                background: rgba(0, 0, 0, 0.04);
-                border: 1px solid rgba(0, 0, 0, 0.08);
-                color: var(--coal);
-                font-family: 'Maison Neue Mono', sans-serif;
-                font-size: 0.625rem;
-                font-weight: 500;
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-                padding: 0.375rem 0.75rem;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                border-radius: 0;
-                outline: none;
-            }
-
-            .filter-multi-chip:hover,
-            .filter-multi-chip.selected {
-                border-color: var(--burnt-ocre);
-                color: var(--burnt-ocre);
-                background: rgba(159, 144, 135, 0.08);
-            }
-
-            .filter-multi-chip:focus {
-                outline: 1px solid var(--burnt-ocre);
-                outline-offset: 2px;
-            }
-
-            /* Year Range Inputs */
-            .year-range-inputs {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                margin-bottom: 1rem;
-            }
-
-            .year-input {
-                width: 80px;
-                padding: 0.375rem 0.5rem;
-                border: 1px solid rgba(0, 0, 0, 0.08);
-                background: var(--white);
-                font-family: 'Maison Neue Mono', sans-serif;
-                font-size: 0.75rem;
-                color: var(--coal);
-                outline: none;
-                border-radius: 0;
-            }
-
-            .year-input:focus {
-                border-color: var(--burnt-ocre);
-                outline: 1px solid var(--burnt-ocre);
-                outline-offset: 2px;
-            }
-
-            .year-separator {
-                font-family: 'Maison Neue Mono', sans-serif;
-                color: var(--coal);
-                font-size: 0.875rem;
-            }
-
-            .year-slider,
-            .impact-slider {
-                margin-top: 0.75rem;
-            }
-
-            .year-range-slider,
-            .impact-range-slider {
-                width: 100%;
-                height: 2px;
-                background: rgba(0, 0, 0, 0.08);
-                outline: none;
-                border: none;
-                border-radius: 0;
-                cursor: pointer;
-            }
-
-            .year-range-slider::-webkit-slider-thumb,
-            .impact-range-slider::-webkit-slider-thumb {
-                appearance: none;
-                width: 16px;
-                height: 16px;
-                background: var(--burnt-ocre);
-                cursor: pointer;
-                border-radius: 50%;
-            }
-
-            .year-range-slider::-moz-range-thumb,
-            .impact-range-slider::-moz-range-thumb {
-                width: 16px;
-                height: 16px;
-                background: var(--burnt-ocre);
-                cursor: pointer;
-                border-radius: 50%;
-                border: none;
-            }
-
-            /* Tools Search */
-            .tools-search {
-                margin-bottom: 1rem;
-            }
-
-            .tools-search-input {
-                width: 100%;
-                padding: 0.5rem 0.75rem;
-                border: 1px solid rgba(0, 0, 0, 0.08);
-                background: var(--white);
-                font-family: 'Maison Neue Mono', sans-serif;
-                font-size: 0.75rem;
-                color: var(--coal);
-                outline: none;
-                border-radius: 0;
-            }
-
-            .tools-search-input:focus {
-                border-color: var(--burnt-ocre);
-                outline: 1px solid var(--burnt-ocre);
-                outline-offset: 2px;
-            }
-
-            .tools-search-input::placeholder {
-                color: rgba(71, 71, 71, 0.6);
-            }
-
-            .tools-chips-grid {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                max-height: 120px;
-                overflow-y: auto;
-            }
-
-            /* Filters Footer */
-            .filters-footer {
-                padding: 1.5rem 2rem;
-                border-top: 1px solid rgba(0, 0, 0, 0.08);
-                background: rgba(252, 252, 252, 0.8);
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 1rem;
-            }
-
-            .filters-summary {
-                font-family: 'Maison Neue Mono', sans-serif;
-                font-size: 0.75rem;
-                color: var(--coal);
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-            }
-
-            .filters-actions {
-                display: flex;
-                gap: 0.75rem;
-            }
-
-            .btn-ghost {
-                background: transparent;
-                color: var(--coal);
-                border: 1px solid rgba(0, 0, 0, 0.08);
-                padding: 0.5rem 1rem;
-                font-family: 'Maison Neue Mono', sans-serif;
-                font-size: 0.75rem;
-                font-weight: 500;
-                text-transform: uppercase;
-                letter-spacing: 0.04em;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                text-decoration: none;
-                display: inline-block;
-                border-radius: 0;
-                outline: none;
-            }
-
-            .btn-ghost:hover {
-                border-color: var(--burnt-ocre);
-                color: var(--burnt-ocre);
-            }
-
-            .btn-ghost:focus {
-                outline: 2px solid var(--burnt-ocre);
-                outline-offset: 2px;
             }
 
             /* ===== SORT DROPDOWN STYLES ===== */
@@ -7890,7 +7740,7 @@
                 <div class="bg-blur bg-blur--nav"></div>
                 <div class="bg-blur"></div>
                 <a href="/" aria-current="page" class="logo w-nav-brand w--current">
-                    <div class="logo-minimal">Sulayman Bowles</div>
+                    <div class="logo-minimal">My Portfolio</div>
                 </a>
                 <nav role="navigation" class="nav w-nav-menu">
                     <a href="#portfolio" class="nav__link w-nav-link">Experience</a>
@@ -8361,7 +8211,6 @@
                         <button class="filter-chip" data-filter="Finance">Finance</button>
                         <button class="filter-chip" data-filter="Technology">Technology</button>
                         <button class="filter-chip" data-filter="Leadership">Leadership</button>
-                        <button class="filter-chip more-filters">More Filters</button>
                     </div>
                 </div>
                 
@@ -8372,10 +8221,6 @@
 
                 </div>
                 
-                <!-- View All Projects Link -->
-                <div class="experience-cta">
-                    <a href="/projects" class="experience-view-all">View all projects ⟶</a>
-                </div>
             </div>
         </div>
 
@@ -8501,64 +8346,6 @@
                 </div>
                 <div class="evidence-viewer">
                     <div class="evidence-content"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- More Filters Popover -->
-        <div id="more-filters-popover" class="more-filters-popover" role="dialog" aria-labelledby="filters-title" aria-hidden="true">
-            <div class="filters-header">
-                <h3 id="filters-title">More Filters</h3>
-            </div>
-            <div class="filters-body">
-                <div class="filter-section">
-                    <label class="filter-label">Domain</label>
-                    <div class="filter-chips-grid">
-                        <button class="filter-multi-chip" data-domain="finance">Finance</button>
-                        <button class="filter-multi-chip" data-domain="technology">Technology</button>
-                        <button class="filter-multi-chip" data-domain="leadership">Leadership</button>
-                        <button class="filter-multi-chip" data-domain="blockchain">Blockchain</button>
-                        <button class="filter-multi-chip" data-domain="energy">Energy</button>
-                        <button class="filter-multi-chip" data-domain="analytics">Analytics</button>
-                    </div>
-                </div>
-                <div class="filter-section">
-                    <label class="filter-label">Year Range</label>
-                    <div class="year-range-inputs">
-                        <input type="number" class="year-input" id="year-from" placeholder="2020" min="2020" max="2025">
-                        <span class="year-separator">–</span>
-                        <input type="number" class="year-input" id="year-to" placeholder="2025" min="2020" max="2025">
-                    </div>
-                    <div class="year-slider">
-                        <input type="range" class="year-range-slider" min="2020" max="2025" value="2020" id="year-slider">
-                    </div>
-                </div>
-                <div class="filter-section">
-                    <label class="filter-label">Impact ≥ <span id="impact-value">0</span>%</label>
-                    <div class="impact-slider">
-                        <input type="range" class="impact-range-slider" min="0" max="100" value="0" id="impact-slider">
-                    </div>
-                </div>
-                <div class="filter-section">
-                    <label class="filter-label">Tools</label>
-                    <div class="tools-search">
-                        <input type="text" class="tools-search-input" placeholder="Search tools..." id="tools-search">
-                    </div>
-                    <div class="tools-chips-grid" id="tools-grid">
-                        <button class="filter-multi-chip" data-tool="python">Python</button>
-                        <button class="filter-multi-chip" data-tool="sql">SQL</button>
-                        <button class="filter-multi-chip" data-tool="excel">Excel</button>
-                        <button class="filter-multi-chip" data-tool="solidity">Solidity</button>
-                        <button class="filter-multi-chip" data-tool="javascript">JavaScript</button>
-                        <button class="filter-multi-chip" data-tool="react">React</button>
-                    </div>
-                </div>
-            </div>
-            <div class="filters-footer">
-                <div class="filters-summary">Showing <span id="results-count">6</span> of <span id="total-count">6</span></div>
-                <div class="filters-actions">
-                    <button class="btn-ghost" id="clear-filters">Clear</button>
-                    <button class="btn-primary" id="apply-filters">Apply</button>
                 </div>
             </div>
         </div>
@@ -10857,8 +10644,8 @@
                 }, 800);
             }
 
-            // Generate experience grid cards
-            function generateExperienceGrid(filter = 'all') {
+            // Generate experience grid cards with animations
+            async function generateExperienceGrid(filter = 'all') {
                 const gridContainer = document.getElementById('experience-projects-grid');
                 if (!gridContainer) return;
 
@@ -10868,9 +10655,94 @@
                     return project.category === filter;
                 });
 
-                // Generate grid HTML
-                const gridHTML = filteredProjects.map(project => `
-                    <div class="experience-grid-card" data-modal="${project.id}" onclick="openModal('${project.id}')">
+                // Check if we should animate (not on initial load)
+                const shouldAnimate = gridContainer.children.length > 0;
+                const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+                if (!shouldAnimate || isReducedMotion) {
+                    // Direct render without animation
+                    const gridHTML = filteredProjects.map(project => `
+                        <div class="experience-grid-card" data-modal="${project.id}" data-project-id="${project.id}" onclick="openModal('${project.id}')">
+                            <div class="shimmer"></div>
+                            <div class="grid-card-header">
+                                <h3 class="grid-card-title">${project.title}</h3>
+                                ${project.highlight_badge ? `
+                                    <div class="grid-card-badges">
+                                        <span class="grid-card-badge">${project.highlight_badge}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="grid-card-meta">${project.org} • ${project.program}</div>
+                            
+                            <div class="grid-card-metric">
+                                <div class="grid-card-metric-value">${project.key_metric.value}${project.key_metric.unit}</div>
+                                <div class="grid-card-metric-label">${project.key_metric.label}</div>
+                            </div>
+                            
+                            <div class="grid-card-summary">${project.summary_grid}</div>
+                            
+                            <div class="grid-card-footer">
+                                <svg class="grid-card-chevron" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M9.5 3.5L3.5 9.5M9.5 3.5H5.5M9.5 3.5V7.5"/>
+                                </svg>
+                            </div>
+                        </div>
+                    `).join('');
+                    gridContainer.innerHTML = gridHTML;
+                    return;
+                }
+
+                // Animated filter transition
+                await animateGridTransition(gridContainer, filteredProjects);
+            }
+
+            // Anti-flicker grid transition for older system
+            async function animateGridTransition(grid, newProjects) {
+                // Anti-flicker: Enter preparation state immediately
+                grid.classList.add('preparing-animation');
+
+                const currentCards = Array.from(grid.querySelectorAll('.experience-grid-card'));
+                const newProjectIds = new Set(newProjects.map(project => project.id));
+                const currentProjectIds = new Set(currentCards.map(card => card.dataset.projectId));
+
+                const exitingCards = currentCards.filter(card => 
+                    !newProjectIds.has(card.dataset.projectId)
+                );
+                const stayingCards = currentCards.filter(card => 
+                    newProjectIds.has(card.dataset.projectId)
+                );
+                const enteringProjects = newProjects.filter(project => 
+                    !currentProjectIds.has(project.id)
+                );
+
+                // Pre-calculate all positions before any DOM changes
+                const stayingPositions = new Map();
+                stayingCards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    stayingPositions.set(card.dataset.projectId, {
+                        left: rect.left,
+                        top: rect.top,
+                        width: rect.width,
+                        height: rect.height
+                    });
+                });
+
+                // Switch to filtering mode
+                grid.classList.remove('preparing-animation');
+                grid.classList.add('filtering');
+
+                // Quick exit animation
+                if (exitingCards.length > 0) {
+                    exitingCards.forEach(card => {
+                        card.classList.add('filter-exit');
+                    });
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+
+                // Prepare new content using DocumentFragment
+                const gridHTML = newProjects.map(project => `
+                    <div class="experience-grid-card" data-modal="${project.id}" data-project-id="${project.id}" onclick="openModal('${project.id}')">
                         <div class="shimmer"></div>
                         <div class="grid-card-header">
                             <h3 class="grid-card-title">${project.title}</h3>
@@ -10898,7 +10770,63 @@
                     </div>
                 `).join('');
 
-                gridContainer.innerHTML = gridHTML;
+                // Use fragment for efficient DOM update
+                const fragment = document.createDocumentFragment();
+                const tempContainer = document.createElement('div');
+                tempContainer.innerHTML = gridHTML;
+                
+                while (tempContainer.firstChild) {
+                    fragment.appendChild(tempContainer.firstChild);
+                }
+
+                // Single DOM operation
+                grid.innerHTML = '';
+                grid.appendChild(fragment);
+                
+                const allNewCards = Array.from(grid.querySelectorAll('.experience-grid-card'));
+                
+                // Set initial states to prevent flicker
+                allNewCards.forEach(card => {
+                    const projectId = card.dataset.projectId;
+                    
+                    if (stayingPositions.has(projectId)) {
+                        // Staying card positioning
+                        const oldPos = stayingPositions.get(projectId);
+                        const newRect = card.getBoundingClientRect();
+                        const deltaX = oldPos.left - newRect.left;
+                        const deltaY = oldPos.top - newRect.top;
+                        
+                        if (Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5) {
+                            card.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
+                            card.classList.add('filter-move');
+                        }
+                    } else {
+                        // Entering card
+                        card.classList.add('filter-enter');
+                    }
+                });
+
+                // Force layout
+                grid.offsetHeight;
+
+                // Trigger animations
+                requestAnimationFrame(() => {
+                    allNewCards.forEach(card => {
+                        if (card.classList.contains('filter-move')) {
+                            card.style.transform = 'translate3d(0, 0, 0)';
+                        }
+                    });
+                });
+
+                // Cleanup
+                setTimeout(() => {
+                    allNewCards.forEach(card => {
+                        card.classList.remove('filter-enter', 'filter-move');
+                        card.style.transform = '';
+                        card.style.transition = '';
+                    });
+                    grid.classList.remove('filtering');
+                }, 400);
             }
 
             // Handle filter chip clicks
@@ -11377,12 +11305,128 @@
                 }
 
                 renderFilteredProjects(grid, projects) {
-                    grid.innerHTML = projects.map(([id, project]) => 
+                    this.animateFilterTransition(grid, projects);
+                }
+
+                async animateFilterTransition(grid, newProjects) {
+                    // Respect reduced motion preferences
+                    if (this.isReducedMotion) {
+                        grid.innerHTML = newProjects.map(([id, project]) => 
+                            this.generateCardContent(project, id)
+                        ).join('');
+                        this.attachCardEventListeners();
+                        return;
+                    }
+
+                    // Anti-flicker: Immediately enter preparation state
+                    grid.classList.add('preparing-animation');
+
+                    // Get current state efficiently
+                    const currentCards = Array.from(grid.querySelectorAll('.experience-grid-card'));
+                    const newProjectIds = new Set(newProjects.map(([id]) => id));
+                    const currentProjectIds = new Set(currentCards.map(card => card.dataset.projectId));
+
+                    const exitingCards = currentCards.filter(card => 
+                        !newProjectIds.has(card.dataset.projectId)
+                    );
+                    const stayingCards = currentCards.filter(card => 
+                        newProjectIds.has(card.dataset.projectId)
+                    );
+                    const enteringProjectIds = newProjects.filter(([id]) => 
+                        !currentProjectIds.has(id)
+                    );
+
+                    // Pre-calculate all layout positions before any changes
+                    const stayingPositions = new Map();
+                    stayingCards.forEach(card => {
+                        const rect = card.getBoundingClientRect();
+                        stayingPositions.set(card.dataset.projectId, {
+                            left: rect.left,
+                            top: rect.top,
+                            width: rect.width,
+                            height: rect.height
+                        });
+                    });
+
+                    // Enable filtering mode
+                    grid.classList.remove('preparing-animation');
+                    grid.classList.add('filtering');
+
+                    // Phase 1: Quick exit animation if needed
+                    if (exitingCards.length > 0) {
+                        exitingCards.forEach(card => {
+                            card.classList.add('filter-exit');
+                        });
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                    }
+
+                    // Phase 2: Prepare new HTML with proper initial states
+                    const newHTML = newProjects.map(([id, project]) => 
                         this.generateCardContent(project, id)
                     ).join('');
+
+                    // Critical: Use DocumentFragment to minimize reflow
+                    const fragment = document.createDocumentFragment();
+                    const tempContainer = document.createElement('div');
+                    tempContainer.innerHTML = newHTML;
                     
-                    // Re-attach event listeners
+                    while (tempContainer.firstChild) {
+                        fragment.appendChild(tempContainer.firstChild);
+                    }
+
+                    // Single DOM operation to replace all content
+                    grid.innerHTML = '';
+                    grid.appendChild(fragment);
                     this.attachCardEventListeners();
+
+                    // Get new cards and set up animations immediately
+                    const allNewCards = Array.from(grid.querySelectorAll('.experience-grid-card'));
+                    
+                    // Set initial states for all cards to prevent flicker
+                    allNewCards.forEach(card => {
+                        const projectId = card.dataset.projectId;
+                        
+                        if (stayingPositions.has(projectId)) {
+                            // Staying card - position it at old location first
+                            const oldPos = stayingPositions.get(projectId);
+                            const newRect = card.getBoundingClientRect();
+                            const deltaX = oldPos.left - newRect.left;
+                            const deltaY = oldPos.top - newRect.top;
+                            
+                            if (Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5) {
+                                card.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0)`;
+                                card.classList.add('filter-move');
+                            }
+                        } else {
+                            // Entering card - start hidden
+                            card.classList.add('filter-enter');
+                        }
+                    });
+
+                    // Force layout calculation
+                    grid.offsetHeight;
+
+                    // Trigger animations in next frame with perfect timing
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            // Animate staying cards to new positions
+                            allNewCards.forEach(card => {
+                                if (card.classList.contains('filter-move')) {
+                                    card.style.transform = 'translate3d(0, 0, 0)';
+                                }
+                            });
+                        });
+                    });
+
+                    // Clean up after animations complete with exact timing
+                    setTimeout(() => {
+                        allNewCards.forEach(card => {
+                            card.classList.remove('filter-enter', 'filter-move');
+                            card.style.transform = '';
+                            card.style.transition = '';
+                        });
+                        grid.classList.remove('filtering');
+                    }, 350); // Match CSS animation duration
                 }
 
                 applyFilters(projects) {
@@ -11446,16 +11490,18 @@
 
                 generateCardContent(project, projectId) {
                     return `
-                        <a href="#" class="experience-card" data-modal="${projectId}" tabindex="0" role="button" aria-label="Open ${project.title} details">
-                            <div class="experience-card-stamp">${project.stamp}</div>
-                            <h3 class="experience-card-title">${project.title}</h3>
-                            <div class="experience-card-meta">${project.company} · ${project.role}</div>
-                            <div class="experience-card-summary">${project.overview}</div>
-                            <div class="experience-card-metric">
-                                <span class="experience-card-metric-number">${project.metrics[0].number}</span>
-                                <span class="experience-card-metric-label">${project.metrics[0].label}</span>
-                            </div>
-                        </a>
+                        <div class="experience-grid-card" data-project-id="${projectId}">
+                            <a href="#" class="experience-card" data-modal="${projectId}" tabindex="0" role="button" aria-label="Open ${project.title} details">
+                                <div class="experience-card-stamp">${project.stamp}</div>
+                                <h3 class="experience-card-title">${project.title}</h3>
+                                <div class="experience-card-meta">${project.company} · ${project.role}</div>
+                                <div class="experience-card-summary">${project.overview}</div>
+                                <div class="experience-card-metric">
+                                    <span class="experience-card-metric-number">${project.metrics[0].number}</span>
+                                    <span class="experience-card-metric-label">${project.metrics[0].label}</span>
+                                </div>
+                            </a>
+                        </div>
                     `;
                 }
 
@@ -11464,7 +11510,7 @@
                         card.addEventListener('keydown', (e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault();
-                                const projectId = card.dataset.projectId;
+                                const projectId = card.dataset.modal;
                                 this.openQuickView(projectId);
                             }
                         });
